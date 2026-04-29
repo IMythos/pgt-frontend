@@ -1,11 +1,7 @@
 <header
   class="w-full h-[80px] bg-[#F4FAFF] dark:bg-[#111111] flex items-center justify-between px-8 shadow-[0px_4px_24px_rgba(17,29,35,0.04)] dark:shadow-none border-b border-[rgba(129,0,10,0.1)] dark:border-[#313131] transition-colors duration-300 z-10 shrink-0"
 >
-
-  <!-- LADO IZQUIERDO: Hamburguesa + Buscador -->
   <div class="flex items-center gap-4">
-
-    <!-- Botón hamburguesa — solo visible en móvil/tablet -->
     <button
       class="lg:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 rounded-lg hover:bg-[rgba(129,0,10,0.05)] dark:hover:bg-[#222222] transition-colors cursor-pointer border-none outline-none"
       (click)="toggleSidebar.emit()"
@@ -28,40 +24,100 @@
       ></span>
     </button>
 
-    <!-- Buscador -->
-    <div class="relative flex items-center">
-      <div class="absolute left-4 flex items-center pointer-events-none">
-        <svg
-          class="w-[18px] h-[18px] text-[#4C616C] dark:text-[#8A9BA8] transition-colors"
-          fill="none" viewBox="0 0 24 24" stroke="currentColor"
-        >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-      </div>
-      <input
-        type="text"
-        placeholder="Buscar..."
-        class="w-[280px] h-10 bg-white dark:bg-[rgba(129,0,10,0.1)] border border-[rgba(129,0,10,0.1)] dark:border-[#313131] rounded-full pl-[42px] pr-4 font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#4C616C] dark:placeholder-[#8A9BA8] focus:outline-none focus:ring-1 focus:ring-[#81000A] dark:focus:ring-[#E2BEBA] transition-colors"
-      />
-    </div>
+    <nav class="flex" aria-label="Breadcrumb">
+      <ol class="inline-flex items-center space-x-2">
+        <!-- Ítem Fijo: Home / Dashboard -->
+        <li class="inline-flex items-center">
+          <a
+            routerLink="/dashboard"
+            class="inline-flex items-center font-['Inter'] text-sm font-medium text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#81000A] dark:hover:text-white transition-colors cursor-pointer"
+          >
+            <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+              />
+            </svg>
+            Inicio
+          </a>
+        </li>
 
+        <!-- Generación dinámica de la ruta actual -->
+        @for (crumb of breadcrumbs(); track crumb.url; let last = $last) {
+          <li [attr.aria-current]="last ? 'page' : null">
+            <div class="flex items-center">
+              <svg
+                class="w-4 h-4 text-gray-300 dark:text-[#313131]"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+
+              <!-- Si NO es el último elemento, es un link clickeable -->
+              @if (!last) {
+                <a
+                  [routerLink]="crumb.url"
+                  class="ml-2 font-['Inter'] text-sm font-medium text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#81000A] dark:hover:text-white transition-colors cursor-pointer"
+                >
+                  {{ crumb.label }}
+                </a>
+              }
+              <!-- Si ES el último elemento, es texto en negrita (posición actual) -->
+              @else {
+                <span class="ml-2 font-['Inter'] text-sm font-bold text-[#111D23] dark:text-white">
+                  {{ crumb.label }}
+                </span>
+              }
+            </div>
+          </li>
+        }
+      </ol>
+    </nav>
+    <div class="hidden md:block h-5 w-px bg-gray-200 dark:bg-[#313131] transition-colors"></div>
+
+    <!-- System Node Status -->
+    <div
+      class="hidden md:flex items-center gap-2 bg-gray-50 dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] px-3 py-1.5 rounded-full transition-colors"
+    >
+      <div
+        class="w-2 h-2 rounded-full bg-[#34A853] animate-pulse shadow-[0_0_8px_rgba(52,168,83,0.6)]"
+      ></div>
+      <span
+        class="font-['Inter'] font-bold text-[10px] tracking-widest uppercase text-[#4C616C] dark:text-[#8A9BA8]"
+      >
+        Nodo: Central-01
+      </span>
+    </div>
   </div>
 
   <!-- LADO DERECHO: Notificaciones, Settings, Usuario -->
   <div class="flex items-center gap-4">
     <div class="flex items-center gap-1">
-
       <!-- Notificaciones -->
       <button
         class="relative p-2 rounded-full hover:bg-[rgba(129,0,10,0.05)] dark:hover:bg-[#222222] transition-colors group cursor-pointer border-none outline-none"
       >
         <svg
           class="w-[20px] h-[20px] text-[#4C616C] dark:text-[#8A9BA8] group-hover:text-[#81000A] dark:group-hover:text-white transition-colors"
-          fill="none" viewBox="0 0 24 24" stroke="currentColor"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+          />
         </svg>
         @if (hasUnreadNotifications()) {
           <div
@@ -79,15 +135,27 @@
         >
           <svg
             class="w-[20px] h-[20px] transition-colors"
-            [ngClass]="isSettingsOpen()
-              ? 'text-[#81000A] dark:text-white'
-              : 'text-[#4C616C] dark:text-[#8A9BA8] group-hover:text-[#81000A] dark:group-hover:text-white'"
-            fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            [ngClass]="
+              isSettingsOpen()
+                ? 'text-[#81000A] dark:text-white'
+                : 'text-[#4C616C] dark:text-[#8A9BA8] group-hover:text-[#81000A] dark:group-hover:text-white'
+            "
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
           >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            />
           </svg>
         </button>
 
@@ -95,8 +163,12 @@
           <div
             class="absolute right-0 mt-3 w-64 bg-white dark:bg-[#1B1B1B] border border-[rgba(129,0,10,0.1)] dark:border-[#313131] rounded-xl shadow-lg z-50 animate-dropdown origin-top-right overflow-hidden"
           >
-            <div class="px-4 py-3 border-b border-[rgba(129,0,10,0.05)] dark:border-[#313131] bg-[#FAFAFA] dark:bg-[#111111]">
-              <h4 class="font-['Inter'] font-bold text-sm text-[#111D23] dark:text-white">Configuración</h4>
+            <div
+              class="px-4 py-3 border-b border-[rgba(129,0,10,0.05)] dark:border-[#313131] bg-[#FAFAFA] dark:bg-[#111111]"
+            >
+              <h4 class="font-['Inter'] font-bold text-sm text-[#111D23] dark:text-white">
+                Configuración
+              </h4>
             </div>
             <div class="p-2">
               <div
@@ -105,17 +177,37 @@
               >
                 <div class="flex items-center gap-3">
                   @if (isDarkMode()) {
-                    <svg class="w-5 h-5 text-[#E2BEBA]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    <svg
+                      class="w-5 h-5 text-[#E2BEBA]"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                      />
                     </svg>
                   } @else {
-                    <svg class="w-5 h-5 text-[#81000A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    <svg
+                      class="w-5 h-5 text-[#81000A]"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                      />
                     </svg>
                   }
-                  <span class="font-['Inter'] font-medium text-sm text-[#111D23] dark:text-white">Modo Oscuro</span>
+                  <span class="font-['Inter'] font-medium text-sm text-[#111D23] dark:text-white"
+                    >Modo Oscuro</span
+                  >
                 </div>
                 <div
                   class="w-10 h-5.5 rounded-full relative transition-colors duration-300 shadow-inner"
@@ -138,36 +230,59 @@
       >
         <svg
           class="w-[20px] h-[20px] text-[#4C616C] dark:text-[#8A9BA8] group-hover:text-[#81000A] dark:group-hover:text-white transition-colors"
-          fill="none" viewBox="0 0 24 24" stroke="currentColor"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
         </svg>
       </button>
-
     </div>
 
     <div class="h-8 w-px bg-[rgba(129,0,10,0.1)] dark:bg-[#313131] transition-colors"></div>
 
     <!-- Usuario -->
     <div class="flex items-center gap-3 cursor-pointer group">
-      <div class="w-10 h-10 rounded-full bg-[rgba(129,0,10,0.08)] dark:bg-[#1B1B1B] flex items-center justify-center overflow-hidden transition-colors">
-        <svg class="w-6 h-6 text-[#81000A] dark:text-[#8A9BA8]" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+      <div
+        class="w-10 h-10 rounded-full bg-[rgba(129,0,10,0.08)] dark:bg-[#1B1B1B] flex items-center justify-center overflow-hidden transition-colors"
+      >
+        <svg
+          class="w-6 h-6 text-[#81000A] dark:text-[#8A9BA8]"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+            clip-rule="evenodd"
+          />
         </svg>
       </div>
       <div class="flex items-center gap-1">
-        <span class="font-['Inter'] font-semibold text-sm text-[#111D23] dark:text-white group-hover:text-[#81000A] dark:group-hover:text-[#E2BEBA] transition-colors">
+        <span
+          class="font-['Inter'] font-semibold text-sm text-[#111D23] dark:text-white group-hover:text-[#81000A] dark:group-hover:text-[#E2BEBA] transition-colors"
+        >
           {{ userName() }}
         </span>
         <svg
           class="w-4 h-4 text-[#4C616C] dark:text-[#8A9BA8] group-hover:text-[#81000A] dark:group-hover:text-[#E2BEBA] transition-colors"
-          fill="none" viewBox="0 0 24 24" stroke="currentColor"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 9l-7 7-7-7"
+          />
         </svg>
       </div>
     </div>
-
   </div>
 </header>

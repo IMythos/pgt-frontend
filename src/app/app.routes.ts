@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { AuthGuard } from './core/guards/auth.guard';
+import { authGuard } from './core/guards/auth.guard';
 import { Layout } from './layout/layout';
 
 export const routes: Routes = [
@@ -10,26 +10,30 @@ export const routes: Routes = [
   {
     path: '',
     component: Layout,
-    canActivate: [AuthGuard],
+    canActivate: [authGuard],
     children: [
       {
         path: 'dashboard',
-        loadChildren: () => import('./dashboard/dashboard.module').then((m) => m.DashboardModule)
+        loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
       },
       {
         path: 'inventario',
-        loadChildren: () => import('./inventario/inventario.module').then((m) => m.InventarioModule)
+        loadChildren: () => import('./inventario/inventario.module').then(m => m.InventarioModule)
       },
       {
         path: 'tracking',
-        loadChildren: () => import('./tracking/tracking.module').then((m) => m.TrackingModule)
+        loadChildren: () => import('./tracking/tracking.module').then(m => m.TrackingModule)
       },
       {
         path: 'admin',
-        loadChildren: () => import('./admin/admin.module').then((m) => m.AdminModule)
+        loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
       },
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+      {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
+      }
     ]
   },
-  { path: '**', redirectTo: 'auth/login' }
+  { path: '**', redirectTo: '' }
 ];

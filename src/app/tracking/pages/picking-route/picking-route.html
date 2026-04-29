@@ -1,11 +1,6 @@
-<div class="flex flex-col lg:flex-row items-stretch p-8 lg:p-10 gap-6 w-full min-h-full bg-white dark:bg-[#111111] transition-colors duration-300">
-
-  <!-- ========================================== -->
-  <!-- COLUMNA IZQUIERDA: CONFIGURACIÓN Y LISTA   -->
-  <!-- ========================================== -->
+<div class="flex flex-col lg:flex-row items-stretch p-8 lg:p-10 gap-6 w-full min-h-full transition-colors duration-300">
   <div class="w-full lg:w-[420px] flex flex-col gap-6 shrink-0 z-20">
     
-    <!-- Configuración de Ruta -->
     <div class="flex flex-col bg-white dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] rounded-2xl p-6 shadow-sm transition-colors relative overflow-hidden">
       <div class="absolute top-0 left-0 w-full h-1 bg-[#81000A]"></div>
       
@@ -122,7 +117,6 @@
                   class="animate-dash opacity-70" />
       </svg>
 
-      <!-- RENDEREADO DE RACKS EN EL PLANO -->
       @for (rack of racks(); track rack.id) {
         <div class="absolute w-28 h-14 bg-white dark:bg-[#222222] border-2 rounded-lg flex items-center justify-center -translate-x-1/2 -translate-y-1/2 transition-colors z-20 shadow-sm"
              [ngClass]="getNodeStatus(rack.id) ? 'border-[#81000A] dark:border-[#E2BEBA]' : 'border-gray-200 dark:border-[#313131]'"
