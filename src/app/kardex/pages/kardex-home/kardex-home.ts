@@ -12,15 +12,13 @@ import { KardexDto, FiltroKardexDto } from '../../models/kardex.model';
 })
 export class KardexHome implements OnInit {
   private readonly kardexApi = inject(KardexApiService);
-
   kardexEntries = signal<KardexDto[]>([]);
   loading = signal(false);
-
   filtroProducto = signal('');
   filtroFechaDesde = signal('');
   filtroFechaHasta = signal('');
   filtroTipo = signal('');
-
+  isExportModalOpen = signal(false);
   ngOnInit(): void {
     this.cargarKardex();
   }
@@ -31,7 +29,6 @@ export class KardexHome implements OnInit {
     if (this.filtroTipo()) filtros.tipoMovimiento = this.filtroTipo();
     if (this.filtroFechaDesde()) filtros.fechaDesde = this.filtroFechaDesde();
     if (this.filtroFechaHasta()) filtros.fechaHasta = this.filtroFechaHasta();
-
     this.kardexApi.listar(filtros).subscribe({
       next: (data) => {
         this.kardexEntries.set(data);
@@ -42,7 +39,35 @@ export class KardexHome implements OnInit {
       }
     });
   }
-
+  openExportModal(): void {
+    this.isExportModalOpen.set(true);
+    document.body.style.overflow = 'hidden';
+  }
+  closeExportModal(): void {
+    this.isExportModalOpen.set(false);
+    document.body.style.overflow = 'auto';
+  }
+  exportar(formato: 'excel' | 'pdf'): void {
+    this.closeExportModal();
+    this.kardexApi.exportar(formato).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const fecha = new Date().toISOString().split('T')[0];
+        const extension = formato === 'pdf' ? 'pdf' : 'xlsx';
+        a.download = `kardex-${fecha}.${extension}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error(`Error exportando ${formato.toUpperCase()}:`, err);
+        alert('No se pudo exportar. Verifica que el backend esté corriendo.');
+      },
+    });
+  }
   getBadgeClass(tipo: string): string {
     switch(tipo) {
       case 'INGRESO':
@@ -55,7 +80,6 @@ export class KardexHome implements OnInit {
         return 'bg-gray-100 dark:bg-[#313131] text-[#4C616C] dark:text-[#8A9BA8]';
     }
   }
-
   getCantidadClass(tipo: string, valor: number): string {
     if (tipo === 'INGRESO' && valor > 0) return 'text-[#34A853]';
     if (tipo === 'SALIDA' && valor > 0) return 'text-[#81000A] dark:text-[#E2BEBA]';

@@ -25,10 +25,6 @@ export const routes: Routes = [
         loadChildren: () => import('./tracking/tracking.module').then(m => m.TrackingModule)
       },
       {
-        path: 'kardex',
-        loadChildren: () => import('./kardex/kardex.module').then(m => m.KardexModule)
-      },
-      {
         path: 'admin',
         loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
       },
