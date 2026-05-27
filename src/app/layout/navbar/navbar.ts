@@ -2,6 +2,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Component, signal, input, output, inject, Inject, PLATFORM_ID } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd, RouterModule } from '@angular/router';
 import { filter } from 'rxjs';
+import { AuthService } from '../../core/services/auth.service';
 export interface Breadcrumb {
   label: string;
   url: string;
@@ -21,7 +22,7 @@ export interface Breadcrumb {
   `]
 })
 export class Navbar {
-  userName = signal<string>('Diego M.');
+  authService = inject(AuthService);
   hasUnreadNotifications = signal<boolean>(true);
   isSettingsOpen = signal<boolean>(false);
   isDarkMode = signal<boolean>(false);

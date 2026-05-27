@@ -14,6 +14,12 @@ const routes: Routes = [
     component: MovementList,
     data: { breadcrumb: 'Trazabilidad' }
   },
+  {
+    path: 'kardex',
+    loadComponent: () =>
+      import('../kardex/pages/kardex-home/kardex-home').then(m => m.KardexHome),
+    data: { breadcrumb: 'Kardex' }
+  }
 ];
 
 @NgModule({

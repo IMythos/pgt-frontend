@@ -27,30 +27,66 @@
     </div>
 
     <nav class="flex flex-col w-full">
-      @for (item of menuItems; track item.route) {
-        <a [routerLink]="item.route" 
-           routerLinkActive="active-link" 
-           [routerLinkActiveOptions]="{ exact: true }"
-           class="group relative flex items-center gap-4 px-8 py-4 cursor-pointer transition-colors duration-200">
-          
-          <div class="absolute left-0 top-0 w-1 h-full bg-transparent group-[.active-link]:bg-[#81000A] transition-colors"></div>
-          <div class="absolute inset-0 bg-transparent group-[.active-link]:bg-[#FFF3F3] dark:group-[.active-link]:bg-[#222222] group-hover:bg-gray-50 dark:group-hover:bg-[#222222]/50 transition-colors z-0"></div>
-          
-          <svg class="w-5 h-5 text-[#4C616C] dark:text-[#8A9BA8] group-[.active-link]:text-[#81000A] dark:group-[.active-link]:text-white group-hover:text-[#81000A] dark:group-hover:text-white relative z-10 transition-colors" 
-               fill="none" 
-               viewBox="0 0 24 24" 
-               stroke="currentColor">
-            
-            <!-- Iteramos sobre los trazos -->
-            @for (path of item.paths; track path) {
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="path" />
-            }
+      @for (item of menuItems; track item.label) {
+        @if (isGroup(item)) {
+          <!-- Grupo expandible -->
+          <button (click)="toggleMenu(item.label)"
+                  class="group relative flex items-center gap-4 px-8 py-4 w-full cursor-pointer transition-colors duration-200">
+            <div class="absolute inset-0 bg-transparent hover:bg-gray-50 dark:hover:bg-[#222222]/50 transition-colors z-0"></div>
 
-          </svg>
-          <span class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8] group-[.active-link]:text-[#81000A] dark:group-[.active-link]:text-white group-hover:text-[#81000A] dark:group-hover:text-white relative z-10 transition-colors">
-            {{ item.label }}
-          </span>
-        </a>
+            <svg class="w-5 h-5 text-[#4C616C] dark:text-[#8A9BA8] group-hover:text-[#81000A] dark:group-hover:text-white relative z-10 transition-colors shrink-0"
+                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              @for (path of item.paths; track path) {
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="path" />
+              }
+            </svg>
+
+            <span class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8] group-hover:text-[#81000A] dark:group-hover:text-white relative z-10 transition-colors text-left flex-1">
+              {{ item.label }}
+            </span>
+
+            <svg class="w-4 h-4 text-[#4C616C] dark:text-[#8A9BA8] relative z-10 transition-transform duration-200"
+                 [class.rotate-90]="isMenuExpanded(item.label)"
+                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+
+          <!-- Hijos -->
+          @if (isMenuExpanded(item.label)) {
+            @for (child of item.children; track child.route) {
+              <a [routerLink]="child.route"
+                 routerLinkActive="active-link"
+                 [routerLinkActiveOptions]="{ exact: true }"
+                 class="group relative flex items-center gap-4 pl-16 pr-8 py-3 cursor-pointer transition-colors duration-200">
+                <div class="absolute left-0 top-0 w-1 h-full bg-transparent group-[.active-link]:bg-[#81000A] transition-colors"></div>
+                <div class="absolute inset-0 bg-transparent group-[.active-link]:bg-[#FFF3F3] dark:group-[.active-link]:bg-[#222222] group-hover:bg-gray-50 dark:group-hover:bg-[#222222]/50 transition-colors z-0"></div>
+                <span class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8] group-[.active-link]:text-[#81000A] dark:group-[.active-link]:text-white relative z-10 transition-colors">
+                  {{ child.label }}
+                </span>
+              </a>
+            }
+          }
+
+        } @else {
+          <!-- Ítem normal -->
+          <a [routerLink]="item.route"
+             routerLinkActive="active-link"
+             [routerLinkActiveOptions]="{ exact: true }"
+             class="group relative flex items-center gap-4 px-8 py-4 cursor-pointer transition-colors duration-200">
+            <div class="absolute left-0 top-0 w-1 h-full bg-transparent group-[.active-link]:bg-[#81000A] transition-colors"></div>
+            <div class="absolute inset-0 bg-transparent group-[.active-link]:bg-[#FFF3F3] dark:group-[.active-link]:bg-[#222222] group-hover:bg-gray-50 dark:group-hover:bg-[#222222]/50 transition-colors z-0"></div>
+            <svg class="w-5 h-5 text-[#4C616C] dark:text-[#8A9BA8] group-[.active-link]:text-[#81000A] dark:group-[.active-link]:text-white group-hover:text-[#81000A] dark:group-hover:text-white relative z-10 transition-colors"
+                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              @for (path of item.paths; track path) {
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="path" />
+              }
+            </svg>
+            <span class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8] group-[.active-link]:text-[#81000A] dark:group-[.active-link]:text-white group-hover:text-[#81000A] dark:group-hover:text-white relative z-10 transition-colors">
+              {{ item.label }}
+            </span>
+          </a>
+        }
       }
     </nav>
   </div>
@@ -66,8 +102,8 @@
       <div class="flex flex-col overflow-hidden lg:flex"
         [class.hidden]="!isOpen()"
       >
-        <span class="font-['Inter'] font-bold text-sm text-[#111D23] dark:text-white truncate transition-colors">{{ userName }}</span>
-        <span class="font-['Inter'] font-medium text-[11px] uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8] truncate transition-colors">{{ userRole }}</span>
+        <span class="font-['Inter'] font-bold text-sm text-[#111D23] dark:text-white truncate transition-colors">{{ authService.currentUserName() }}</span>
+        <span class="font-['Inter'] font-medium text-[11px] uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8] truncate transition-colors">{{ authService.currentUserRole() }}</span>
       </div>
     </div>
 

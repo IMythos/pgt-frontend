@@ -15,6 +15,7 @@
 
     <div class="flex items-center gap-3">
       <button
+        (click)="openExportModal()"
         class="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-[#1B1B1B] border border-gray-200 dark:border-[#313131] text-[#111D23] dark:text-white font-['Inter'] font-semibold text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-[#222222] transition-colors cursor-pointer shadow-sm"
       >
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -246,6 +247,7 @@
         </svg>
       </div>
       <input
+        (ngModelChange)="cargarProductos()"
         type="text"
         placeholder="Buscar por SKU, nombre..."
         class="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#4C616C] dark:placeholder-[#8A9BA8] focus:outline-none focus:ring-1 focus:ring-[#81000A] transition-colors"
@@ -256,17 +258,28 @@
       <select
         class="w-full md:w-auto bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-[#313131] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#81000A] transition-colors cursor-pointer"
       >
-        <option value="">Todas las Categorías</option>
-        <option value="automatizacion">Automatización</option>
-        <option value="sensores">Sensores</option>
-        <option value="motores">Motores</option>
+        @for (cat of categorias(); track cat.idCategoria) {
+          <option [value]="cat.idCategoria">{{ cat.nombreCategoria }}</option>
+        }
       </select>
       <select
         class="w-full md:w-auto bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-[#313131] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#81000A] transition-colors cursor-pointer"
+        [ngModel]="filtroCategoria()"
+        (ngModelChange)="filtroCategoria.set($event); cargarProductos()"
+      >
+        <option value="">Todas las Categorías</option>
+        @for (cat of categorias(); track cat.idCategoria) {
+          <option [value]="cat.idCategoria">{{ cat.nombreCategoria }}</option>
+        }
+      </select>
+      <select
+        class="w-full md:w-auto bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-[#313131] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#81000A] transition-colors cursor-pointer"
+        [ngModel]="filtroEstado()"
+        (ngModelChange)="filtroEstado.set($event); cargarProductos()"
       >
         <option value="">Estado: Todos</option>
-        <option value="optimo">Óptimo</option>
-        <option value="bajo">Bajo / Crítico</option>
+        <option value="activo">Activo</option>
+        <option value="inactivo">Inactivo</option>
       </select>
     </div>
   </div>
@@ -320,92 +333,109 @@
         </thead>
 
         <tbody class="font-['Inter'] text-sm">
-          @for (product of products(); track product.id) {
-            <tr
-              class="border-b border-gray-50 dark:border-[#313131] hover:bg-gray-50 dark:hover:bg-[#222222] transition-colors cursor-default"
-            >
-              <td class="px-6 py-4 font-semibold text-[#4C616C] dark:text-[#8A9BA8]">
-                {{ product.sku }}
-              </td>
-              <td class="px-6 py-4 font-bold text-[#111D23] dark:text-white">{{ product.name }}</td>
-              <td class="px-6 py-4 text-[#4C616C] dark:text-[#8A9BA8]">{{ product.category }}</td>
-              <td class="px-6 py-4 font-medium text-[#111D23] dark:text-white">
-                ${{ product.price | number: '1.2-2' }}
-              </td>
-              <td class="px-6 py-4">
-                <div class="flex items-center gap-2">
-                  <span
-                    class="font-bold"
-                    [ngClass]="{
-                      'text-[#111D23] dark:text-white': product.stock > 0,
-                      'text-[#4C616C] dark:text-[#8A9BA8] line-through': product.stock === 0,
-                    }"
-                  >
-                    {{ product.stock }}
-                  </span>
-                  <span
-                    class="px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase"
-                    [ngClass]="getStockStatus(product.stock).colorClass"
-                  >
-                    {{ getStockStatus(product.stock).label }}
-                  </span>
-                </div>
-              </td>
-              <td class="px-6 py-4">
-                <div class="flex items-center gap-1.5">
-                  <div
-                    class="w-1.5 h-1.5 rounded-full"
-                    [ngClass]="product.status === 'ACTIVO' ? 'bg-[#34A853]' : 'bg-[#4C616C]'"
-                  ></div>
-                  <span
-                    class="text-xs font-semibold"
-                    [ngClass]="
-                      product.status === 'ACTIVO'
-                        ? 'text-[#34A853]'
-                        : 'text-[#4C616C] dark:text-[#8A9BA8]'
-                    "
-                  >
-                    {{ product.status }}
-                  </span>
-                </div>
-              </td>
-              <td class="px-6 py-4 text-right">
-                <div class="flex items-center justify-end gap-2">
-                  <button
-                    class="p-1.5 text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#313131] rounded-md transition-colors cursor-pointer"
-                    title="Ver Detalles"
-                  >
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    class="p-1.5 text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#81000A] dark:hover:text-[#E2BEBA] hover:bg-[#FFF3F3] dark:hover:bg-[rgba(129,0,10,0.2)] rounded-md transition-colors cursor-pointer"
-                    title="Editar"
-                  >
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                      />
-                    </svg>
-                  </button>
-                </div>
+          @if (loading()) {
+            <tr>
+              <td colspan="7" class="px-6 py-8 text-center text-[#4C616C] dark:text-[#8A9BA8]">
+                Cargando productos...
               </td>
             </tr>
+          } @else if (products().length === 0) {
+            <tr>
+              <td colspan="7" class="px-6 py-8 text-center text-[#4C616C] dark:text-[#8A9BA8]">
+                No se encontraron productos.
+              </td>
+            </tr>
+          } @else {
+            @for (product of products(); track product.idProducto) {
+              <tr
+                class="border-b border-gray-50 dark:border-[#313131] hover:bg-gray-50 dark:hover:bg-[#222222] transition-colors cursor-default"
+              >
+                <td class="px-6 py-4 font-semibold text-[#4C616C] dark:text-[#8A9BA8]">
+                  {{ product.sku }}
+                </td>
+                <td class="px-6 py-4 font-bold text-[#111D23] dark:text-white">
+                  {{ product.descripcion }}
+                </td>
+                <td class="px-6 py-4 text-[#4C616C] dark:text-[#8A9BA8]">
+                  {{ product.categoria.nombreCategoria }}
+                </td>
+                <td class="px-6 py-4 font-medium text-[#111D23] dark:text-white">
+                  ${{ product.precioVenta | number: '1.2-2' }}
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-2">
+                    <span
+                      class="font-bold"
+                      [ngClass]="{
+                        'text-[#111D23] dark:text-white': (product.stockTotal ?? 0) > 0,
+                        'text-[#4C616C] dark:text-[#8A9BA8] line-through':
+                          (product.stockTotal ?? 0) === 0,
+                      }"
+                    >
+                      {{ product.stockTotal ?? 0 }}
+                    </span>
+                    <span
+                      class="px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase"
+                      [ngClass]="getStockStatus(product.stockTotal).colorClass"
+                    >
+                      {{ getStockStatus(product.stockTotal).label }}
+                    </span>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-1.5">
+                    <div
+                      class="w-1.5 h-1.5 rounded-full"
+                      [ngClass]="product.estado ? 'bg-[#34A853]' : 'bg-[#4C616C]'"
+                    ></div>
+                    <span
+                      class="text-xs font-semibold"
+                      [ngClass]="
+                        product.estado ? 'text-[#34A853]' : 'text-[#4C616C] dark:text-[#8A9BA8]'
+                      "
+                    >
+                      {{ product.estado ? 'ACTIVO' : 'INACTIVO' }}
+                    </span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <div class="flex items-center justify-end gap-2">
+                    <button
+                      class="p-1.5 text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#313131] rounded-md transition-colors cursor-pointer"
+                      title="Ver Detalles"
+                    >
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      class="p-1.5 text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#81000A] dark:hover:text-[#E2BEBA] hover:bg-[#FFF3F3] dark:hover:bg-[rgba(129,0,10,0.2)] rounded-md transition-colors cursor-pointer"
+                      title="Editar"
+                    >
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
           }
         </tbody>
       </table>
@@ -467,11 +497,15 @@
                 >Categoría <span class="text-[#81000A]">*</span></label
               >
               <select
+                name="idCategoria"
+                [ngModel]="formProducto().idCategoria"
+                (ngModelChange)="actualizarForm('idCategoria', $event)"
+                [ngModelOptions]="{ standalone: true }"
                 class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors cursor-pointer hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
               >
-                <option value="" disabled selected>Seleccione una categoría</option>
-                @for (cat of categorias(); track cat.id) {
-                  <option [value]="cat.id">{{ cat.nombre }}</option>
+                <option [ngValue]="null" disabled>Seleccione una categoría</option>
+                @for (cat of categorias(); track cat.idCategoria) {
+                  <option [ngValue]="cat.idCategoria">{{ cat.nombreCategoria }}</option>
                 }
               </select>
             </div>
@@ -481,11 +515,15 @@
                 >Marca <span class="text-[#81000A]">*</span></label
               >
               <select
+                name="idMarca"
+                [ngModel]="formProducto().idMarca"
+                (ngModelChange)="actualizarForm('idMarca', $event)"
+                [ngModelOptions]="{ standalone: true }"
                 class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors cursor-pointer hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
               >
-                <option value="" disabled selected>Seleccione una marca</option>
-                @for (marca of marcas(); track marca.id) {
-                  <option [value]="marca.id">{{ marca.nombre }}</option>
+                <option [ngValue]="null" disabled>Seleccione una marca</option>
+                @for (marca of marcas(); track marca.idMarca) {
+                  <option [ngValue]="marca.idMarca">{{ marca.nombreMarca }}</option>
                 }
               </select>
             </div>
@@ -495,9 +533,13 @@
                 >SKU Interno (cod_prod) <span class="text-[#81000A]">*</span></label
               >
               <input
+                name="sku"
                 type="text"
-                placeholder="Ej. PX-1029"
+                placeholder="Ingrese SKU..."
                 class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
+                [ngModel]="formProducto().sku"
+                (ngModelChange)="actualizarForm('sku', $event)"
+                [ngModelOptions]="{ standalone: true }"
               />
             </div>
 
@@ -506,7 +548,12 @@
                 >Cód. Fabricante (cod_anexo)</label
               >
               <input
+                name="numeroParte"
                 type="text"
+                [ngModel]="formProducto().numeroParte"
+                (ngModelChange)="actualizarForm('numeroParte', $event)"
+                [ngModelOptions]="{ standalone: true }"
+                maxlength="30"
                 placeholder="Ej. AB-990-2"
                 class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
               />
@@ -517,7 +564,11 @@
                 >Descripción Técnica <span class="text-[#81000A]">*</span></label
               >
               <textarea
+                name="descripcion"
                 rows="3"
+                [ngModel]="formProducto().descripcion"
+                (ngModelChange)="actualizarForm('descripcion', $event)"
+                [ngModelOptions]="{ standalone: true }"
                 placeholder="Describa el producto..."
                 class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors resize-none hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
               ></textarea>
@@ -528,7 +579,11 @@
                 >Modelos Compatibles (JSONB)</label
               >
               <input
+                name="modelosCompatibles"
                 type="text"
+                [ngModel]="formProducto().modelosCompatiblesStr"
+                (ngModelChange)="actualizarForm('modelosCompatiblesStr', $event)"
+                [ngModelOptions]="{ standalone: true }"
                 placeholder="Separe por comas Ej. Serie 200, Serie 300"
                 class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
               />
@@ -544,8 +599,13 @@
               <div class="relative">
                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#8A9BA8]">$</span>
                 <input
+                  name="precioCompra"
                   type="number"
                   step="0.01"
+                  min="0"
+                  [ngModel]="formProducto().precioCompra"
+                  (ngModelChange)="actualizarForm('precioCompra', $event)"
+                  [ngModelOptions]="{ standalone: true }"
                   placeholder="0.00"
                   class="w-full pl-8 pr-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
                 />
@@ -559,8 +619,13 @@
               <div class="relative">
                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#8A9BA8]">$</span>
                 <input
+                  name="precioVenta"
                   type="number"
                   step="0.01"
+                  min="0"
+                  [ngModel]="formProducto().precioVenta"
+                  (ngModelChange)="actualizarForm('precioVenta', $event)"
+                  [ngModelOptions]="{ standalone: true }"
                   placeholder="0.00"
                   class="w-full pl-8 pr-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
                 />
@@ -579,17 +644,145 @@
             Cancelar
           </button>
           <button
-            class="flex items-center gap-2 px-6 py-2.5 bg-[#81000A] hover:bg-[#6a0008] text-white font-['Inter'] font-semibold text-sm rounded-lg shadow-md transition-colors cursor-pointer"
+            (click)="guardarProducto()"
+            [disabled]="isSaving()"
+            class="flex items-center gap-2 px-6 py-2.5 bg-[#81000A] hover:bg-[#6a0008] text-white font-['Inter'] font-semibold text-sm rounded-lg shadow-md transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            @if (isSaving() == true) {
+              <span>Guardando...</span>
+            } @else {
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+              <span>Guardar Producto</span>
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+  @if (isExportModalOpen()) {
+    <div
+      class="animate-fade-in fixed inset-0 z-50 flex items-center justify-center bg-[#111111]/60 dark:bg-black/80 backdrop-blur-sm p-4"
+    >
+      <div
+        class="animate-zoom-in flex flex-col w-full max-w-md bg-white dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] rounded-2xl shadow-2xl overflow-hidden"
+      >
+        <!-- Header -->
+        <div
+          class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-[#313131] bg-gray-50 dark:bg-[#222222]"
+        >
+          <div class="flex items-center gap-3">
+            <div
+              class="w-8 h-8 rounded-full bg-[rgba(129,0,10,0.1)] dark:bg-[#313131] flex items-center justify-center shrink-0"
+            >
+              <svg
+                class="w-4 h-4 text-[#81000A] dark:text-[#E2BEBA]"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                />
+              </svg>
+            </div>
+            <h3 class="font-['Work_Sans'] font-bold text-lg text-[#111D23] dark:text-white">
+              Exportar Inventario
+            </h3>
+          </div>
+          <button
+            (click)="closeExportModal()"
+            class="p-2 text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#81000A] dark:hover:text-[#E2BEBA] hover:bg-gray-200 dark:hover:bg-[#313131] rounded-full transition-colors cursor-pointer"
+          >
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M5 13l4 4L19 7"
+                d="M6 18L18 6M6 6l12 12"
               />
             </svg>
-            Guardar Producto
+          </button>
+        </div>
+        <div class="p-6 flex flex-col gap-3">
+          <p class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8] mb-2">
+            Selecciona el formato de exportación:
+          </p>
+          <button
+            (click)="exportar('excel')"
+            class="flex items-center gap-4 p-4 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-xl hover:border-[#81000A]/50 dark:hover:border-[#E2BEBA]/50 hover:bg-[#FFF3F3]/30 dark:hover:bg-[rgba(129,0,10,0.05)] transition-all cursor-pointer group"
+          >
+            <div
+              class="w-12 h-12 rounded-lg bg-[#217346]/10 flex items-center justify-center shrink-0 group-hover:bg-[#217346]/20 transition-colors"
+            >
+              <svg class="w-6 h-6 text-[#217346]" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M14,2H6A2,2,0,0,0,4,4V20a2,2,0,0,0,2,2H18a2,2,0,0,0,2-2V8ZM18,20H6V4h7V9h5V20Z"
+                  opacity="0.4"
+                />
+                <path d="M14,2l6,6h-6V2Z" />
+                <rect x="8" y="13" width="3" height="5" rx="0.5" fill="#217346" />
+                <rect x="13" y="13" width="3" height="5" rx="0.5" fill="#217346" />
+              </svg>
+            </div>
+            <div class="flex flex-col items-start">
+              <span
+                class="font-['Inter'] font-bold text-[#111D23] dark:text-white group-hover:text-[#217346] transition-colors"
+              >
+                Microsoft Excel (.xlsx)
+              </span>
+              <span class="font-['Inter'] text-xs text-[#4C616C] dark:text-[#8A9BA8]">
+                Formato de hoja de cálculo con filtros y fórmulas
+              </span>
+            </div>
+          </button>
+          <!-- Opción PDF -->
+          <button
+            (click)="exportar('pdf')"
+            class="flex items-center gap-4 p-4 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-xl hover:border-[#81000A]/50 dark:hover:border-[#E2BEBA]/50 hover:bg-[#FFF3F3]/30 dark:hover:bg-[rgba(129,0,10,0.05)] transition-all cursor-pointer group"
+          >
+            <div
+              class="w-12 h-12 rounded-lg bg-[#B30B00]/10 flex items-center justify-center shrink-0 group-hover:bg-[#B30B00]/20 transition-colors"
+            >
+              <svg class="w-6 h-6 text-[#B30B00]" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M14,2H6A2,2,0,0,0,4,4V20a2,2,0,0,0,2,2H18a2,2,0,0,0,2-2V8ZM18,20H6V4h7V9h5V20Z"
+                  opacity="0.4"
+                />
+                <path d="M14,2l6,6h-6V2Z" />
+                <text x="8" y="18" font-size="7" font-weight="bold" fill="#B30B00">PDF</text>
+              </svg>
+            </div>
+            <div class="flex flex-col items-start">
+              <span
+                class="font-['Inter'] font-bold text-[#111D23] dark:text-white group-hover:text-[#B30B00] transition-colors"
+              >
+                Adobe PDF (.pdf)
+              </span>
+              <span class="font-['Inter'] text-xs text-[#4C616C] dark:text-[#8A9BA8]">
+                Formato portable ideal para impresión y distribución
+              </span>
+            </div>
+          </button>
+        </div>
+        <!-- Footer -->
+        <div
+          class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100 dark:border-[#313131] bg-gray-50 dark:bg-[#111111]"
+        >
+          <button
+            (click)="closeExportModal()"
+            class="px-5 py-2.5 font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white hover:bg-gray-200 dark:hover:bg-[#222222] rounded-lg transition-colors cursor-pointer"
+          >
+            Cancelar
           </button>
         </div>
       </div>

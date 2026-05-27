@@ -60,6 +60,7 @@ export interface ProductoCatalogoDto {
   precioCompra: number;
   precioVenta: number;
   estado: boolean;
+  stockTotal?: number;
   stockMinimo?: number | null;
   fechaCreacion: string;
 }

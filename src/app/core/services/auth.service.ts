@@ -25,6 +25,7 @@ export class AuthService {
   
   isAuthenticated = signal<boolean>(false);
   currentUserRole = signal<string | null>(null);
+  currentUserName = signal<string | null>(null);
 
   private readonly AUTH_API_URL = 'http://localhost:8080/api/v1/auth'; 
 
@@ -35,6 +36,22 @@ export class AuthService {
     if (localStorage.getItem('token')) {
       this.isAuthenticated.set(true);
       this.currentUserRole.set(localStorage.getItem('role'));
+      this.decodeAndSetUser();
+    }
+  }
+
+  private decodeAndSetUser(): void {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    try {
+      const payload = token.split('.')[1];
+      const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+      const decoded = JSON.parse(atob(base64));
+      this.currentUserName.set(decoded.name || decoded.sub || decoded.preferred_username || 'Usuario');
+      const role = decoded.role || decoded.rol;
+      if (role) this.currentUserRole.set(role);
+    } catch {
+      this.currentUserName.set('Usuario');
     }
   }
 
@@ -45,13 +62,12 @@ export class AuthService {
         const token = response.data.token;
         const role = response.data.role; 
         
-        // Guardamos en LocalStorage
         localStorage.setItem('token', token);
         localStorage.setItem('role', role);
         
-        // Actualizamos los Signals
         this.isAuthenticated.set(true);
         this.currentUserRole.set(role);
+        this.decodeAndSetUser();
       }),
       // Si todo sale bien, emitimos 'true'
       map(() => true),
@@ -69,6 +85,7 @@ export class AuthService {
     
     this.isAuthenticated.set(false);
     this.currentUserRole.set(null);
+    this.currentUserName.set(null);
     
     this.router.navigate(['/auth/login']);
   }

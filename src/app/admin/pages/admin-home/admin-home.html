@@ -1,139 +1,247 @@
-<div class="flex flex-col items-start p-8 lg:p-10 gap-8 w-full min-h-full transition-colors duration-300">
-  <div class="flex flex-col md:flex-row justify-between items-start md:items-center w-full gap-4">
-    <div class="flex flex-col">
-      <h2 class="font-['Work_Sans'] font-bold text-3xl text-[#111D23] dark:text-white transition-colors">
-        System Administration
+<div class="flex w-full flex-col gap-6 p-6 lg:p-8">
+  <header class="flex w-full flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+    <div>
+      <p class="font-['Inter'] text-xs font-bold uppercase text-[#81000A] dark:text-[#E2BEBA]">
+        Administracion
+      </p>
+      <h2 class="font-['Work_Sans'] text-3xl font-bold text-[#111D23] dark:text-white">
+        Usuarios, roles y accesos
       </h2>
-      <p class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8] mt-1 transition-colors">
-        Traceability and access control matrix.
+      <p class="mt-1 font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">
+        Gestiona cuentas del sistema y valida el estado de acceso desde el backend.
       </p>
     </div>
-    
-    <div class="flex items-center gap-3">
-      <button class="flex items-center gap-2 px-5 py-2.5 bg-[#81000A] hover:bg-[#6a0008] text-white font-['Inter'] font-semibold text-sm rounded-lg shadow-sm transition-colors cursor-pointer">
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+
+    <div class="flex flex-col gap-2 sm:flex-row">
+      <button
+        type="button"
+        (click)="loadAdminData()"
+        class="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 font-['Inter'] text-sm font-semibold text-[#111D23] shadow-sm transition-colors hover:bg-gray-50 dark:border-[#313131] dark:bg-[#1B1B1B] dark:text-white dark:hover:bg-[#222222]"
+      >
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v6h6M20 20v-6h-6M20 8A8 8 0 006.34 4.34M4 16a8 8 0 0013.66 3.66" />
         </svg>
-        Export Logs
+        Actualizar
       </button>
     </div>
-  </div>
+  </header>
 
-  <div class="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6 w-full items-start">
-
-    <div class="flex flex-col bg-white dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] rounded-2xl p-6 shadow-sm transition-colors">
-      
-      <div class="flex items-center gap-2 mb-6">
-        <svg class="w-5 h-5 text-[#81000A] dark:text-[#E2BEBA]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-        </svg>
-        <span class="font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA]">
-          Role Matrix
-        </span>
-      </div>
-
-      <div class="flex flex-col gap-4">
-        @for (role of roles(); track role.id) {
-          <div 
-            (click)="selectRole(role.id)"
-            class="relative flex flex-col p-5 rounded-xl border cursor-pointer transition-all duration-200 overflow-hidden group"
-            [ngClass]="role.active ? 'bg-gray-50 dark:bg-[#222222] border-gray-200 dark:border-[#313131]' : 'bg-white dark:bg-[#111111] border-gray-100 dark:border-[#222222] hover:border-gray-300 dark:hover:border-[#313131]'">
-            
-            <div class="absolute left-0 top-0 w-1.5 h-full transition-colors" [ngClass]="role.active ? 'bg-[#81000A]' : 'bg-transparent group-hover:bg-gray-200 dark:group-hover:bg-[#313131]'"></div>
-
-            <div class="flex justify-between items-start w-full mb-2 pl-2">
-              <span class="font-['Inter'] font-bold text-sm text-[#111D23] dark:text-white">{{ role.name }}</span>
-              <span class="font-['Inter'] font-bold text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-[#313131] text-[#4C616C] dark:text-[#8A9BA8]">
-                {{ role.level }}
-              </span>
-            </div>
-            
-            <p class="font-['Inter'] text-xs text-[#4C616C] dark:text-[#8A9BA8] pl-2 leading-relaxed">
-              {{ role.description }}
-            </p>
-          </div>
-        }
-      </div>
-
+  @if (errorMessage()) {
+    <div class="rounded-lg border border-[#E2BEBA] bg-[#81000A]/10 px-4 py-3 font-['Inter'] text-sm font-semibold text-[#81000A] dark:bg-[#81000A]/20 dark:text-[#E2BEBA]">
+      {{ errorMessage() }}
     </div>
+  }
 
-    <div class="flex flex-col bg-white dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] rounded-2xl p-6 shadow-sm transition-colors overflow-hidden">
-      
-      <div class="flex flex-col md:flex-row justify-between items-start md:items-center w-full gap-4 mb-6">
-        <div class="flex items-center gap-2">
-          <svg class="w-5 h-5 text-[#81000A] dark:text-[#E2BEBA]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <span class="font-['Inter'] font-bold text-lg text-[#111D23] dark:text-white">
-            Global Audit Log
-          </span>
-        </div>
+  @if (successMessage()) {
+    <div class="rounded-lg border border-[#B7E2C2] bg-[#E6F4EA] px-4 py-3 font-['Inter'] text-sm font-semibold text-[#1E7A3A] dark:border-[#244D31] dark:bg-[#132218] dark:text-[#8DE0A2]">
+      {{ successMessage() }}
+    </div>
+  }
 
-        <div class="flex items-center gap-3 w-full md:w-auto">
-          <div class="relative w-full md:w-64">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg class="w-4 h-4 text-[#4C616C] dark:text-[#8A9BA8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-            <input type="text" placeholder="Trace ID or User" class="w-full pl-9 pr-4 py-2 bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-full font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#4C616C] dark:placeholder-[#8A9BA8] focus:outline-none focus:ring-1 focus:ring-[#81000A] transition-colors">
-          </div>
-          
-          <button class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-[#222222] border border-gray-200 dark:border-[#313131] text-[#111D23] dark:text-white font-['Inter'] font-semibold text-sm rounded-full hover:bg-gray-50 dark:hover:bg-[#313131] transition-colors cursor-pointer">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-            </svg>
-            Filter
+  <section class="grid w-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+    <article class="rounded-lg border border-gray-100 bg-white p-5 shadow-sm dark:border-[#313131] dark:bg-[#1B1B1B]">
+      <span class="font-['Inter'] text-xs font-bold uppercase text-[#4C616C] dark:text-[#8A9BA8]">Usuarios</span>
+      <div class="mt-3 flex items-end justify-between">
+        <strong class="font-['Work_Sans'] text-3xl text-[#111D23] dark:text-white">{{ users().length }}</strong>
+        <span class="rounded-full bg-gray-100 px-2.5 py-1 font-['Inter'] text-xs font-bold text-[#4C616C] dark:bg-[#222222] dark:text-[#8A9BA8]">IAM</span>
+      </div>
+    </article>
+
+    <article class="rounded-lg border border-gray-100 bg-white p-5 shadow-sm dark:border-[#313131] dark:bg-[#1B1B1B]">
+      <span class="font-['Inter'] text-xs font-bold uppercase text-[#4C616C] dark:text-[#8A9BA8]">Cuentas activas</span>
+      <div class="mt-3 flex items-end justify-between">
+        <strong class="font-['Work_Sans'] text-3xl text-[#111D23] dark:text-white">{{ activeAccountsCount() }}</strong>
+        <span class="rounded-full bg-[#E6F4EA] px-2.5 py-1 font-['Inter'] text-xs font-bold text-[#1E7A3A] dark:bg-[#132218] dark:text-[#8DE0A2]">UP</span>
+      </div>
+    </article>
+
+    <article class="rounded-lg border border-gray-100 bg-white p-5 shadow-sm dark:border-[#313131] dark:bg-[#1B1B1B]">
+      <span class="font-['Inter'] text-xs font-bold uppercase text-[#4C616C] dark:text-[#8A9BA8]">Cuentas inactivas</span>
+      <div class="mt-3 flex items-end justify-between">
+        <strong class="font-['Work_Sans'] text-3xl text-[#111D23] dark:text-white">{{ inactiveAccountsCount() }}</strong>
+        <span class="rounded-full bg-[#FEF3C7] px-2.5 py-1 font-['Inter'] text-xs font-bold text-[#B45309] dark:bg-[#2A1D0A]">Revisar</span>
+      </div>
+    </article>
+
+    <article class="rounded-lg border border-gray-100 bg-white p-5 shadow-sm dark:border-[#313131] dark:bg-[#1B1B1B]">
+      <span class="font-['Inter'] text-xs font-bold uppercase text-[#4C616C] dark:text-[#8A9BA8]">Roles</span>
+      <div class="mt-3 flex items-end justify-between">
+        <strong class="font-['Work_Sans'] text-3xl text-[#111D23] dark:text-white">{{ roles().length }}</strong>
+        <span class="rounded-full bg-[#81000A]/10 px-2.5 py-1 font-['Inter'] text-xs font-bold text-[#81000A] dark:bg-[#81000A]/20 dark:text-[#E2BEBA]">RBAC</span>
+      </div>
+    </article>
+  </section>
+
+  <section class="grid w-full grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
+    <div class="min-w-0 rounded-lg border border-gray-100 bg-white shadow-sm dark:border-[#313131] dark:bg-[#1B1B1B]">
+      <div class="flex flex-col gap-4 border-b border-gray-100 p-5 dark:border-[#313131] lg:flex-row lg:items-center lg:justify-between">
+        <div class="inline-flex w-fit rounded-lg bg-gray-100 p-1 dark:bg-[#111111]">
+          <button
+            type="button"
+            (click)="setTab('users')"
+            class="rounded-md px-4 py-2 font-['Inter'] text-sm font-bold transition-colors"
+            [ngClass]="activeTab() === 'users' ? 'bg-white text-[#111D23] shadow-sm dark:bg-[#2A2A2A] dark:text-white' : 'text-[#4C616C] dark:text-[#8A9BA8]'"
+          >
+            Usuarios
+          </button>
+          <button
+            type="button"
+            (click)="setTab('roles')"
+            class="rounded-md px-4 py-2 font-['Inter'] text-sm font-bold transition-colors"
+            [ngClass]="activeTab() === 'roles' ? 'bg-white text-[#111D23] shadow-sm dark:bg-[#2A2A2A] dark:text-white' : 'text-[#4C616C] dark:text-[#8A9BA8]'"
+          >
+            Roles
           </button>
         </div>
+
+        <div class="relative w-full lg:w-80">
+          <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#4C616C] dark:text-[#8A9BA8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            type="search"
+            [ngModel]="searchTerm()"
+            (ngModelChange)="updateSearch($event)"
+            placeholder="Buscar usuario, DNI o rol"
+            class="w-full rounded-lg border border-gray-200 bg-gray-50 py-2.5 pl-9 pr-3 font-['Inter'] text-sm text-[#111D23] outline-none transition focus:border-[#81000A] focus:bg-white dark:border-[#313131] dark:bg-[#111111] dark:text-white dark:focus:bg-[#161616]"
+          />
+        </div>
       </div>
 
-      <div class="w-full overflow-x-auto">
-        <table class="w-full text-left border-collapse whitespace-nowrap">
-          <thead>
-            <tr class="border-b border-gray-100 dark:border-[#313131]">
-              <th class="py-4 pr-6 font-['Inter'] font-bold text-[10px] tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA] opacity-90">Timestamp</th>
-              <th class="py-4 px-6 font-['Inter'] font-bold text-[10px] tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA] opacity-90">User</th>
-              <th class="py-4 px-6 font-['Inter'] font-bold text-[10px] tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA] opacity-90">Event</th>
-              <th class="py-4 pl-6 font-['Inter'] font-bold text-[10px] tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA] opacity-90">Payload / Object</th>
-            </tr>
-          </thead>
-          <tbody class="font-['Inter'] text-sm">
-            @for (log of auditLogs(); track log.id) {
-              <tr class="border-b border-gray-50 dark:border-[#222222] hover:bg-gray-50 dark:hover:bg-[#222222]/50 transition-colors">
-                
-                <td class="py-4 pr-6 text-[#4C616C] dark:text-[#8A9BA8] text-xs">{{ log.timestamp }}</td>
-                
-                <td class="py-4 px-6">
-                  <div class="flex items-center gap-3">
-                    <div class="flex justify-center items-center w-7 h-7 rounded-full text-[10px] font-bold tracking-wider" [ngClass]="getAvatarClass(log.eventType)">
-                      {{ log.userInitials }}
-                    </div>
-                    <span class="font-semibold text-[#111D23] dark:text-white">{{ log.userName }}</span>
-                  </div>
-                </td>
-                
-                <td class="py-4 px-6">
-                  <span class="px-2.5 py-1 rounded-md text-[10px] font-bold tracking-wide uppercase transition-colors" [ngClass]="getEventBadgeClass(log.eventType)">
-                    {{ log.event }}
-                  </span>
-                </td>
-                
-                <td class="py-4 pl-6 text-[#4C616C] dark:text-[#8A9BA8] text-xs">
-                  {{ log.payload }}
-                </td>
-
+      @if (loading()) {
+        <div class="p-8 font-['Inter'] text-sm font-semibold text-[#4C616C] dark:text-[#8A9BA8]">
+          Cargando datos de administracion...
+        </div>
+      } @else if (activeTab() === 'users') {
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-[860px] text-left">
+            <thead>
+              <tr class="border-b border-gray-100 text-[11px] uppercase text-[#81000A] dark:border-[#313131] dark:text-[#E2BEBA]">
+                <th class="px-5 py-4 font-['Inter'] font-bold">Usuario</th>
+                <th class="px-5 py-4 font-['Inter'] font-bold">Cuenta</th>
+                <th class="px-5 py-4 font-['Inter'] font-bold">Rol</th>
+                <th class="px-5 py-4 font-['Inter'] font-bold">Sede</th>
+                <th class="px-5 py-4 font-['Inter'] font-bold">Estado</th>
+                <th class="px-5 py-4 font-['Inter'] font-bold">Accion</th>
               </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-
-      <button class="mt-6 font-['Inter'] font-bold text-xs text-[#81000A] dark:text-[#E2BEBA] hover:underline transition-colors w-full text-center py-2 cursor-pointer">
-        Load Older Entries...
-      </button>
-
+            </thead>
+            <tbody class="divide-y divide-gray-50 dark:divide-[#222222]">
+              @for (user of filteredUsers(); track user.uuid) {
+                @let account = accountForUser(user);
+                <tr class="transition-colors hover:bg-gray-50 dark:hover:bg-[#222222]/60">
+                  <td class="px-5 py-4">
+                    <div class="flex items-center gap-3">
+                      <div class="flex h-9 w-9 items-center justify-center rounded-full bg-[#81000A] font-['Inter'] text-xs font-bold text-white">
+                        {{ initials(user) }}
+                      </div>
+                      <div>
+                        <p class="font-['Inter'] text-sm font-bold text-[#111D23] dark:text-white">{{ user.firstName }} {{ user.lastName }}</p>
+                        <p class="font-['Inter'] text-xs text-[#4C616C] dark:text-[#8A9BA8]">DNI {{ user.dni }}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-5 py-4 font-['Inter'] text-sm text-[#111D23] dark:text-white">{{ account?.username ?? '-' }}</td>
+                  <td class="px-5 py-4">
+                    <span class="rounded-md bg-gray-100 px-2.5 py-1 font-['Inter'] text-xs font-bold text-[#4C616C] dark:bg-[#222222] dark:text-[#8A9BA8]">
+                      {{ user.roles[0] || 'Sin rol' }}
+                    </span>
+                  </td>
+                  <td class="px-5 py-4 font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">{{ account?.headquarterId ?? '-' }}</td>
+                  <td class="px-5 py-4">
+                    <span
+                      class="rounded-full px-2.5 py-1 font-['Inter'] text-xs font-bold"
+                      [ngClass]="account?.active ? 'bg-[#E6F4EA] text-[#1E7A3A] dark:bg-[#132218] dark:text-[#8DE0A2]' : 'bg-[#F3F4F6] text-[#4C616C] dark:bg-[#222222] dark:text-[#8A9BA8]'"
+                    >
+                      {{ account?.active ? 'Activo' : 'Inactivo' }}
+                    </span>
+                  </td>
+                  <td class="px-5 py-4">
+                    @if (account) {
+                      <button
+                        type="button"
+                        (click)="toggleAccount(account)"
+                        class="rounded-lg border border-gray-200 px-3 py-2 font-['Inter'] text-xs font-bold text-[#111D23] transition-colors hover:bg-gray-50 dark:border-[#313131] dark:text-white dark:hover:bg-[#222222]"
+                      >
+                        {{ account.active ? 'Desactivar' : 'Activar' }}
+                      </button>
+                    }
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="6" class="px-5 py-8 text-center font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">
+                    No hay usuarios para mostrar.
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <div class="grid gap-3 p-5 sm:grid-cols-2 xl:grid-cols-3">
+          @for (role of roles(); track role.id) {
+            <article class="rounded-lg border border-gray-100 bg-gray-50 p-4 dark:border-[#313131] dark:bg-[#111111]">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <h3 class="font-['Inter'] text-sm font-bold text-[#111D23] dark:text-white">{{ role.name }}</h3>
+                  <p class="mt-1 font-['Inter'] text-xs text-[#4C616C] dark:text-[#8A9BA8]">Creado {{ formatDate(role.createdAt) }}</p>
+                </div>
+                <span class="rounded-full bg-[#81000A]/10 px-2 py-1 font-['Inter'] text-[10px] font-bold uppercase text-[#81000A] dark:bg-[#81000A]/20 dark:text-[#E2BEBA]">Rol</span>
+              </div>
+            </article>
+          } @empty {
+            <p class="p-4 font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">No hay roles registrados.</p>
+          }
+        </div>
+      }
     </div>
 
-  </div>
+    <aside class="flex flex-col gap-6">
+      <form
+        (ngSubmit)="createUser()"
+        class="rounded-lg border border-gray-100 bg-white p-5 shadow-sm dark:border-[#313131] dark:bg-[#1B1B1B]"
+      >
+        <h3 class="font-['Work_Sans'] text-lg font-bold text-[#111D23] dark:text-white">Nuevo usuario</h3>
+        <div class="mt-4 grid gap-3">
+          <input class="admin-input" type="text" placeholder="Nombres" [ngModel]="userForm().firstName" (ngModelChange)="updateUserForm('firstName', $event)" name="firstName" />
+          <input class="admin-input" type="text" placeholder="Apellidos" [ngModel]="userForm().lastName" (ngModelChange)="updateUserForm('lastName', $event)" name="lastName" />
+          <input class="admin-input" type="text" inputmode="numeric" maxlength="8" placeholder="DNI" [ngModel]="userForm().dni" (ngModelChange)="updateUserForm('dni', $event)" name="dni" />
+          <input class="admin-input" type="text" placeholder="Usuario" [ngModel]="userForm().username" (ngModelChange)="updateUserForm('username', $event)" name="username" />
+          <input class="admin-input" type="password" placeholder="Contrasena inicial" [ngModel]="userForm().password" (ngModelChange)="updateUserForm('password', $event)" name="password" />
+          <div class="grid grid-cols-[1fr_90px] gap-3">
+            <select class="admin-input" [ngModel]="userForm().roleName" (ngModelChange)="updateUserForm('roleName', $event)" name="roleName">
+              @for (role of roles(); track role.id) {
+                <option [value]="role.name">{{ role.name }}</option>
+              }
+            </select>
+            <input class="admin-input" type="number" min="1" [ngModel]="userForm().headquarterId" (ngModelChange)="updateUserForm('headquarterId', +$event)" name="headquarterId" />
+          </div>
+        </div>
+        <button
+          type="submit"
+          [disabled]="savingUser()"
+          class="mt-4 w-full rounded-lg bg-[#81000A] px-4 py-2.5 font-['Inter'] text-sm font-bold text-white transition-colors hover:bg-[#6A0008] disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {{ savingUser() ? 'Guardando...' : 'Crear usuario' }}
+        </button>
+      </form>
+
+      <form
+        (ngSubmit)="createRole()"
+        class="rounded-lg border border-gray-100 bg-white p-5 shadow-sm dark:border-[#313131] dark:bg-[#1B1B1B]"
+      >
+        <h3 class="font-['Work_Sans'] text-lg font-bold text-[#111D23] dark:text-white">Nuevo rol</h3>
+        <div class="mt-4 flex gap-3">
+          <input class="admin-input" type="text" placeholder="Nombre del rol" [ngModel]="roleName()" (ngModelChange)="roleName.set($event)" name="roleNameQuick" />
+          <button
+            type="submit"
+            [disabled]="savingRole()"
+            class="rounded-lg border border-gray-200 px-4 py-2.5 font-['Inter'] text-sm font-bold text-[#111D23] transition-colors hover:bg-gray-50 disabled:opacity-60 dark:border-[#313131] dark:text-white dark:hover:bg-[#222222]"
+          >
+            Crear
+          </button>
+        </div>
+      </form>
+    </aside>
+  </section>
 </div>
