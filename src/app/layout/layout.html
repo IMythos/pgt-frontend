@@ -1,0 +1,26 @@
+<div class="h-screen w-full flex overflow-hidden bg-[#F4FAFF] dark:bg-[#222222] transition-colors duration-300">
+
+  <!-- OVERLAY móvil -->
+  @if (sidebar().isOpen()) {
+    <div
+      class="fixed inset-0 bg-black/50 z-30 lg:hidden"
+      (click)="sidebar().close()"
+    ></div>
+  }
+
+  <app-sidebar></app-sidebar>
+
+  <div class="flex-1 flex flex-col h-screen min-w-0">
+
+    <!-- Navbar conectado al sidebar -->
+    <app-navbar
+      [sidebarOpen]="sidebar().isOpen()"
+      (toggleSidebar)="sidebar().toggle()"
+    ></app-navbar>
+
+    <main class="flex-1 overflow-y-auto overflow-x-hidden p-8 lg:p-12 relative">
+      <router-outlet></router-outlet>
+    </main>
+
+  </div>
+</div>

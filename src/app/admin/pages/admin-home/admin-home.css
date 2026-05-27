@@ -1,0 +1,31 @@
+.admin-input {
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  padding: 0.625rem 0.75rem;
+  font-family: Inter, sans-serif;
+  font-size: 0.875rem;
+  color: #111d23;
+  outline: none;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.admin-input:focus {
+  border-color: #81000a;
+  background: #ffffff;
+  box-shadow: 0 0 0 1px rgba(129, 0, 10, 0.08);
+}
+
+:host-context(.dark) .admin-input {
+  border-color: #313131;
+  background: #111111;
+  color: #ffffff;
+}
+
+:host-context(.dark) .admin-input:focus {
+  background: #161616;
+}

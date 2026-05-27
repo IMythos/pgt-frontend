@@ -1,0 +1,154 @@
+<div class="flex flex-col lg:flex-row items-stretch p-8 lg:p-10 gap-6 w-full min-h-full transition-colors duration-300">
+  <div class="w-full lg:w-[420px] flex flex-col gap-6 shrink-0 z-20">
+    
+    <div class="flex flex-col bg-white dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] rounded-2xl p-6 shadow-sm transition-colors relative overflow-hidden">
+      <div class="absolute top-0 left-0 w-full h-1 bg-[#81000A]"></div>
+      
+      <h3 class="font-['Work_Sans'] font-bold text-xl text-[#111D23] dark:text-white mb-1">Configuración de Ruta</h3>
+      <p class="font-['Inter'] text-[11px] text-[#4C616C] dark:text-[#8A9BA8] mb-5">Escanear o ingresar ID de Orden</p>
+      
+      <div class="flex items-center gap-2 w-full mb-4">
+        <div class="relative w-full">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg class="w-5 h-5 text-[#8A9BA8]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm14 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+          </div>
+          <input type="text" [value]="orderId()" readonly class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm font-bold text-[#111D23] dark:text-white focus:outline-none transition-colors" />
+        </div>
+        <button class="p-3 bg-gray-50 dark:bg-[#222222] border border-gray-200 dark:border-[#313131] hover:bg-[#81000A] hover:border-[#81000A] text-[#4C616C] dark:text-[#8A9BA8] hover:text-white rounded-lg transition-colors cursor-pointer">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+        </button>
+      </div>
+
+      <div class="flex justify-between items-center px-4 py-3 bg-[#FFF3F3] dark:bg-[rgba(129,0,10,0.1)] rounded-lg">
+        <span class="font-['Inter'] font-semibold text-xs text-[#81000A] dark:text-[#E2BEBA]">Tiempo Estimado (Nearest Neighbor)</span>
+        <span class="font-['Work_Sans'] font-bold text-sm text-[#81000A] dark:text-[#E2BEBA]">{{ estimatedTime() }}</span>
+      </div>
+    </div>
+
+    <!-- Secuencia de Recolección (Picking List) -->
+    <div class="flex flex-col flex-1 bg-white dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] rounded-2xl p-6 shadow-sm transition-colors overflow-hidden">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="font-['Work_Sans'] font-bold text-lg text-[#111D23] dark:text-white">Secuencia de Picking</h3>
+        <span class="font-['Inter'] font-bold text-[10px] px-2.5 py-1 bg-gray-100 dark:bg-[#313131] text-[#4C616C] dark:text-[#8A9BA8] rounded-full uppercase tracking-wider">
+          @if (isRouteActive()) { Restantes } @else { Finalizado }
+        </span>
+      </div>
+
+      <div class="flex flex-col gap-3 overflow-y-auto pr-2">
+        @for (item of pickingList(); track item.id) {
+          <div class="flex items-center gap-4 p-4 rounded-xl border transition-all duration-300 relative overflow-hidden group"
+               [ngClass]="{
+                 'bg-gray-50/50 dark:bg-[#111111]/50 border-gray-100 dark:border-[#222222] opacity-60': item.status === 'completed',
+                 'bg-white dark:bg-[#222222] border-[#81000A] shadow-md scale-[1.02]': item.status === 'active',
+                 'bg-white dark:bg-[#111111] border-gray-200 dark:border-[#313131]': item.status === 'pending'
+               }">
+            
+            <!-- Barra lateral indicadora de activo -->
+            @if(item.status === 'active') { <div class="absolute left-0 top-0 w-1 h-full bg-[#81000A]"></div> }
+
+            <!-- Círculo de Número -->
+            <div class="flex justify-center items-center w-8 h-8 rounded-full shrink-0 shadow-sm transition-colors"
+                 [ngClass]="{
+                   'bg-[#34A853] text-white': item.status === 'completed',
+                   'bg-[#81000A] text-white': item.status === 'active',
+                   'bg-gray-100 dark:bg-[#313131] text-[#4C616C] dark:text-[#8A9BA8]': item.status === 'pending'
+                 }">
+              @if (item.status === 'completed') {
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              } @else {
+                <span class="font-['Inter'] font-bold text-xs">{{ item.sequence }}</span>
+              }
+            </div>
+
+            <div class="flex flex-col flex-1">
+              <span class="font-['Inter'] font-bold text-sm text-[#111D23] dark:text-white" [ngClass]="{'line-through': item.status === 'completed'}">{{ item.name }}</span>
+              <span class="font-['Inter'] font-medium text-[11px] text-[#4C616C] dark:text-[#8A9BA8]">
+                Loc: <span class="font-bold text-[#111D23] dark:text-[#E2BEBA]">{{ item.location }}</span> • Qty: <span class="font-bold">{{ item.qty }}</span>
+              </span>
+            </div>
+
+            <!-- Botón de confirmar recolección -->
+            @if (item.status === 'active') {
+              <button (click)="completePick(item)" class="p-2 bg-[#81000A] hover:bg-[#6a0008] text-white rounded-lg shadow-md transition-colors cursor-pointer shrink-0">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              </button>
+            }
+          </div>
+        }
+      </div>
+      
+      @if (!isRouteActive()) {
+        <button class="mt-4 w-full py-3 bg-[#34A853] hover:bg-[#2b8a44] text-white font-['Inter'] font-bold text-sm rounded-xl shadow-md transition-colors cursor-pointer">
+          Cerrar Ruta y Actualizar Kardex
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- COLUMNA DERECHA: PLANO Y RUTA (MAPA)       -->
+  <!-- ========================================== -->
+  <div class="flex flex-col flex-1 bg-gray-50 dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] rounded-2xl p-8 shadow-sm relative overflow-hidden transition-colors">
+    
+    <div class="flex justify-between items-center w-full mb-6 z-30">
+      <div class="flex flex-col">
+        <h2 class="font-['Work_Sans'] font-bold text-2xl text-[#111D23] dark:text-white">Sector Alpha del Almacén</h2>
+        <p class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">Ruta activa optimizada para mínima distancia.</p>
+      </div>
+      <div class="flex gap-2">
+        <button class="p-2 bg-white dark:bg-[#222222] border border-gray-200 dark:border-[#313131] rounded-full text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white transition-colors cursor-pointer"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/></svg></button>
+        <button class="p-2 bg-white dark:bg-[#222222] border border-gray-200 dark:border-[#313131] rounded-full text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white transition-colors cursor-pointer"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"/></svg></button>
+      </div>
+    </div>
+
+    <!-- Contenedor del Plano -->
+    <div class="relative w-full flex-1 min-h-[500px] bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#222222] rounded-xl overflow-hidden transition-colors"
+         style="background-image: radial-gradient(circle, rgba(129,0,10,0.15) 1px, transparent 1px); background-size: 24px 24px;">
+      
+      <!-- POLILÍNEA SVG DINÁMICA (La Ruta) -->
+      <svg class="absolute inset-0 w-full h-full pointer-events-none z-10" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <!-- Definimos un stroke-dasharray para el efecto de "ruta caminando" -->
+        <polyline [attr.points]="routePath()" 
+                  fill="none" 
+                  stroke="#81000A" 
+                  stroke-width="0.4" 
+                  stroke-dasharray="2 1" 
+                  stroke-linejoin="round"
+                  class="animate-dash opacity-70" />
+      </svg>
+
+      @for (rack of racks(); track rack.id) {
+        <div class="absolute w-28 h-14 bg-white dark:bg-[#222222] border-2 rounded-lg flex items-center justify-center -translate-x-1/2 -translate-y-1/2 transition-colors z-20 shadow-sm"
+             [ngClass]="getNodeStatus(rack.id) ? 'border-[#81000A] dark:border-[#E2BEBA]' : 'border-gray-200 dark:border-[#313131]'"
+             [style.left.%]="rack.x" [style.top.%]="rack.y">
+          
+          <span class="font-['Inter'] font-bold text-sm text-[#4C616C] dark:text-[#8A9BA8]">{{ rack.id }}</span>
+
+          <!-- Badge Indicador de Secuencia Numérica -->
+          @if (getNodeSequence(rack.id)) {
+            <div class="absolute -top-3 -right-3 w-7 h-7 rounded-full flex items-center justify-center shadow-lg border-[3px] border-white dark:border-[#111111] z-30 transition-all duration-300"
+                 [ngClass]="{
+                   'bg-[#34A853] text-white': getNodeStatus(rack.id) === 'completed',
+                   'bg-[#81000A] text-white scale-110 animate-pulse': getNodeStatus(rack.id) === 'active',
+                   'bg-gray-200 dark:bg-[#313131] text-[#4C616C] dark:text-[#8A9BA8]': getNodeStatus(rack.id) === 'pending'
+                 }">
+              
+              @if (getNodeStatus(rack.id) === 'completed') {
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              } @else {
+                <span class="font-bold text-[11px]">{{ getNodeSequence(rack.id) }}</span>
+              }
+            </div>
+            
+            <!-- Halo pulsante si está activo -->
+            @if (getNodeStatus(rack.id) === 'active') {
+              <div class="absolute -inset-2 bg-[#81000A] rounded-lg opacity-20 animate-ping -z-10 pointer-events-none"></div>
+            }
+          }
+        </div>
+      }
+    </div>
+
+  </div>
+
+</div>

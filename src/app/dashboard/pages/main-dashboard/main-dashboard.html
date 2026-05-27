@@ -1,0 +1,333 @@
+<div
+  class="flex flex-col items-start p-10 gap-10 w-full min-h-full transition-colors duration-300"
+>
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center w-full gap-4">
+    <div class="flex flex-col">
+      <h2
+        class="font-['Work_Sans'] font-bold text-3xl text-[#111D23] dark:text-white transition-colors"
+      >
+        Dashboard Principal
+      </h2>
+      <p class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8] transition-colors">
+        Vista general de métricas, alertas y flujo operativo del sistema.
+      </p>
+    </div>
+    <div class="flex items-center gap-3">
+      <button
+        class="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-[#1B1B1B] border border-gray-200 dark:border-[#313131] text-[#111D23] dark:text-white font-['Inter'] font-semibold text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-[#222222] transition-colors shadow-sm cursor-pointer"
+      >
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          />
+        </svg>
+        Actualizar Datos
+      </button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-[1583px]">
+    @for (kpi of kpis(); track kpi.title) {
+      <div
+        class="flex flex-col justify-between items-start p-6 h-[164px] bg-white dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] shadow-sm rounded-xl transition-colors duration-300"
+      >
+        <div class="flex justify-between items-start w-full">
+          <span
+            class="font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA] opacity-90"
+          >
+            {{ kpi.title }}
+          </span>
+          <div
+            class="flex justify-center items-center w-10 h-10 rounded-full bg-[rgba(129,0,10,0.05)] dark:bg-[rgba(129,0,10,0.1)] transition-colors"
+          >
+            <svg
+              class="w-5 h-5 text-[#81000A] dark:text-[#E2BEBA]"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+              />
+            </svg>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <span
+            class="font-['Work_Sans'] font-bold text-[40px] leading-none text-[#111D23] dark:text-white"
+          >
+            {{ kpi.value }}
+          </span>
+          <span class="font-['Inter'] font-medium text-xs text-[#81000A] dark:text-[#E2BEBA] mt-1">
+            {{ kpi.trend }} este mes
+          </span>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-6 w-full max-w-[1583px]">
+    <div
+      class="flex flex-col items-start p-6 h-[400px] bg-white dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] shadow-sm rounded-xl transition-colors duration-300 relative overflow-hidden"
+    >
+      <div class="flex flex-col gap-1 w-full mb-6">
+        <h3 class="font-['Work_Sans'] font-bold text-xl text-[#111D23] dark:text-white">
+          Alertas de Stock Crítico
+        </h3>
+        <p class="font-['Inter'] font-medium text-sm text-[#4C616C] dark:text-[#8A9BA8]">
+          Repuestos por debajo del mínimo operativo
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-2 w-full flex-1 overflow-y-auto pr-2">
+        @for (alert of stockAlerts(); track alert.sku) {
+          <div
+            class="flex justify-between items-center w-full py-3 border-b border-gray-50 dark:border-[#313131] last:border-0 transition-colors"
+          >
+            <div class="flex items-center gap-3">
+              <div
+                class="flex justify-center items-center w-10 h-10 rounded-md bg-[rgba(129,0,10,0.05)] dark:bg-[rgba(129,0,10,0.2)] shrink-0"
+              >
+                <svg
+                  class="w-5 h-5 text-[#81000A] dark:text-[#E2BEBA]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
+              </div>
+              <div class="flex flex-col">
+                <span class="font-['Inter'] font-bold text-sm text-[#111D23] dark:text-white">{{
+                  alert.name
+                }}</span>
+                <span class="font-['Inter'] font-medium text-xs text-[#4C616C] dark:text-[#8A9BA8]"
+                  >SKU: {{ alert.sku }}</span
+                >
+              </div>
+            </div>
+            <div class="flex flex-col items-end gap-1">
+              <span
+                class="font-['Inter'] font-bold text-[10px] tracking-[1px] uppercase transition-colors"
+                [ngClass]="
+                  alert.status === 'Crítico'
+                    ? 'text-[#81000A] dark:text-[#E2BEBA] bg-[rgba(129,0,10,0.1)] dark:bg-[rgba(129,0,10,0.3)] px-2 py-0.5 rounded'
+                    : 'text-[#B45309] bg-[#FEF3C7] dark:bg-[rgba(180,83,9,0.2)] px-2 py-0.5 rounded'
+                "
+              >
+                {{ alert.status }}
+              </span>
+              <span class="font-['Inter'] font-medium text-xs text-[#4C616C] dark:text-[#8A9BA8]"
+                >Stock: {{ alert.stock }}</span
+              >
+            </div>
+          </div>
+        }
+      </div>
+
+      <a
+        href="#"
+        class="mt-4 font-['Inter'] font-bold text-sm text-[#81000A] dark:text-[#E2BEBA] hover:underline transition-colors w-full text-center py-2"
+        >Ver todas las alertas</a
+      >
+    </div>
+
+    <div
+      class="flex flex-col items-start p-6 h-[400px] bg-white dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] shadow-sm rounded-xl transition-colors duration-300 relative"
+    >
+      <div class="flex justify-between items-start w-full mb-6">
+        <h3 class="font-['Work_Sans'] font-bold text-xl text-[#111D23] dark:text-white">
+          Top Componentes (Alta Rotación)
+        </h3>
+        <select
+          class="bg-gray-50 dark:bg-[#222222] border border-gray-200 dark:border-[#313131] text-[#111D23] dark:text-white font-['Inter'] text-sm font-medium rounded-md px-3 py-1.5 focus:outline-none cursor-pointer"
+        >
+          <option>Este mes</option>
+          <option>Últimos 3 meses</option>
+        </select>
+      </div>
+
+      <div
+        class="flex-1 w-full flex items-end gap-4 pt-6 relative border-b border-gray-100 dark:border-[#313131]"
+      >
+        <div class="absolute inset-0 flex flex-col justify-between z-0 pb-6">
+          <div class="w-full border-t border-dashed border-gray-200 dark:border-[#313131]"></div>
+          <div class="w-full border-t border-dashed border-gray-200 dark:border-[#313131]"></div>
+          <div class="w-full border-t border-dashed border-gray-200 dark:border-[#313131]"></div>
+          <div class="w-full border-t border-dashed border-gray-200 dark:border-[#313131]"></div>
+        </div>
+
+        @for (data of chartData(); track data.label) {
+          <div class="relative flex flex-col items-center flex-1 z-10 group h-full justify-end">
+            <div
+              class="absolute -top-8 bg-[#111111] dark:bg-white text-white dark:text-[#111111] text-xs font-bold py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+            >
+              {{ data.value }}
+            </div>
+            <div
+              class="w-full max-w-[40px] bg-[#81000A] dark:bg-[#E2BEBA] rounded-t-sm opacity-80 group-hover:opacity-100 transition-all duration-300"
+              [style.height.%]="data.value"
+            ></div>
+            <span
+              class="absolute -bottom-6 font-['Inter'] font-medium text-xs text-[#4C616C] dark:text-[#8A9BA8]"
+              >{{ data.label }}</span
+            >
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-col lg:flex-row items-stretch gap-6 w-full max-w-[1588px]">
+    <div
+      class="flex flex-col p-6 w-full lg:w-[71%] h-[404px] bg-white dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] shadow-sm rounded-xl transition-colors duration-300 overflow-hidden"
+    >
+      <div class="flex justify-between items-center mb-6 shrink-0">
+        <h3 class="font-['Work_Sans'] font-bold text-xl text-[#111D23] dark:text-white">
+          Últimas Operaciones
+        </h3>
+        <button
+          class="font-['Inter'] font-semibold text-sm text-[#81000A] dark:text-[#E2BEBA] hover:underline"
+        >
+          Ver historial
+        </button>
+      </div>
+
+      <div class="w-full flex-1 overflow-y-auto pr-2">
+        <table class="w-full text-left border-collapse">
+          <thead class="sticky top-0 bg-white dark:bg-[#1B1B1B] z-10 transition-colors">
+            <tr class="border-b border-gray-100 dark:border-[#313131]">
+              <th
+                class="pb-3 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA] opacity-80"
+              >
+                ID Operación
+              </th>
+              <th
+                class="pb-3 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA] opacity-80"
+              >
+                Tipo
+              </th>
+              <th
+                class="pb-3 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA] opacity-80"
+              >
+                Producto
+              </th>
+              <th
+                class="pb-3 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA] opacity-80"
+              >
+                Fecha
+              </th>
+              <th
+                class="pb-3 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA] opacity-80 text-right"
+              >
+                Estado
+              </th>
+            </tr>
+          </thead>
+          <tbody class="font-['Inter'] text-sm">
+            @for (op of recentOperations(); track op.id) {
+              <tr
+                class="border-b border-gray-50 dark:border-[#313131] hover:bg-gray-50 dark:hover:bg-[#222222] transition-colors"
+              >
+                <td class="py-3.5 font-semibold text-[#111D23] dark:text-white">{{ op.id }}</td>
+                <td class="py-3.5">
+                  <span
+                    class="px-2 py-1 rounded text-[10px] font-bold tracking-wide uppercase"
+                    [ngClass]="
+                      op.type === 'INGRESO'
+                        ? 'bg-[rgba(129,0,10,0.08)] dark:bg-[rgba(226,190,186,0.15)] text-[#81000A] dark:text-[#E2BEBA]'
+                        : 'border border-[#81000A] text-[#81000A] dark:border-[#E2BEBA] dark:text-[#E2BEBA]'
+                    "
+                  >
+                    {{ op.type }}
+                  </span>
+                </td>
+                <td class="py-3.5 text-[#4C616C] dark:text-[#8A9BA8]">{{ op.product }}</td>
+                <td class="py-3.5 text-[#4C616C] dark:text-[#8A9BA8]">{{ op.date }}</td>
+                <td
+                  class="py-3.5 text-right font-semibold text-xs"
+                  [ngClass]="op.status === 'COMPLETADO' ? 'text-[#34A853]' : 'text-[#F5A623]'"
+                >
+                  {{ op.status }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div
+      class="flex flex-col items-center p-6 w-full lg:w-[29%] h-[404px] bg-white dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] shadow-sm rounded-xl transition-colors duration-300"
+    >
+      <h3
+        class="font-['Work_Sans'] font-bold text-xl text-[#111D23] dark:text-white w-full text-left mb-8"
+      >
+        Capacidad de Almacén
+      </h3>
+      <div class="relative flex items-center justify-center w-48 h-48 mb-6">
+        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+          <path
+            class="text-gray-100 dark:text-[#313131] transition-colors"
+            stroke-width="3.5"
+            stroke="currentColor"
+            fill="none"
+            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+          />
+          <path
+            class="text-[#81000A] dark:text-[#E2BEBA] transition-colors"
+            [attr.stroke-dasharray]="capacityStatus().percentage + ', 100'"
+            stroke-width="3.5"
+            stroke-linecap="round"
+            stroke="currentColor"
+            fill="none"
+            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+          />
+        </svg>
+        <div class="absolute flex flex-col items-center">
+          <span class="font-['Work_Sans'] font-bold text-4xl text-[#111D23] dark:text-white"
+            >{{ capacityStatus().percentage }}%</span
+          >
+          <span
+            class="font-['Inter'] font-semibold text-xs tracking-wider uppercase text-[#81000A] dark:text-[#E2BEBA]"
+            >{{ capacityStatus().label }}</span
+          >
+        </div>
+      </div>
+      <div
+        class="flex justify-between w-full mt-auto px-4 pt-4 border-t border-gray-100 dark:border-[#313131]"
+      >
+        <div class="flex flex-col items-start">
+          <span
+            class="font-['Inter'] text-[11px] font-bold tracking-[1px] uppercase text-[#4C616C] dark:text-[#8A9BA8]"
+            >Locaciones</span
+          >
+          <span class="font-['Work_Sans'] text-lg font-bold text-[#111D23] dark:text-white">{{
+            capacityStatus().totalLocations
+          }}</span>
+        </div>
+        <div class="flex flex-col items-end">
+          <span
+            class="font-['Inter'] text-[11px] font-bold tracking-[1px] uppercase text-[#4C616C] dark:text-[#8A9BA8]"
+            >En Uso</span
+          >
+          <span class="font-['Work_Sans'] text-lg font-bold text-[#81000A] dark:text-[#E2BEBA]">{{
+            capacityStatus().usedLocations
+          }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
