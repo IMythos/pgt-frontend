@@ -3,6 +3,7 @@ import { Component, signal, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KardexApiService } from '../../services/kardex-api.service';
 import { KardexDto, FiltroKardexDto } from '../../models/kardex.model';
+import { WebSocketService } from '../../../core/services/websocket.service';
 
 @Component({
   selector: 'app-kardex-home',
@@ -12,6 +13,7 @@ import { KardexDto, FiltroKardexDto } from '../../models/kardex.model';
 })
 export class KardexHome implements OnInit {
   private readonly kardexApi = inject(KardexApiService);
+  private readonly ws = inject(WebSocketService);
   kardexEntries = signal<KardexDto[]>([]);
   loading = signal(false);
   filtroProducto = signal('');
@@ -21,6 +23,7 @@ export class KardexHome implements OnInit {
   isExportModalOpen = signal(false);
   ngOnInit(): void {
     this.cargarKardex();
+    this.ws.onMovement().subscribe(() => this.cargarKardex());
   }
 
   cargarKardex(): void {
@@ -39,14 +42,17 @@ export class KardexHome implements OnInit {
       }
     });
   }
+
   openExportModal(): void {
     this.isExportModalOpen.set(true);
     document.body.style.overflow = 'hidden';
   }
+
   closeExportModal(): void {
     this.isExportModalOpen.set(false);
     document.body.style.overflow = 'auto';
   }
+
   exportar(formato: 'excel' | 'pdf'): void {
     this.closeExportModal();
     this.kardexApi.exportar(formato).subscribe({
@@ -68,6 +74,7 @@ export class KardexHome implements OnInit {
       },
     });
   }
+
   getBadgeClass(tipo: string): string {
     switch(tipo) {
       case 'INGRESO':
@@ -80,6 +87,7 @@ export class KardexHome implements OnInit {
         return 'bg-gray-100 dark:bg-[#313131] text-[#4C616C] dark:text-[#8A9BA8]';
     }
   }
+
   getCantidadClass(tipo: string, valor: number): string {
     if (tipo === 'INGRESO' && valor > 0) return 'text-[#34A853]';
     if (tipo === 'SALIDA' && valor > 0) return 'text-[#81000A] dark:text-[#E2BEBA]';

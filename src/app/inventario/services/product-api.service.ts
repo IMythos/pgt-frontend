@@ -24,6 +24,7 @@ interface ProductoResponseBe {
   preCom: number;
   preVen: number;
   estado: boolean;
+  stockTotal?: number;
   fecCreacion: string;
 }
 interface CategoriaResponseBe {
@@ -46,13 +47,18 @@ export class ProductApiService {
   private readonly categoriasUrl = `${environment.apiUrl}/v1/categories`;
   private readonly marcasUrl = `${environment.apiUrl}/v1/brands`;
 
-  listarCatalogo(
-    filtros: FiltroCatalogoProductosDto = {},
-  ): Observable<RespuestaPaginadaProductosDto> {
-    return this.http.get<RespuestaPaginadaProductosDto>(this.baseUrl, {
-      params: this.construirParams(filtros),
-    });
-  }
+  listarCatalogo(filtros: FiltroCatalogoProductosDto = {}): Observable<RespuestaPaginadaProductosDto> {
+  return this.http.get<ProductoResponseBe[]>(this.baseUrl, {
+    params: this.construirParams(filtros)
+  }).pipe(
+    map((lista) => ({
+      items: lista.map(be => this.mapProductoBeToFe(be)),
+      total: lista.length,
+      pagina: 1,
+      tamanioPagina: lista.length
+    }))
+  );
+}
 
   obtenerPorId(idProducto: string): Observable<DetalleProductoDto> {
     return this.http.get<DetalleProductoDto>(`${this.baseUrl}/${idProducto}`);
@@ -166,6 +172,7 @@ export class ProductApiService {
       precioCompra: be.preCom,
       precioVenta: be.preVen,
       estado: be.estado,
+      stockTotal: be.stockTotal ?? 0,
       stockMinimo: 0,
       fechaCreacion: be.fecCreacion
     };

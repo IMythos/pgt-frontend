@@ -168,6 +168,73 @@
               </div>
             </div>
 
+            @if (formTipo() === 'INGRESO' || formTipo() === 'AJUSTE') {
+              <div class="flex flex-col gap-1.5 md:col-span-2">
+                <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Producto <span class="text-[#81000A]">*</span></label>
+                <select
+                  class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors cursor-pointer"
+                  [ngModel]="formProducto()"
+                  (ngModelChange)="formProducto.set($event)"
+                >
+                  <option value="">Seleccione un producto</option>
+                  @for (p of productos(); track p.idProducto) {
+                    <option [value]="p.idProducto">{{ p.sku }} - {{ p.descripcion }}</option>
+                  }
+                </select>
+              </div>
+            }
+
+            @if (formTipo() === 'INGRESO') {
+              <div class="flex flex-col gap-1.5 md:col-span-2">
+                <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Locación <span class="text-[#81000A]">*</span></label>
+                <select
+                  class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors cursor-pointer"
+                  [ngModel]="formLocacion()"
+                  (ngModelChange)="formLocacion.set($event)"
+                >
+                  <option value="">Seleccione una locación</option>
+                  @for (l of locaciones(); track l.idLocacion) {
+                    <option [value]="l.idLocacion">{{ l.zona }} - {{ l.pasillo }}{{ l.estante ? ' - ' + l.estante : '' }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="flex flex-col gap-1.5">
+                <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Proveedor</label>
+                <input
+                  type="text"
+                  placeholder="Nombre del proveedor"
+                  class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors"
+                  [ngModel]="formProveedor()"
+                  (ngModelChange)="formProveedor.set($event)"
+                />
+              </div>
+
+              <div class="flex flex-col gap-1.5">
+                <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Nro. Lote</label>
+                <input
+                  type="text"
+                  placeholder="Número de lote"
+                  class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors"
+                  [ngModel]="formNroLote()"
+                  (ngModelChange)="formNroLote.set($event)"
+                />
+              </div>
+
+              <div class="flex flex-col gap-1.5">
+                <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Costo Unitario</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  placeholder="0.00"
+                  class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors"
+                  [ngModel]="formCostoUnit()"
+                  (ngModelChange)="formCostoUnit.set($event)"
+                />
+              </div>
+            }
+
             <div class="flex flex-col gap-1.5">
               <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Cantidad <span class="text-[#81000A]">*</span></label>
               <input

@@ -2,12 +2,17 @@ import { CommonModule } from '@angular/common';
 import { Component, signal, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MovementApiService } from '../../services/movement-api.service';
+import { ProductApiService } from '../../services/product-api.service';
+import { LocationApiService } from '../../services/location-api.service';
 import {
   MovimientoListadoDto,
   RegistrarMovimientoRequest,
   FiltroMovimientoDto,
   TipoMovimiento
 } from '../../models/movement.model';
+import { ProductoCatalogoDto } from '../../models/product.model';
+import { LocationDto } from '../../models/location.model';
+import { WebSocketService } from '../../../core/services/websocket.service';
 
 @Component({
   selector: 'app-movement-list',
@@ -17,8 +22,13 @@ import {
 })
 export class MovementList implements OnInit {
   private readonly movementApi = inject(MovementApiService);
+  private readonly productApi = inject(ProductApiService);
+  private readonly locationApi = inject(LocationApiService);
+  private readonly ws = inject(WebSocketService);
 
   movements = signal<MovimientoListadoDto[]>([]);
+  productos = signal<ProductoCatalogoDto[]>([]);
+  locaciones = signal<LocationDto[]>([]);
   loading = signal(false);
   isModalOpen = signal<boolean>(false);
 
@@ -31,9 +41,30 @@ export class MovementList implements OnInit {
   formCantidad = signal<number | null>(null);
   formDocumentoRef = signal('');
   formMotivo = signal('');
+  formLocacion = signal('');
+  formProveedor = signal('');
+  formNroLote = signal('');
+  formCostoUnit = signal<number | null>(null);
 
   ngOnInit(): void {
     this.cargarMovimientos();
+    this.cargarProductos();
+    this.cargarLocaciones();
+    this.ws.onMovement().subscribe(() => this.cargarMovimientos());
+  }
+
+  cargarProductos(): void {
+    this.productApi.listarCatalogo({ estado: true }).subscribe({
+      next: (data) => this.productos.set(data.items),
+      error: () => console.error('Error al cargar productos')
+    });
+  }
+
+  cargarLocaciones(): void {
+    this.locationApi.listarActivas().subscribe({
+      next: (data) => this.locaciones.set(data),
+      error: () => console.error('Error al cargar locaciones')
+    });
   }
 
   cargarMovimientos(): void {
@@ -71,19 +102,38 @@ export class MovementList implements OnInit {
 
     const payload: RegistrarMovimientoRequest = {
       tipo: this.formTipo(),
-      idProducto: '',
-      idLocacion: '',
       cantidad: this.formCantidad()!,
       motivo: this.formMotivo(),
       documentoRef: this.formDocumentoRef() || undefined
     };
+
+    if (this.formProducto()) {
+      payload.idProducto = this.formProducto();
+    }
+
+    if (this.formLocacion()) {
+      payload.idLocacion = this.formLocacion();
+    }
+
+    if (this.formProveedor()) {
+      payload.proveedor = this.formProveedor();
+    }
+
+    if (this.formNroLote()) {
+      payload.nroLote = this.formNroLote();
+    }
+
+    if (this.formCostoUnit()) {
+      payload.costoUnit = this.formCostoUnit()!;
+    }
 
     this.movementApi.registrar(payload).subscribe({
       next: () => {
         this.closeModal();
         this.cargarMovimientos();
       },
-      error: () => {
+      error: (err) => {
+        console.error('Error al registrar movimiento:', err);
       }
     });
   }
@@ -98,6 +148,10 @@ export class MovementList implements OnInit {
     this.formCantidad.set(null);
     this.formDocumentoRef.set('');
     this.formMotivo.set('');
+    this.formLocacion.set('');
+    this.formProveedor.set('');
+    this.formNroLote.set('');
+    this.formCostoUnit.set(null);
   }
 
   getMovementBadgeClass(type: string): string {
@@ -107,6 +161,8 @@ export class MovementList implements OnInit {
       case 'SALIDA':
         return 'border border-[#81000A] text-[#81000A] dark:border-[#E2BEBA] dark:text-[#E2BEBA]';
       case 'AJUSTE':
+      case 'AJUSTE_POSITIVO':
+      case 'AJUSTE_NEGATIVO':
         return 'bg-gray-100 dark:bg-[#313131] text-[#4C616C] dark:text-[#8A9BA8]';
       default:
         return 'bg-gray-100 dark:bg-[#313131] text-[#4C616C] dark:text-[#8A9BA8]';
@@ -114,8 +170,8 @@ export class MovementList implements OnInit {
   }
 
   getQuantityClass(type: string): string {
-    if (type === 'INGRESO') return 'text-[#34A853]';
-    if (type === 'SALIDA') return 'text-[#111D23] dark:text-white';
+    if (type === 'INGRESO' || type === 'AJUSTE_POSITIVO') return 'text-[#34A853]';
+    if (type === 'SALIDA' || type === 'AJUSTE_NEGATIVO') return 'text-[#111D23] dark:text-white';
     return 'text-[#B45309]';
   }
 

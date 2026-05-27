@@ -18,9 +18,9 @@ export interface MovimientoListadoDto {
 
 export interface RegistrarMovimientoRequest {
   tipo: TipoMovimiento;
-  idProducto: string;
+  idProducto?: string;
   idLote?: string;
-  idLocacion: string;
+  idLocacion?: string;
   cantidad: number;
   motivo: string;
   documentoRef?: string;

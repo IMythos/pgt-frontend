@@ -247,6 +247,7 @@
         </svg>
       </div>
       <input
+        (ngModelChange)="cargarProductos()"
         type="text"
         placeholder="Buscar por SKU, nombre..."
         class="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#4C616C] dark:placeholder-[#8A9BA8] focus:outline-none focus:ring-1 focus:ring-[#81000A] transition-colors"
@@ -257,17 +258,28 @@
       <select
         class="w-full md:w-auto bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-[#313131] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#81000A] transition-colors cursor-pointer"
       >
-        <option value="">Todas las Categorías</option>
-        <option value="automatizacion">Automatización</option>
-        <option value="sensores">Sensores</option>
-        <option value="motores">Motores</option>
+        @for (cat of categorias(); track cat.idCategoria) {
+          <option [value]="cat.idCategoria">{{ cat.nombreCategoria }}</option>
+        }
       </select>
       <select
         class="w-full md:w-auto bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-[#313131] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#81000A] transition-colors cursor-pointer"
+        [ngModel]="filtroCategoria()"
+        (ngModelChange)="filtroCategoria.set($event); cargarProductos()"
+      >
+        <option value="">Todas las Categorías</option>
+        @for (cat of categorias(); track cat.idCategoria) {
+          <option [value]="cat.idCategoria">{{ cat.nombreCategoria }}</option>
+        }
+      </select>
+      <select
+        class="w-full md:w-auto bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-[#313131] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#81000A] transition-colors cursor-pointer"
+        [ngModel]="filtroEstado()"
+        (ngModelChange)="filtroEstado.set($event); cargarProductos()"
       >
         <option value="">Estado: Todos</option>
-        <option value="optimo">Óptimo</option>
-        <option value="bajo">Bajo / Crítico</option>
+        <option value="activo">Activo</option>
+        <option value="inactivo">Inactivo</option>
       </select>
     </div>
   </div>
@@ -321,92 +333,109 @@
         </thead>
 
         <tbody class="font-['Inter'] text-sm">
-          @for (product of products(); track product.id) {
-            <tr
-              class="border-b border-gray-50 dark:border-[#313131] hover:bg-gray-50 dark:hover:bg-[#222222] transition-colors cursor-default"
-            >
-              <td class="px-6 py-4 font-semibold text-[#4C616C] dark:text-[#8A9BA8]">
-                {{ product.sku }}
-              </td>
-              <td class="px-6 py-4 font-bold text-[#111D23] dark:text-white">{{ product.name }}</td>
-              <td class="px-6 py-4 text-[#4C616C] dark:text-[#8A9BA8]">{{ product.category }}</td>
-              <td class="px-6 py-4 font-medium text-[#111D23] dark:text-white">
-                ${{ product.price | number: '1.2-2' }}
-              </td>
-              <td class="px-6 py-4">
-                <div class="flex items-center gap-2">
-                  <span
-                    class="font-bold"
-                    [ngClass]="{
-                      'text-[#111D23] dark:text-white': product.stock > 0,
-                      'text-[#4C616C] dark:text-[#8A9BA8] line-through': product.stock === 0,
-                    }"
-                  >
-                    {{ product.stock }}
-                  </span>
-                  <span
-                    class="px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase"
-                    [ngClass]="getStockStatus(product.stock).colorClass"
-                  >
-                    {{ getStockStatus(product.stock).label }}
-                  </span>
-                </div>
-              </td>
-              <td class="px-6 py-4">
-                <div class="flex items-center gap-1.5">
-                  <div
-                    class="w-1.5 h-1.5 rounded-full"
-                    [ngClass]="product.status === 'ACTIVO' ? 'bg-[#34A853]' : 'bg-[#4C616C]'"
-                  ></div>
-                  <span
-                    class="text-xs font-semibold"
-                    [ngClass]="
-                      product.status === 'ACTIVO'
-                        ? 'text-[#34A853]'
-                        : 'text-[#4C616C] dark:text-[#8A9BA8]'
-                    "
-                  >
-                    {{ product.status }}
-                  </span>
-                </div>
-              </td>
-              <td class="px-6 py-4 text-right">
-                <div class="flex items-center justify-end gap-2">
-                  <button
-                    class="p-1.5 text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#313131] rounded-md transition-colors cursor-pointer"
-                    title="Ver Detalles"
-                  >
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    class="p-1.5 text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#81000A] dark:hover:text-[#E2BEBA] hover:bg-[#FFF3F3] dark:hover:bg-[rgba(129,0,10,0.2)] rounded-md transition-colors cursor-pointer"
-                    title="Editar"
-                  >
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                      />
-                    </svg>
-                  </button>
-                </div>
+          @if (loading()) {
+            <tr>
+              <td colspan="7" class="px-6 py-8 text-center text-[#4C616C] dark:text-[#8A9BA8]">
+                Cargando productos...
               </td>
             </tr>
+          } @else if (products().length === 0) {
+            <tr>
+              <td colspan="7" class="px-6 py-8 text-center text-[#4C616C] dark:text-[#8A9BA8]">
+                No se encontraron productos.
+              </td>
+            </tr>
+          } @else {
+            @for (product of products(); track product.idProducto) {
+              <tr
+                class="border-b border-gray-50 dark:border-[#313131] hover:bg-gray-50 dark:hover:bg-[#222222] transition-colors cursor-default"
+              >
+                <td class="px-6 py-4 font-semibold text-[#4C616C] dark:text-[#8A9BA8]">
+                  {{ product.sku }}
+                </td>
+                <td class="px-6 py-4 font-bold text-[#111D23] dark:text-white">
+                  {{ product.descripcion }}
+                </td>
+                <td class="px-6 py-4 text-[#4C616C] dark:text-[#8A9BA8]">
+                  {{ product.categoria.nombreCategoria }}
+                </td>
+                <td class="px-6 py-4 font-medium text-[#111D23] dark:text-white">
+                  ${{ product.precioVenta | number: '1.2-2' }}
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-2">
+                    <span
+                      class="font-bold"
+                      [ngClass]="{
+                        'text-[#111D23] dark:text-white': (product.stockTotal ?? 0) > 0,
+                        'text-[#4C616C] dark:text-[#8A9BA8] line-through':
+                          (product.stockTotal ?? 0) === 0,
+                      }"
+                    >
+                      {{ product.stockTotal ?? 0 }}
+                    </span>
+                    <span
+                      class="px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase"
+                      [ngClass]="getStockStatus(product.stockTotal).colorClass"
+                    >
+                      {{ getStockStatus(product.stockTotal).label }}
+                    </span>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-1.5">
+                    <div
+                      class="w-1.5 h-1.5 rounded-full"
+                      [ngClass]="product.estado ? 'bg-[#34A853]' : 'bg-[#4C616C]'"
+                    ></div>
+                    <span
+                      class="text-xs font-semibold"
+                      [ngClass]="
+                        product.estado ? 'text-[#34A853]' : 'text-[#4C616C] dark:text-[#8A9BA8]'
+                      "
+                    >
+                      {{ product.estado ? 'ACTIVO' : 'INACTIVO' }}
+                    </span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <div class="flex items-center justify-end gap-2">
+                    <button
+                      class="p-1.5 text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#313131] rounded-md transition-colors cursor-pointer"
+                      title="Ver Detalles"
+                    >
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      class="p-1.5 text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#81000A] dark:hover:text-[#E2BEBA] hover:bg-[#FFF3F3] dark:hover:bg-[rgba(129,0,10,0.2)] rounded-md transition-colors cursor-pointer"
+                      title="Editar"
+                    >
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
           }
         </tbody>
       </table>
@@ -468,6 +497,7 @@
                 >Categoría <span class="text-[#81000A]">*</span></label
               >
               <select
+                name="idCategoria"
                 [ngModel]="formProducto().idCategoria"
                 (ngModelChange)="actualizarForm('idCategoria', $event)"
                 [ngModelOptions]="{ standalone: true }"
@@ -485,6 +515,7 @@
                 >Marca <span class="text-[#81000A]">*</span></label
               >
               <select
+                name="idMarca"
                 [ngModel]="formProducto().idMarca"
                 (ngModelChange)="actualizarForm('idMarca', $event)"
                 [ngModelOptions]="{ standalone: true }"
@@ -502,13 +533,13 @@
                 >SKU Interno (cod_prod) <span class="text-[#81000A]">*</span></label
               >
               <input
+                name="sku"
                 type="text"
+                placeholder="Ingrese SKU..."
+                class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
                 [ngModel]="formProducto().sku"
                 (ngModelChange)="actualizarForm('sku', $event)"
                 [ngModelOptions]="{ standalone: true }"
-                maxlength="30"
-                placeholder="Ej. PX-1029"
-                class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
               />
             </div>
 
@@ -517,6 +548,7 @@
                 >Cód. Fabricante (cod_anexo)</label
               >
               <input
+                name="numeroParte"
                 type="text"
                 [ngModel]="formProducto().numeroParte"
                 (ngModelChange)="actualizarForm('numeroParte', $event)"
@@ -532,6 +564,7 @@
                 >Descripción Técnica <span class="text-[#81000A]">*</span></label
               >
               <textarea
+                name="descripcion"
                 rows="3"
                 [ngModel]="formProducto().descripcion"
                 (ngModelChange)="actualizarForm('descripcion', $event)"
@@ -546,6 +579,7 @@
                 >Modelos Compatibles (JSONB)</label
               >
               <input
+                name="modelosCompatibles"
                 type="text"
                 [ngModel]="formProducto().modelosCompatiblesStr"
                 (ngModelChange)="actualizarForm('modelosCompatiblesStr', $event)"
@@ -565,6 +599,7 @@
               <div class="relative">
                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#8A9BA8]">$</span>
                 <input
+                  name="precioCompra"
                   type="number"
                   step="0.01"
                   min="0"
@@ -584,6 +619,7 @@
               <div class="relative">
                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#8A9BA8]">$</span>
                 <input
+                  name="precioVenta"
                   type="number"
                   step="0.01"
                   min="0"
