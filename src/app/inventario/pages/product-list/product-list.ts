@@ -1,15 +1,16 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { forkJoin } from 'rxjs';
 import { ProductApiService } from '../../services/product-api.service';
 import {
+  ActualizarProductoDto,
   CategoriaProductoDto,
   CrearProductoDto,
   MarcaProductoDto,
   ProductoCatalogoDto,
   FiltroCatalogoProductosDto,
 } from '../../models/product.model';
-
 @Component({
   selector: 'app-product-list',
   imports: [CommonModule, FormsModule],
@@ -37,21 +38,23 @@ export class ProductList implements OnInit {
   isSaving = signal(false);
   loading = signal(false);
 
+  isDetailModalOpen = signal(false);
+  isEditModalOpen = signal(false);
+  isUpdating = signal(false);
+  selectedProduct = signal<ProductoCatalogoDto | null>(null);
+  editingProductId = signal<string | null>(null);
   products = signal<ProductoCatalogoDto[]>([]);
   categorias = signal<CategoriaProductoDto[]>([]);
   marcas = signal<MarcaProductoDto[]>([]);
-
   filtroTexto = signal('');
   filtroCategoria = signal<number | ''>('');
   filtroEstado = signal('');
-
   inventoryStats = signal({
     totalProducts: { value: 0, trend: 'Cargando...', isPositive: true },
     lowStock: { value: 0, trend: '-', isPositive: true },
     criticalStock: { value: 0, trend: '-', isPositive: false },
     totalCategories: { value: 0, trend: '-', isPositive: true },
   });
-
   formProducto = signal({
     idCategoria: null as number | null,
     idMarca: null as number | null,
@@ -61,22 +64,54 @@ export class ProductList implements OnInit {
     modelosCompatiblesStr: '',
     precioCompra: null as number | null,
     precioVenta: null as number | null,
+    stockMinimo: null as number | null,
+    stockInicial: null as number | null,
+  });
+  editFormProducto = signal({
+    idCategoria: null as number | null,
+    idMarca: null as number | null,
+    numeroParte: '' as string | null,
+    descripcion: '',
+    modelosCompatiblesStr: '',
+    estado: true,
   });
 
   ngOnInit(): void {
     this.cargarCatalogos();
-    this.cargarProductos();
   }
 
   private cargarCatalogos(): void {
-    this.productApi.listarCategoriasActivas().subscribe({
-      next: (data) => this.categorias.set(data),
-      error: (err) => console.error('Error cargando categorías:', err),
+    this.loading.set(true);
+    forkJoin({
+      categorias: this.productApi.listarCategoriasActivas(),
+      marcas: this.productApi.listarMarcasActivas(),
+    }).subscribe({
+      next: ({ categorias, marcas }) => {
+        this.categorias.set(categorias);
+        this.marcas.set(marcas);
+        this.cargarProductos();
+      },
+      error: (err) => {
+        console.error('Error cargando catálogos:', err);
+        this.loading.set(false);
+      },
     });
-    this.productApi.listarMarcasActivas().subscribe({
-      next: (data) => this.marcas.set(data),
-      error: (err) => console.error('Error cargando marcas:', err),
-    });
+  }
+
+  private enrichProductsWithCatalogNames(products: ProductoCatalogoDto[]): ProductoCatalogoDto[] {
+    const catMap = new Map(this.categorias().map((c) => [c.idCategoria, c.nombreCategoria]));
+    const marcaMap = new Map(this.marcas().map((m) => [m.idMarca, m.nombreMarca]));
+    return products.map((p) => ({
+      ...p,
+      categoria: {
+        ...p.categoria,
+        nombreCategoria: catMap.get(p.categoria.idCategoria) || `ID ${p.categoria.idCategoria}`,
+      },
+      marca: {
+        ...p.marca,
+        nombreMarca: marcaMap.get(p.marca.idMarca) || `ID ${p.marca.idMarca}`,
+      },
+    }));
   }
 
   cargarProductos(): void {
@@ -86,29 +121,19 @@ export class ProductList implements OnInit {
     if (this.filtroCategoria() !== '') filtros.idCategoria = Number(this.filtroCategoria());
     if (this.filtroEstado() === 'activo') filtros.estado = true;
     else if (this.filtroEstado() === 'inactivo') filtros.estado = false;
-
     this.productApi.listarCatalogo(filtros).subscribe({
       next: (data) => {
-        const catMap = new Map(this.categorias().map((c) => [c.idCategoria, c.nombreCategoria]));
-        const marcaMap = new Map(this.marcas().map((m) => [m.idMarca, m.nombreMarca]));
-        const enriched = data.items.map((p) => ({
-          ...p,
-          categoria: { ...p.categoria, nombreCategoria: catMap.get(p.categoria.idCategoria) || '' },
-          marca: { ...p.marca, nombreMarca: marcaMap.get(p.marca.idMarca) || '' },
-        }));
+        const enriched = this.enrichProductsWithCatalogNames(data.items);
         this.products.set(enriched);
-
         const total = data.total;
         const lowStockCount = enriched.filter((p) => (p.stockTotal ?? 0) > 0 && (p.stockTotal ?? 0) <= 10).length;
         const criticalCount = enriched.filter((p) => (p.stockTotal ?? 0) === 0).length;
-
         this.inventoryStats.set({
           totalProducts: { value: total, trend: `${total} registrados`, isPositive: true },
           lowStock: { value: lowStockCount, trend: 'Productos con stock ≤ 10', isPositive: lowStockCount < 10 },
           criticalStock: { value: criticalCount, trend: 'Sin stock (0 unidades)', isPositive: false },
           totalCategories: { value: this.categorias().length, trend: 'Activas', isPositive: true },
         });
-
         this.loading.set(false);
       },
       error: (err) => {
@@ -131,13 +156,20 @@ export class ProductList implements OnInit {
 
   guardarProducto(): void {
     const form = this.formProducto();
-    console.log("Datos del formulario actuales:", form);
     if (!form.idCategoria || !form.idMarca || !form.sku || !form.descripcion || form.precioCompra === null || form.precioVenta === null) {
       alert('Por favor completa los campos requeridos: Categoría, Marca, SKU, Descripción, Precios');
       return;
     }
     if (form.precioCompra <= 0 || form.precioVenta <= 0) {
       alert('Los precios deben ser mayores a 0');
+      return;
+    }
+    if (form.stockMinimo !== null && form.stockMinimo < 0) {
+      alert('El stock mínimo no puede ser negativo');
+      return;
+    }
+    if (form.stockInicial !== null && form.stockInicial < 0) {
+      alert('El stock inicial no puede ser negativo');
       return;
     }
     let modelosCompatibles: string[] = [];
@@ -153,6 +185,8 @@ export class ProductList implements OnInit {
       modelosCompatibles,
       precioCompra: form.precioCompra,
       precioVenta: form.precioVenta,
+      stockMinimo: form.stockMinimo ?? null,
+      stockInicial: form.stockInicial ?? null,
     };
     this.isSaving.set(true);
     this.productApi.crear(payload).subscribe({
@@ -175,28 +209,105 @@ export class ProductList implements OnInit {
     this.formProducto.set({
       idCategoria: null, idMarca: null, sku: '', numeroParte: '',
       descripcion: '', modelosCompatiblesStr: '', precioCompra: null, precioVenta: null,
+      stockMinimo: null, stockInicial: null,
     });
   }
 
-  openModal() {
-    this.isModalOpen.set(true);
+  openDetail(product: ProductoCatalogoDto): void {
+    this.selectedProduct.set(product);
+    this.isDetailModalOpen.set(true);
     document.body.style.overflow = 'hidden';
   }
-
-  closeModal() {
-    this.isModalOpen.set(false);
+  closeDetail(): void {
+    this.isDetailModalOpen.set(false);
+    this.selectedProduct.set(null);
     document.body.style.overflow = 'auto';
   }
 
-  openExportModal() {
-    this.isExportModalOpen.set(true);
+  openEdit(product: ProductoCatalogoDto): void {
+    this.editingProductId.set(product.idProducto);
+    this.editFormProducto.set({
+      idCategoria: product.categoria.idCategoria,
+      idMarca: product.marca.idMarca,
+      numeroParte: product.numeroParte ?? null,
+      descripcion: product.descripcion,
+      modelosCompatiblesStr: (product.modelosCompatibles ?? []).join(', '),
+      estado: product.estado,
+    });
+    this.isEditModalOpen.set(true);
     document.body.style.overflow = 'hidden';
   }
 
-  closeExportModal() {
-    this.isExportModalOpen.set(false);
+  closeEdit(): void {
+    this.isEditModalOpen.set(false);
+    this.editingProductId.set(null);
     document.body.style.overflow = 'auto';
   }
+
+  actualizarEditForm<K extends keyof ReturnType<typeof this.editFormProducto>>(
+    campo: K, valor: ReturnType<typeof this.editFormProducto>[K],
+  ): void {
+    this.editFormProducto.update((prev) => ({ ...prev, [campo]: valor }));
+  }
+
+  actualizarProducto(): void {
+    const form = this.editFormProducto();
+    const id = this.editingProductId();
+    if (!id) return;
+    if (!form.idCategoria || !form.idMarca || !form.descripcion) {
+      alert('Completa los campos requeridos: Categoría, Marca, Descripción');
+      return;
+    }
+    let modelosCompatibles: string[] = [];
+    if (form.modelosCompatiblesStr && form.modelosCompatiblesStr.trim()) {
+      modelosCompatibles = form.modelosCompatiblesStr.split(',').map((m) => m.trim()).filter((m) => m.length > 0);
+    }
+    const payload: ActualizarProductoDto = {
+      idCategoria: form.idCategoria,
+      idMarca: form.idMarca,
+      numeroParte: form.numeroParte || null,
+      descripcion: form.descripcion,
+      modelosCompatibles,
+      estado: form.estado,
+    };
+    this.isUpdating.set(true);
+    this.productApi.actualizar(id, payload).subscribe({
+      next: () => {
+        alert('Producto actualizado exitosamente!');
+        this.closeEdit();
+        this.cargarProductos();
+      },
+      error: (err) => {
+        console.error('Error actualizando producto:', err);
+        const msg = err.error?.message || err.error || 'Error al actualizar. Verifica consola.';
+        alert(`No se pudo actualizar:\n${msg}`);
+      },
+      complete: () => this.isUpdating.set(false),
+    });
+  }
+
+
+  eliminarProducto(id: string): void {
+    if (!confirm('¿Estás seguro de eliminar este producto? Esta acción no se puede deshacer.')) return;
+    this.productApi.eliminar(id).subscribe({
+      next: () => {
+        alert('Producto eliminado exitosamente!');
+        this.closeDetail();
+        this.cargarProductos();
+      },
+      error: (err) => {
+        console.error('Error eliminando producto:', err);
+        const msg = err.error?.message || err.error || 'Error al eliminar. Verifica consola.';
+        alert(`No se pudo eliminar:\n${msg}`);
+      },
+    });
+  }
+
+  openModal() { this.isModalOpen.set(true); document.body.style.overflow = 'hidden'; }
+  closeModal() { this.isModalOpen.set(false); document.body.style.overflow = 'auto'; }
+  openExportModal() { this.isExportModalOpen.set(true); document.body.style.overflow = 'hidden'; }
+  closeExportModal() { this.isExportModalOpen.set(false); document.body.style.overflow = 'auto'; }
+
 
   exportar(formato: 'excel' | 'pdf') {
     this.closeExportModal();
@@ -218,7 +329,6 @@ export class ProductList implements OnInit {
       },
     });
   }
-
   actualizarForm<K extends keyof ReturnType<typeof this.formProducto>>(
     campo: K, valor: ReturnType<typeof this.formProducto>[K],
   ): void {
