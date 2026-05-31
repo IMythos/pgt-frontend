@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { PagedResponse } from '../../shared/models/paginated-response';
 import {
   MovimientoListadoDto,
   RegistrarMovimientoRequest,
@@ -15,10 +16,9 @@ export class MovementApiService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${environment.apiUrl}/v1/movimientos`;
 
-  listar(filtros: FiltroMovimientoDto = {}): Observable<MovimientoListadoDto[]> {
-    return this.http.get<MovimientoListadoDto[]>(this.baseUrl, {
-      params: this.construirParams(filtros)
-    });
+  listar(filtros: FiltroMovimientoDto = {}): Observable<PagedResponse<MovimientoListadoDto>> {
+    const params = this.construirParams({ pagina: 0, tamanioPagina: 50, ...filtros });
+    return this.http.get<PagedResponse<MovimientoListadoDto>>(this.baseUrl, { params });
   }
 
   obtenerPorId(id: string): Observable<MovimientoListadoDto> {

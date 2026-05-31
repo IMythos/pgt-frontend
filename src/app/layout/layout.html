@@ -1,5 +1,4 @@
-<div class="h-screen w-full flex overflow-hidden bg-[#F4FAFF] dark:bg-[#222222] transition-colors duration-300">
-
+<div class="h-screen w-full flex overflow-hidden bg-[#F4FAFF] dark:bg-[#000000] transition-colors duration-300">
   <!-- OVERLAY móvil -->
   @if (sidebar().isOpen()) {
     <div
@@ -7,20 +6,27 @@
       (click)="sidebar().close()"
     ></div>
   }
-
   <app-sidebar></app-sidebar>
-
   <div class="flex-1 flex flex-col h-screen min-w-0">
-
     <!-- Navbar conectado al sidebar -->
     <app-navbar
       [sidebarOpen]="sidebar().isOpen()"
       (toggleSidebar)="sidebar().toggle()"
     ></app-navbar>
-
     <main class="flex-1 overflow-y-auto overflow-x-hidden p-8 lg:p-12 relative">
       <router-outlet></router-outlet>
     </main>
-
   </div>
+  @if (authService.sessionExpired()) {
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <h2>Sesión Expirada</h2>
+      <p>Tu sesión ha caducado por inactividad o porque el token es inválido. Por favor, vuelve a iniciar sesión.</p>
+      
+      <button (click)="authService.confirmSessionExpired()">
+        Ir al Login
+      </button>
+    </div>
+  </div>
+}
 </div>

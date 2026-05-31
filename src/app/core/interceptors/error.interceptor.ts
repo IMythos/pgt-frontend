@@ -15,7 +15,7 @@ export class ErrorInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
           // Token expirado o inválido
-          this.authService.logout();
+          this.authService.handleSessionExpired();
         }
         
         if (error.status === 403) {

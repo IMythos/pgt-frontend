@@ -1,0 +1,165 @@
+<div class="animate-fade-in fixed inset-0 z-50 flex items-center justify-center bg-[#111111]/60 dark:bg-black/80 backdrop-blur-sm p-4">
+  <div class="animate-zoom-in flex flex-col w-full max-w-3xl bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] rounded-2xl shadow-2xl overflow-hidden">
+
+    @let ef = editFormProducto();
+    @let editModelosPreview = parseModelos(ef.modelosCompatiblesStr);
+
+    <!-- Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-[#1F1F1F] bg-gray-50 dark:bg-[#141414]">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-full bg-[rgba(129,0,10,0.1)] dark:bg-[#313131] flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5 text-[#81000A] dark:text-[#EF4444]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+          </svg>
+        </div>
+        <div class="flex flex-col">
+          <h3 class="font-['Work_Sans'] font-bold text-lg text-[#111D23] dark:text-white leading-tight">Editar Producto</h3>
+          <span class="font-['Inter'] text-[11px] text-[#4C616C] dark:text-[#8A9BA8]">Editando: {{ getEditingProductSku() }}</span>
+        </div>
+      </div>
+      <button (click)="close.emit()" type="button" class="p-1.5 text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#81000A] dark:hover:text-[#EF4444] hover:bg-gray-200 dark:hover:bg-[#313131] rounded-full transition-colors cursor-pointer">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="p-6 overflow-y-auto max-h-[70vh] flex flex-col gap-5">
+
+      <!-- Identificación -->
+      <div class="bg-gray-50 dark:bg-black border border-gray-100 dark:border-[#1F1F1F] rounded-xl p-5 transition-colors">
+        <span class="font-['Inter'] text-xs font-bold uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8] block mb-3">Identificación</span>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="flex flex-col gap-1.5">
+            <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Categoría <span class="text-[#81000A]">*</span></label>
+            <select
+              [ngModel]="ef.idCategoria"
+              (ngModelChange)="actualizarEditForm('idCategoria', $event)"
+              [ngModelOptions]="{ standalone: true }"
+              class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors cursor-pointer"
+            >
+              <option [ngValue]="null" disabled>Seleccione una categoría</option>
+              @for (cat of categorias(); track cat.idCategoria) {
+              <option [ngValue]="cat.idCategoria">{{ cat.nombreCategoria }}</option>
+              }
+            </select>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Marca <span class="text-[#81000A]">*</span></label>
+            <select
+              [ngModel]="ef.idMarca"
+              (ngModelChange)="actualizarEditForm('idMarca', $event)"
+              [ngModelOptions]="{ standalone: true }"
+              class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors cursor-pointer"
+            >
+              <option [ngValue]="null" disabled>Seleccione una marca</option>
+              @for (marca of marcas(); track marca.idMarca) {
+              <option [ngValue]="marca.idMarca">{{ marca.nombreMarca }}</option>
+              }
+            </select>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Cód. Fabricante</label>
+            <input
+              type="text"
+              [ngModel]="ef.numeroParte"
+              (ngModelChange)="actualizarEditForm('numeroParte', $event)"
+              [ngModelOptions]="{ standalone: true }"
+              maxlength="30"
+              placeholder="Ej. AB-990-2"
+              class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors"
+            />
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Estado</label>
+            <div class="flex gap-2 p-1 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] rounded-lg">
+              <button
+                type="button"
+                (click)="actualizarEditForm('estado', true)"
+                class="flex-1 px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer"
+                [ngClass]="ef.estado ? 'bg-[#34A853] text-white shadow-sm' : 'text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white'"
+              >
+                <span class="flex items-center justify-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                  Activo
+                </span>
+              </button>
+              <button
+                type="button"
+                (click)="actualizarEditForm('estado', false)"
+                class="flex-1 px-3 py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer"
+                [ngClass]="!ef.estado ? 'bg-[#4C616C] text-white shadow-sm' : 'text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white'"
+              >
+                <span class="flex items-center justify-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                  Inactivo
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Descripción -->
+      <div class="bg-gray-50 dark:bg-black border border-gray-100 dark:border-[#1F1F1F] rounded-xl p-5 transition-colors">
+        <span class="font-['Inter'] text-xs font-bold uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8] block mb-3">Descripción</span>
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col gap-1.5">
+            <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Descripción Técnica <span class="text-[#81000A]">*</span></label>
+            <textarea
+              rows="3"
+              [ngModel]="ef.descripcion"
+              (ngModelChange)="actualizarEditForm('descripcion', $event)"
+              [ngModelOptions]="{ standalone: true }"
+              placeholder="Describa el producto..."
+              class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors resize-none"
+            ></textarea>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Modelos Compatibles <span class="text-[#8A9BA8]">(separados por coma)</span></label>
+            <input
+              type="text"
+              [ngModel]="ef.modelosCompatiblesStr"
+              (ngModelChange)="actualizarEditForm('modelosCompatiblesStr', $event)"
+              [ngModelOptions]="{ standalone: true }"
+              placeholder="Ej. Serie 200, Serie 300"
+              class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors"
+            />
+            @if (editModelosPreview.length > 0) {
+            <div class="flex flex-wrap gap-1.5 mt-1">
+              @for (m of editModelosPreview; track m) {
+              <span class="px-2 py-0.5 rounded-full bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] font-['Inter'] text-[11px] font-semibold text-[#4C616C] dark:text-[#8A9BA8]">{{ m }}</span>
+              }
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100 dark:border-[#1F1F1F] bg-gray-50 dark:bg-black">
+      <button (click)="close.emit()" type="button" class="px-5 py-2.5 font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white hover:bg-gray-200 dark:hover:bg-[#141414] rounded-lg transition-colors cursor-pointer">
+        Cancelar
+      </button>
+      <button (click)="actualizarProducto()" [disabled]="isUpdating()"
+        class="flex items-center gap-2 px-6 py-2.5 bg-[#81000A] hover:bg-[#6a0008] text-white font-['Inter'] font-semibold text-sm rounded-lg shadow-md transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+        @if (isUpdating()) {
+        <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+        </svg>
+        <span>Actualizando...</span>
+        } @else {
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span>Actualizar Producto</span>
+        }
+      </button>
+    </div>
+
+  </div>
+</div>

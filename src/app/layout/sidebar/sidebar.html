@@ -1,9 +1,8 @@
 <aside
-  class="fixed lg:relative top-0 left-0 h-screen bg-white dark:bg-[#1B1B1B] flex flex-col justify-between shrink-0 border-r border-gray-100 dark:border-[#313131] pt-6 lg:pt-20 pb-8 transition-all duration-300 z-40 lg:w-[288px] -translate-x-full lg:translate-x-0"
+  class="fixed lg:relative top-0 left-0 h-screen bg-white dark:bg-[#0A0A0A] flex flex-col justify-between shrink-0 border-r border-gray-100 dark:border-[#1F1F1F] pt-6 lg:pt-20 pb-8 transition-all duration-300 z-40 lg:w-[288px] -translate-x-full lg:translate-x-0"
   [class.w-\[288px\]]="isOpen()"
   [class.w-\[72px\]]="!isOpen()"
   [class.translate-x-0]="isOpen()"
-  [class.-translate-x-full]="!isOpen()"
 >
 
   <div class="flex flex-col w-full">
@@ -15,9 +14,7 @@
       [class.justify-center]="!isOpen()"
       [class.lg:px-8]="true"
     >
-      <div class="flex justify-center items-center w-10 h-10 bg-[#81000A] shrink-0 rounded-sm">
-        <div class="w-5 h-5 bg-white"></div>
-      </div>
+      <img src="assets/img/logo.png" alt="Logo" class="w-8 h-8 rounded-full object-cover">
       <span
         class="font-['Work_Sans'] font-black text-sm leading-tight uppercase text-[#111D23] dark:text-white transition-colors lg:block"
         [class.hidden]="!isOpen()"
@@ -32,16 +29,16 @@
           <!-- Grupo expandible -->
           <button (click)="toggleMenu(item.label)"
                   class="group relative flex items-center gap-4 px-8 py-4 w-full cursor-pointer transition-colors duration-200">
-            <div class="absolute inset-0 bg-transparent hover:bg-gray-50 dark:hover:bg-[#222222]/50 transition-colors z-0"></div>
+            <div class="absolute inset-0 bg-transparent hover:bg-gray-50 dark:hover:bg-[#141414] transition-colors z-0"></div>
 
-            <svg class="w-5 h-5 text-[#4C616C] dark:text-[#8A9BA8] group-hover:text-[#81000A] dark:group-hover:text-white relative z-10 transition-colors shrink-0"
+            <svg              class="w-5 h-5 text-[#4C616C] dark:text-[#8A9BA8] group-hover:text-[#81000A] dark:group-hover:text-[#EF4444] relative z-10 transition-colors shrink-0"
                  fill="none" viewBox="0 0 24 24" stroke="currentColor">
               @for (path of item.paths; track path) {
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="path" />
               }
             </svg>
 
-            <span class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8] group-hover:text-[#81000A] dark:group-hover:text-white relative z-10 transition-colors text-left flex-1">
+            <span class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8] group-hover:text-[#81000A] dark:group-hover:text-[#EF4444] relative z-10 transition-colors text-left flex-1">
               {{ item.label }}
             </span>
 
@@ -60,8 +57,8 @@
                  [routerLinkActiveOptions]="{ exact: true }"
                  class="group relative flex items-center gap-4 pl-16 pr-8 py-3 cursor-pointer transition-colors duration-200">
                 <div class="absolute left-0 top-0 w-1 h-full bg-transparent group-[.active-link]:bg-[#81000A] transition-colors"></div>
-                <div class="absolute inset-0 bg-transparent group-[.active-link]:bg-[#FFF3F3] dark:group-[.active-link]:bg-[#222222] group-hover:bg-gray-50 dark:group-hover:bg-[#222222]/50 transition-colors z-0"></div>
-                <span class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8] group-[.active-link]:text-[#81000A] dark:group-[.active-link]:text-white relative z-10 transition-colors">
+                <div class="absolute inset-0 bg-transparent group-[.active-link]:bg-[#FFF3F3] dark:group-[.active-link]:bg-[#141414] group-hover:bg-gray-50 dark:group-hover:bg-[#141414] transition-colors z-0"></div>
+                <span class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8] group-[.active-link]:text-[#81000A] dark:group-[.active-link]:text-[#EF4444] relative z-10 transition-colors">
                   {{ child.label }}
                 </span>
               </a>
@@ -75,14 +72,14 @@
              [routerLinkActiveOptions]="{ exact: true }"
              class="group relative flex items-center gap-4 px-8 py-4 cursor-pointer transition-colors duration-200">
             <div class="absolute left-0 top-0 w-1 h-full bg-transparent group-[.active-link]:bg-[#81000A] transition-colors"></div>
-            <div class="absolute inset-0 bg-transparent group-[.active-link]:bg-[#FFF3F3] dark:group-[.active-link]:bg-[#222222] group-hover:bg-gray-50 dark:group-hover:bg-[#222222]/50 transition-colors z-0"></div>
-            <svg class="w-5 h-5 text-[#4C616C] dark:text-[#8A9BA8] group-[.active-link]:text-[#81000A] dark:group-[.active-link]:text-white group-hover:text-[#81000A] dark:group-hover:text-white relative z-10 transition-colors"
+            <div class="absolute inset-0 bg-transparent group-[.active-link]:bg-[#FFF3F3] dark:group-[.active-link]:bg-[#141414] group-hover:bg-gray-50 dark:group-hover:bg-[#141414] transition-colors z-0"></div>
+            <svg class="w-5 h-5 text-[#4C616C] dark:text-[#8A9BA8] group-[.active-link]:text-[#81000A] dark:group-[.active-link]:text-[#EF4444] group-hover:text-[#81000A] dark:group-hover:text-[#EF4444] relative z-10 transition-colors"
                  fill="none" viewBox="0 0 24 24" stroke="currentColor">
               @for (path of item.paths; track path) {
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="path" />
               }
             </svg>
-            <span class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8] group-[.active-link]:text-[#81000A] dark:group-[.active-link]:text-white group-hover:text-[#81000A] dark:group-hover:text-white relative z-10 transition-colors">
+            <span class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8] group-[.active-link]:text-[#81000A] dark:group-[.active-link]:text-[#EF4444] group-hover:text-[#81000A] dark:group-hover:text-[#EF4444] relative z-10 transition-colors">
               {{ item.label }}
             </span>
           </a>
@@ -91,10 +88,10 @@
     </nav>
   </div>
 
-  <div class="flex flex-col w-full gap-4 pt-6 px-8 border-t border-gray-100 dark:border-[#313131] transition-colors">
+  <div class="flex flex-col w-full gap-4 pt-6 px-8 border-t border-gray-100 dark:border-[#1F1F1F] transition-colors">
     
     <div class="flex items-center gap-3 w-full">
-      <div class="flex justify-center items-center w-10 h-10 rounded-full bg-gray-50 dark:bg-[#222222] border border-gray-100 dark:border-[#313131] shrink-0 overflow-hidden transition-colors">
+      <div class="flex justify-center items-center w-10 h-10 rounded-full bg-gray-50 dark:bg-[#141414] border border-gray-100 dark:border-[#1F1F1F] shrink-0 overflow-hidden transition-colors">
         <svg class="w-6 h-6 text-[#81000A] dark:text-[#8A9BA8]" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
         </svg>
@@ -107,8 +104,8 @@
       </div>
     </div>
 
-    <button (click)="onLogout()" class="flex items-center gap-3 w-full py-2.5 rounded-lg text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#81000A] dark:hover:text-white transition-colors group cursor-pointer">
-      <svg class="w-5 h-5 text-[#4C616C] dark:text-[#8A9BA8] group-hover:text-[#81000A] dark:group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <button (click)="onLogout()" class="flex items-center gap-3 w-full py-2.5 rounded-lg text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#81000A] dark:hover:text-[#EF4444] transition-colors group cursor-pointer">
+      <svg class="w-5 h-5 text-[#4C616C] dark:text-[#8A9BA8] group-hover:text-[#81000A] dark:group-hover:text-[#EF4444] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
       </svg>
       <span class="font-['Inter'] font-semibold text-sm lg:block"

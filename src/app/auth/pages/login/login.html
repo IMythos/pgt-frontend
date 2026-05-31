@@ -1,5 +1,5 @@
 <div
-  class="h-screen w-full flex overflow-hidden bg-[#F4FAFF] dark:bg-[#222222] transition-colors duration-300"
+  class="h-screen w-full flex overflow-hidden bg-[#F4FAFF] dark:bg-black transition-colors duration-300"
 >
   <div
     class="relative hidden lg:flex flex-1 h-full bg-[#263238] flex-col justify-between p-8 xl:p-12 overflow-hidden"
@@ -16,7 +16,6 @@
         class="absolute inset-0 bg-[radial-gradient(70.71%_70.71%_at_50%_50%,rgba(129,0,10,0.1)_2.21%,rgba(129,0,10,0)_2.21%)] opacity-30"
       ></div>
     </div>
-
     <div class="relative z-10 flex items-center gap-3 h-12">
       <div class="flex justify-center items-center w-12 h-12 bg-[#81000A]">
         <div class="w-[22.54px] h-[23.13px] bg-white"></div>
@@ -27,12 +26,11 @@
         portable global technology
       </span>
     </div>
-
     <div class="relative z-10 flex flex-col gap-6 w-full max-w-[576px]">
       <h2
         class="font-['Work_Sans'] font-bold text-5xl xl:text-[72px] leading-tight xl:leading-[72px] text-white"
       >
-        Industrial Control Systems
+        Sistemas de Control Industrial
       </h2>
       <div class="w-full max-w-[448px] opacity-90">
         <p class="font-['Inter'] font-normal text-base xl:text-lg leading-relaxed text-[#E9F6FD]">
@@ -40,55 +38,61 @@
         </p>
       </div>
     </div>
-
     <div class="relative z-10 flex flex-wrap items-start gap-8 h-auto">
       <div class="flex items-center gap-2">
         <div class="w-2 h-2 bg-[#81000A] rounded-full"></div>
         <span class="font-['Inter'] font-medium text-xs tracking-[1.2px] uppercase text-[#D7E4EC]"
-          >System Online</span
+          >Sistema en Línea</span
         >
       </div>
       <span class="font-['Inter'] font-medium text-xs tracking-[1.2px] uppercase text-[#D7E4EC]"
-        >V. 2.4.1 (Stable)</span
+        >V. 2.4.1 (Estable)</span
       >
       <span class="font-['Inter'] font-medium text-xs tracking-[1.2px] uppercase text-[#D7E4EC]"
-        >Server: Lima-Central</span
+        >Servidor: Lima-Central</span
       >
     </div>
   </div>
 
   <div
-    class="flex flex-col justify-center items-center p-8 xl:p-16 w-full lg:max-w-[600px] xl:max-w-[768px] h-full bg-[#F4FAFF] dark:bg-[#222222] overflow-y-auto transition-colors duration-300"
+    class="flex flex-col justify-start items-center p-8 xl:p-16 w-full lg:max-w-[600px] xl:max-w-[768px] h-full bg-[#F4FAFF] dark:bg-black overflow-y-auto transition-colors duration-300"
   >
-    <div class="flex flex-col items-start gap-8 xl:gap-10 w-full max-w-[448px] my-auto">
-      <div class="flex flex-col gap-2 w-full">
+    <div class="flex flex-col items-start gap-0 w-full max-w-[448px] -mb-28">
+      <div class="flex flex-col gap-0 w-full -mb-10">
         <h3
-          class="font-['Work_Sans'] font-bold text-[30px] leading-9 tracking-[-0.75px] text-[#111D23] dark:text-white transition-colors"
+          class="font-['Work_Sans'] font-bold text-[30px] leading-9 tracking-[-0.75px] text-[#111D23] dark:text-white transition-colors w-full text-left"
         >
-          Portable System
+          Sistema Portable
         </h3>
         <p
-          class="font-['Inter'] font-medium text-base leading-6 text-[#4C616C] dark:text-gray-400 transition-colors"
+          class="font-['Inter'] font-medium text-base leading-6 text-[#4C616C] dark:text-gray-400 transition-colors w-full text-left"
         >
-          Identify yourself to access the industrial grid.
+          Identifícate para acceder al sistema.
         </p>
       </div>
+
+      <canvas
+        #riveCanvas
+        width="400"
+        height="400"
+        class="w-110 h-110 mx-auto -my-16 relative z-10 pointer-events-none"
+      ></canvas>
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6 w-full">
         <div class="flex flex-col gap-4 w-full">
           <div class="relative w-full h-[78px]">
             <label
-              class="absolute left-1 top-[-0.5px] font-['Inter'] font-bold text-xs tracking-[1.2px] uppercase text-[#4C616C] dark:text-gray-400 transition-colors"
+              class="absolute left-1 top-[-0.5px] font-['Inter'] font-bold text-xs tracking-[1.2px] uppercase text-[#4C616C] dark:text-[#9CA3AF] transition-colors"
             >
-              Operator ID
+              ID de Operador
             </label>
             <div class="absolute inset-x-0 top-[22px] h-14">
               <div
-                class="relative flex items-center w-full h-full bg-[#DDEAF2] dark:bg-[#333333] transition-colors"
+                class="relative flex items-center w-full h-full bg-[#DDEAF2] dark:bg-[#1A1A1A] transition-colors"
               >
                 <div class="absolute left-4 flex items-center opacity-50">
                   <svg
-                    class="w-5 h-5 text-[#4C616C] dark:text-gray-300"
+                    class="w-5 h-5 text-[#4C616C] dark:text-[#9CA3AF]"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -104,7 +108,10 @@
                 <input
                   type="text"
                   formControlName="identifier"
-                  class="w-full h-full bg-transparent pl-12 pr-4 font-['Inter'] text-base text-[#4C616C] dark:text-gray-100 placeholder-[rgba(76,97,108,0.4)] dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#004A77] dark:focus:ring-[#81000A] transition-colors"
+                  (focus)="onIdentifierFocus()"
+                  (input)="onIdentifierInput($event)"
+                  (blur)="onBlur()"
+                  class="w-full h-full bg-transparent pl-12 pr-4 font-['Inter'] text-base text-[#4C616C] dark:text-white placeholder-[rgba(76,97,108,0.4)] dark:placeholder-[#6B7280] focus:outline-none focus:ring-2 focus:ring-[#004A77] dark:focus:ring-[#EF4444] transition-colors"
                   placeholder="PX-000-000"
                 />
               </div>
@@ -114,23 +121,23 @@
           <div class="flex flex-col gap-1.5 w-full h-[78px]">
             <div class="flex justify-between items-end px-1 w-full">
               <label
-                class="font-['Inter'] font-bold text-xs tracking-[1.2px] uppercase text-[#4C616C] dark:text-gray-400 transition-colors"
+                class="font-['Inter'] font-bold text-xs tracking-[1.2px] uppercase text-[#4C616C] dark:text-[#9CA3AF] transition-colors"
               >
-                Passcode
+                Contraseña
               </label>
               <a
                 href="#"
                 class="font-['Inter'] font-bold text-[10px] tracking-[-0.5px] uppercase text-[#81000A] hover:underline"
               >
-                Recover Key
+                Recuperar Acceso
               </a>
             </div>
             <div
-              class="relative flex items-center w-full h-14 bg-[#DDEAF2] dark:bg-[#333333] transition-colors"
+              class="relative flex items-center w-full h-14 bg-[#DDEAF2] dark:bg-[#1A1A1A] transition-colors"
             >
               <div class="absolute left-4 flex items-center opacity-50">
                 <svg
-                  class="w-5 h-5 text-[#4C616C] dark:text-gray-300"
+                  class="w-5 h-5 text-[#4C616C] dark:text-[#9CA3AF]"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -146,13 +153,15 @@
               <input
                 [type]="showPassword() ? 'text' : 'password'"
                 formControlName="password"
-                class="w-full h-full bg-transparent pl-12 pr-12 font-['Inter'] text-base text-[#4C616C] dark:text-gray-100 placeholder-[rgba(76,97,108,0.4)] dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#004A77] dark:focus:ring-[#81000A] transition-colors"
+                (focus)="onPasswordFocus()"
+                (blur)="onBlur()"
+                class="w-full h-full bg-transparent pl-12 pr-12 font-['Inter'] text-base text-[#4C616C] dark:text-white placeholder-[rgba(76,97,108,0.4)] dark:placeholder-[#6B7280] focus:outline-none focus:ring-2 focus:ring-[#004A77] dark:focus:ring-[#EF4444] transition-colors"
                 placeholder="••••••••••••"
               />
               <button
                 type="button"
                 (click)="togglePasswordVisibility()"
-                class="absolute right-4 flex items-center text-[#4C616C] dark:text-gray-400 hover:text-[#111D23] dark:hover:text-white opacity-50 hover:opacity-100 focus:outline-none transition-colors"
+                class="absolute right-4 flex items-center text-[#4C616C] dark:text-[#9CA3AF] hover:text-[#111D23] dark:hover:text-white opacity-50 hover:opacity-100 focus:outline-none transition-colors"
               >
                 @if (showPassword()) {
                   <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -188,19 +197,19 @@
           <label class="flex items-center gap-2 cursor-pointer group">
             <input
               type="checkbox"
-              class="w-5 h-5 bg-white dark:bg-[#333333] border border-[#E2BEBA] dark:border-gray-600 rounded appearance-none checked:bg-[#81000A] dark:checked:bg-[#81000A] checked:border-transparent transition-colors relative cursor-pointer before:content-[''] before:absolute before:inset-0 before:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwb2x5bGluZSBwb2ludHM9IjIwIDYgOSAxNyA0IDEyIi8+PC9zdmc+')] before:bg-center before:bg-no-repeat before:bg-[length:12px] before:opacity-0 checked:before:opacity-100"
+              class="w-5 h-5 bg-white dark:bg-[#1A1A1A] border border-[#E2BEBA] dark:border-[#1F1F1F] rounded appearance-none checked:bg-[#81000A] dark:checked:bg-[#EF4444] checked:border-transparent transition-colors relative cursor-pointer before:content-[''] before:absolute before:inset-0 before:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwb2x5bGluZSBwb2ludHM9IjIwIDYgOSAxNyA0IDEyIi8+PC9zdmc+')] before:bg-center before:bg-no-repeat before:bg-[length:12px] before:opacity-0 checked:before:opacity-100"
             />
             <span
-              class="font-['Inter'] font-medium text-sm text-[#5A413E] dark:text-gray-300 transition-colors"
-              >Keep connection open</span
+              class="font-['Inter'] font-medium text-sm text-[#5A413E] dark:text-[#9CA3AF] transition-colors"
+              >Mantener sesión activa</span
             >
           </label>
         </div>
         @if (loginError()) {
           <div class="w-full text-center py-2">
-            <span class="font-['Inter'] text-sm text-[#81000A] font-semibold">
-              Credenciales incorrectas. Intente nuevamente.
-            </span>
+            <span class="font-['Inter'] text-sm text-[#81000A] font-semibold"
+              >Credenciales incorrectas. Intente nuevamente.</span
+            >
           </div>
         }
         <div class="flex flex-col gap-4 pt-2 w-full">
@@ -210,8 +219,9 @@
             class="relative flex justify-center items-center py-[13.5px] gap-3 w-full h-14 bg-[#81000A] hover:bg-[#6a0008] transition-colors disabled:opacity-70 disabled:cursor-not-allowed group shadow-[0px_10px_15px_-3px_rgba(129,0,10,0.2),0px_4px_6px_-4px_rgba(129,0,10,0.2)]"
           >
             <div class="absolute inset-0 bg-[rgba(255,255,255,0.002)]"></div>
-            <span class="relative z-10 font-['Work_Sans'] font-bold text-lg leading-7 text-white"
-              >Initialize</span
+            <span
+              class="relative z-10 font-['Work_Sans'] font-bold text-lg leading-7 text-white cursor-pointer"
+              >Iniciar Sesión</span
             >
             <div class="relative z-10 flex items-center justify-center w-4 h-5">
               <svg
@@ -233,16 +243,16 @@
 
         <div class="flex justify-center items-start pt-4 gap-1 w-full">
           <span
-            class="font-['Inter'] font-medium text-sm text-[#4C616C] dark:text-gray-400 transition-colors"
-            >Unauthorized?</span
+            class="font-['Inter'] font-medium text-sm text-[#4C616C] dark:text-[#9CA3AF] transition-colors"
+            >¿No tienes cuenta?</span
           >
           <a href="#" class="font-['Inter'] font-bold text-sm text-[#81000A] hover:underline"
-            >Request Terminal Access</a
+            >Solicitar Acceso</a
           >
         </div>
 
         <div
-          class="flex items-center p-4 gap-4 w-full h-[74px] bg-[#E9F6FD] dark:bg-[#2A2A2A] border border-[rgba(226,190,186,0.15)] dark:border-gray-700 rounded-[32px] mt-2 transition-colors"
+          class="flex items-center p-4 gap-4 w-full h-[74px] bg-[#E9F6FD] dark:bg-[#0A0A0A] border border-[rgba(226,190,186,0.15)] dark:border-[#1F1F1F] rounded-[32px] mt-2 transition-colors"
         >
           <div
             class="flex justify-center items-center w-10 h-10 bg-[#CEE5FF] dark:bg-[#1A365D] rounded-full shrink-0 transition-colors"
@@ -261,12 +271,12 @@
           </div>
           <div class="flex flex-col flex-1">
             <span
-              class="font-['Inter'] font-bold text-[10px] tracking-[-0.25px] uppercase text-[#4C616C] dark:text-gray-400 transition-colors"
-              >Connection Security</span
+              class="font-['Inter'] font-bold text-[10px] tracking-[-0.25px] uppercase text-[#4C616C] dark:text-[#9CA3AF] transition-colors"
+              >Seguridad de Conexión</span
             >
             <span
               class="font-['Inter'] font-semibold text-xs text-[#111D23] dark:text-white transition-colors"
-              >End-to-End Encrypted</span
+              >Cifrado de extremo a extremo</span
             >
           </div>
         </div>
@@ -276,7 +286,7 @@
 
   <div class="fixed right-8 bottom-8 z-50">
     <button
-      class="relative flex justify-center items-center w-14 h-14 bg-[#111D23] dark:bg-[#333333] rounded-full group hover:scale-105 transition-all duration-300"
+      class="relative flex justify-center items-center w-14 h-14 bg-[#111D23] dark:bg-[#1A1A1A] rounded-full group hover:scale-105 transition-all duration-300"
     >
       <div
         class="absolute inset-0 bg-[rgba(255,255,255,0.002)] shadow-[0px_25px_50px_-12px_rgba(0,0,0,0.25)] rounded-full"
@@ -295,9 +305,9 @@
         />
       </svg>
       <div
-        class="absolute right-[70px] top-3 flex items-center px-3 py-2 bg-[#111D23] dark:bg-[#333333] rounded-[32px] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
+        class="absolute right-[70px] top-3 flex items-center px-3 py-2 bg-[#111D23] dark:bg-[#1A1A1A] rounded-[32px] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
       >
-        <span class="font-['Inter'] font-bold text-xs text-[#F4FAFF]">Get Support</span>
+        <span class="font-['Inter'] font-bold text-xs text-[#F4FAFF]">Soporte Técnico</span>
       </div>
     </button>
   </div>

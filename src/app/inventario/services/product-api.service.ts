@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { PagedResponse } from '../../../app/shared/models/paginated-response';
 import {
   ActualizarProductoDto,
   CambiarEstadoProductoDto,
@@ -25,6 +26,7 @@ interface ProductoResponseBe {
   preVen: number;
   estado: boolean;
   stockTotal?: number;
+  stockMinimo?: number;
   fecCreacion: string;
 }
 interface CategoriaResponseBe {
@@ -48,17 +50,18 @@ export class ProductApiService {
   private readonly marcasUrl = `${environment.apiUrl}/v1/brands`;
 
   listarCatalogo(filtros: FiltroCatalogoProductosDto = {}): Observable<RespuestaPaginadaProductosDto> {
-  return this.http.get<ProductoResponseBe[]>(this.baseUrl, {
-    params: this.construirParams(filtros)
-  }).pipe(
-    map((lista) => ({
-      items: lista.map(be => this.mapProductoBeToFe(be)),
-      total: lista.length,
-      pagina: 1,
-      tamanioPagina: lista.length
-    }))
-  );
-}
+    const params = this.construirParams({ pagina: 0, tamanioPagina: 50, ...filtros });
+    return this.http.get<PagedResponse<ProductoResponseBe>>(this.baseUrl, {
+      params
+    }).pipe(
+      map((response) => ({
+        items: (response.items ?? []).map(be => this.mapProductoBeToFe(be)),
+        total: response.total,
+        pagina: response.page,
+        tamanioPagina: response.pageSize
+      }))
+    );
+  }
 
   obtenerPorId(idProducto: string): Observable<DetalleProductoDto> {
     return this.http.get<DetalleProductoDto>(`${this.baseUrl}/${idProducto}`);
@@ -74,14 +77,37 @@ export class ProductApiService {
       modelosCompatibles: payload.modelosCompatibles,
       preCom: payload.precioCompra,
       preVen: payload.precioVenta,
+      stockMinimo: payload.stockMinimo ?? null,
+      stockInicial: payload.stockInicial ?? null,
     };
     return this.http
       .post<ProductoResponseBe>(this.baseUrl, payloadBe)
       .pipe(map((be) => this.mapProductoBeToFe(be)));
   }
 
+  registrarMovimientoInicial(productId: string, cantidad: number): Observable<any> {
+    const body = {
+      tipo: 'INGRESO',
+      idProducto: productId,
+      idLote: null,
+      idLocacion: null,
+      cantidad,
+      motivo: 'Stock inicial',
+      documentoRef: null,
+      proveedor: null,
+      nroLote: null,
+      costoUnit: null,
+      fecGarantia: null
+    };
+    return this.http.post(`${environment.apiUrl}/v1/movimientos`, body);
+  }
+
   actualizar(idProducto: string, payload: ActualizarProductoDto): Observable<DetalleProductoDto> {
-    return this.http.put<DetalleProductoDto>(`${this.baseUrl}/${idProducto}`, payload);
+    return this.http.patch<DetalleProductoDto>(`${this.baseUrl}/${idProducto}`, payload);
+  }
+
+  eliminar(idProducto: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${idProducto}`);
   }
 
   cambiarEstado(
@@ -173,7 +199,7 @@ export class ProductApiService {
       precioVenta: be.preVen,
       estado: be.estado,
       stockTotal: be.stockTotal ?? 0,
-      stockMinimo: 0,
+      stockMinimo: be.stockMinimo ?? 0,
       fechaCreacion: be.fecCreacion
     };
   }

@@ -16,7 +16,7 @@
     <div class="flex items-center gap-3">
       <button
         (click)="openExportModal()"
-        class="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-[#1B1B1B] border border-gray-200 dark:border-[#313131] text-[#111D23] dark:text-white font-['Inter'] font-semibold text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-[#222222] transition-colors cursor-pointer shadow-sm"
+        class="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] text-[#111D23] dark:text-white font-['Inter'] font-semibold text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-[#141414] transition-colors cursor-pointer shadow-sm"
       >
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path
@@ -47,7 +47,7 @@
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
     <div
-      class="p-5 bg-white dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] rounded-xl flex flex-col justify-between gap-4 transition-colors shadow-sm"
+      class="p-5 bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] rounded-xl flex flex-col justify-between gap-4 transition-colors shadow-sm"
     >
       <div class="flex justify-between items-start w-full">
         <span
@@ -56,10 +56,10 @@
           Total Productos
         </span>
         <div
-          class="flex justify-center items-center w-8 h-8 rounded-full bg-gray-50 dark:bg-[#222222] shrink-0 transition-colors"
+          class="flex justify-center items-center w-8 h-8 rounded-full bg-gray-50 dark:bg-[#141414] shrink-0 transition-colors"
         >
           <svg
-            class="w-4 h-4 text-[#81000A] dark:text-[#E2BEBA]"
+            class="w-4 h-4 text-[#81000A] dark:text-[#EF4444]"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -94,7 +94,7 @@
     </div>
 
     <div
-      class="p-5 bg-white dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] rounded-xl flex flex-col justify-between gap-4 transition-colors shadow-sm"
+      class="p-5 bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] rounded-xl flex flex-col justify-between gap-4 transition-colors shadow-sm"
     >
       <div class="flex justify-between items-start w-full">
         <span class="font-['Inter'] text-xs font-bold text-[#F5A623] uppercase tracking-wider">
@@ -134,19 +134,19 @@
     </div>
 
     <div
-      class="p-5 bg-white dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] rounded-xl flex flex-col justify-between gap-4 transition-colors shadow-sm"
+      class="p-5 bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] rounded-xl flex flex-col justify-between gap-4 transition-colors shadow-sm"
     >
       <div class="flex justify-between items-start w-full">
         <span
-          class="font-['Inter'] text-xs font-bold text-[#81000A] dark:text-[#E2BEBA] uppercase tracking-wider"
+          class="font-['Inter'] text-xs font-bold text-[#81000A] dark:text-[#EF4444] uppercase tracking-wider"
         >
           Stock Crítico
         </span>
         <div
-          class="flex justify-center items-center w-8 h-8 rounded-full bg-[#FFF3F3] dark:bg-[rgba(129,0,10,0.2)] shrink-0 transition-colors"
+          class="flex justify-center items-center w-8 h-8 rounded-full bg-[#FFF3F3] dark:bg-[rgba(239,68,68,0.15)] shrink-0 transition-colors"
         >
           <svg
-            class="w-4 h-4 text-[#81000A] dark:text-[#E2BEBA]"
+            class="w-4 h-4 text-[#81000A] dark:text-[#EF4444]"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -165,8 +165,8 @@
           {{ inventoryStats().criticalStock.value }}
         </span>
         <div class="flex items-center gap-1.5 mt-1">
-          <div class="w-1.5 h-1.5 rounded-full bg-[#81000A] dark:bg-[#E2BEBA] animate-pulse"></div>
-          <span class="font-['Inter'] text-xs font-semibold text-[#81000A] dark:text-[#E2BEBA]">
+          <div class="w-1.5 h-1.5 rounded-full bg-[#81000A] dark:bg-[#EF4444] animate-pulse"></div>
+          <span class="font-['Inter'] text-xs font-semibold text-[#81000A] dark:text-[#EF4444]">
             {{ inventoryStats().criticalStock.trend }}
           </span>
         </div>
@@ -174,7 +174,7 @@
     </div>
 
     <div
-      class="p-5 bg-white dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] rounded-xl flex flex-col justify-between gap-4 transition-colors shadow-sm"
+      class="p-5 bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] rounded-xl flex flex-col justify-between gap-4 transition-colors shadow-sm"
     >
       <div class="flex justify-between items-start w-full">
         <span
@@ -183,10 +183,10 @@
           Categorías Activas
         </span>
         <div
-          class="flex justify-center items-center w-8 h-8 rounded-full bg-gray-50 dark:bg-[#222222] shrink-0 transition-colors"
+          class="flex justify-center items-center w-8 h-8 rounded-full bg-gray-50 dark:bg-[#141414] shrink-0 transition-colors"
         >
           <svg
-            class="w-4 h-4 text-[#81000A] dark:text-[#E2BEBA]"
+            class="w-4 h-4 text-[#81000A] dark:text-[#EF4444]"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -228,7 +228,7 @@
 
   <!-- Controles y Filtros -->
   <div
-    class="flex flex-col md:flex-row justify-between items-center w-full gap-4 p-4 bg-white dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] rounded-xl transition-colors shadow-sm"
+    class="flex flex-col md:flex-row justify-between items-center w-full gap-4 p-4 bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] rounded-xl transition-colors shadow-sm"
   >
     <div class="relative w-full md:w-96">
       <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -247,23 +247,17 @@
         </svg>
       </div>
       <input
-        (ngModelChange)="cargarProductos()"
+        [ngModel]="filtroTexto()"
+        (ngModelChange)="filtroTexto.set($event); cargarProductos()"
         type="text"
         placeholder="Buscar por SKU, nombre..."
-        class="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#4C616C] dark:placeholder-[#8A9BA8] focus:outline-none focus:ring-1 focus:ring-[#81000A] transition-colors"
+        class="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#4C616C] dark:placeholder-[#8A9BA8] focus:outline-none focus:ring-1 focus:ring-[#81000A] transition-colors"
       />
     </div>
 
     <div class="flex items-center gap-3 w-full md:w-auto">
       <select
-        class="w-full md:w-auto bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-[#313131] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#81000A] transition-colors cursor-pointer"
-      >
-        @for (cat of categorias(); track cat.idCategoria) {
-          <option [value]="cat.idCategoria">{{ cat.nombreCategoria }}</option>
-        }
-      </select>
-      <select
-        class="w-full md:w-auto bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-[#313131] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#81000A] transition-colors cursor-pointer"
+        class="w-full md:w-auto bg-gray-50 dark:bg-black border border-gray-200 dark:border-[#1F1F1F] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#81000A] transition-colors cursor-pointer"
         [ngModel]="filtroCategoria()"
         (ngModelChange)="filtroCategoria.set($event); cargarProductos()"
       >
@@ -273,7 +267,7 @@
         }
       </select>
       <select
-        class="w-full md:w-auto bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-[#313131] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#81000A] transition-colors cursor-pointer"
+        class="w-full md:w-auto bg-gray-50 dark:bg-black border border-gray-200 dark:border-[#1F1F1F] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#81000A] transition-colors cursor-pointer"
         [ngModel]="filtroEstado()"
         (ngModelChange)="filtroEstado.set($event); cargarProductos()"
       >
@@ -286,46 +280,46 @@
 
   <!-- Tabla de Inventario -->
   <div
-    class="w-full bg-white dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] rounded-xl overflow-hidden shadow-sm transition-colors"
+    class="w-full bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] rounded-xl overflow-hidden shadow-sm transition-colors"
   >
     <div class="overflow-x-auto w-full">
       <table class="w-full text-left border-collapse whitespace-nowrap">
         <thead
-          class="bg-gray-50 dark:bg-[#111111] border-b border-gray-100 dark:border-[#313131] transition-colors"
+          class="bg-gray-50 dark:bg-black border-b border-gray-100 dark:border-[#1F1F1F] transition-colors"
         >
           <tr>
             <th
-              class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA] opacity-90"
+              class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#EF4444] opacity-90"
             >
               SKU
             </th>
             <th
-              class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA] opacity-90"
+              class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#EF4444] opacity-90"
             >
               Producto
             </th>
             <th
-              class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA] opacity-90"
+              class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#EF4444] opacity-90"
             >
               Categoría
             </th>
             <th
-              class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA] opacity-90"
+              class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#EF4444] opacity-90"
             >
               Precio (Venta)
             </th>
             <th
-              class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA] opacity-90"
+              class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#EF4444] opacity-90"
             >
               Stock
             </th>
             <th
-              class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA] opacity-90"
+              class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#EF4444] opacity-90"
             >
               Estado DB
             </th>
             <th
-              class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA] opacity-90 text-right"
+              class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#EF4444] opacity-90 text-right"
             >
               Acciones
             </th>
@@ -348,7 +342,7 @@
           } @else {
             @for (product of products(); track product.idProducto) {
               <tr
-                class="border-b border-gray-50 dark:border-[#313131] hover:bg-gray-50 dark:hover:bg-[#222222] transition-colors cursor-default"
+                class="border-b border-gray-50 dark:border-[#1F1F1F] hover:bg-gray-50 dark:hover:bg-[#141414] transition-colors cursor-default"
               >
                 <td class="px-6 py-4 font-semibold text-[#4C616C] dark:text-[#8A9BA8]">
                   {{ product.sku }}
@@ -401,7 +395,8 @@
                 <td class="px-6 py-4 text-right">
                   <div class="flex items-center justify-end gap-2">
                     <button
-                      class="p-1.5 text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#313131] rounded-md transition-colors cursor-pointer"
+                      (click)="openDetail(product)"
+                      class="p-1.5 text-[#4C616C] dark:text-[#8A9BA8} hover:text-[#111D23] dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#313131] rounded-md transition-colors cursor-pointer"
                       title="Ver Detalles"
                     >
                       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -420,7 +415,8 @@
                       </svg>
                     </button>
                     <button
-                      class="p-1.5 text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#81000A] dark:hover:text-[#E2BEBA] hover:bg-[#FFF3F3] dark:hover:bg-[rgba(129,0,10,0.2)] rounded-md transition-colors cursor-pointer"
+                      (click)="openEdit(product)"
+                      class="p-1.5 text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#81000A] dark:hover:text-[#EF4444] hover:bg-[#FFF3F3] dark:hover:bg-[rgba(239,68,68,0.2)] rounded-md transition-colors cursor-pointer"
                       title="Editar"
                     >
                       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -442,350 +438,68 @@
     </div>
   </div>
 
-  <!-- Modal -->
-  @if (isModalOpen()) {
-    <div
-      class="animate-fade-in fixed inset-0 z-50 flex items-center justify-center bg-[#111111]/60 dark:bg-black/80 backdrop-blur-sm p-4"
-    >
-      <div
-        class="animate-zoom-in flex flex-col w-full max-w-3xl bg-white dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] rounded-2xl shadow-2xl overflow-hidden"
+  <!-- Paginación -->
+  <div class="flex items-center justify-between w-full">
+    <div class="flex items-center gap-2">
+      <span class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">Filas:</span>
+      <select
+        [ngModel]="pageSize()"
+        (ngModelChange)="onPageSizeChange($event)"
+        class="bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#81000A] cursor-pointer"
       >
-        <div
-          class="flex items-center justify-between px-8 py-5 border-b border-gray-100 dark:border-[#313131] bg-gray-50 dark:bg-[#222222]"
-        >
-          <div class="flex items-center gap-3">
-            <div
-              class="w-8 h-8 rounded-full bg-[rgba(129,0,10,0.1)] dark:bg-[#313131] flex items-center justify-center shrink-0"
-            >
-              <svg
-                class="w-4 h-4 text-[#81000A] dark:text-[#E2BEBA]"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                />
-              </svg>
-            </div>
-            <h3 class="font-['Work_Sans'] font-bold text-xl text-[#111D23] dark:text-white">
-              Registrar Nuevo Producto
-            </h3>
-          </div>
-          <button
-            (click)="closeModal()"
-            class="p-2 text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#81000A] dark:hover:text-[#E2BEBA] hover:bg-gray-200 dark:hover:bg-[#313131] rounded-full transition-colors cursor-pointer"
-          >
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-
-        <div class="p-8 overflow-y-auto max-h-[70vh]">
-          <form class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="flex flex-col gap-1.5">
-              <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]"
-                >Categoría <span class="text-[#81000A]">*</span></label
-              >
-              <select
-                name="idCategoria"
-                [ngModel]="formProducto().idCategoria"
-                (ngModelChange)="actualizarForm('idCategoria', $event)"
-                [ngModelOptions]="{ standalone: true }"
-                class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors cursor-pointer hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
-              >
-                <option [ngValue]="null" disabled>Seleccione una categoría</option>
-                @for (cat of categorias(); track cat.idCategoria) {
-                  <option [ngValue]="cat.idCategoria">{{ cat.nombreCategoria }}</option>
-                }
-              </select>
-            </div>
-
-            <div class="flex flex-col gap-1.5">
-              <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]"
-                >Marca <span class="text-[#81000A]">*</span></label
-              >
-              <select
-                name="idMarca"
-                [ngModel]="formProducto().idMarca"
-                (ngModelChange)="actualizarForm('idMarca', $event)"
-                [ngModelOptions]="{ standalone: true }"
-                class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors cursor-pointer hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
-              >
-                <option [ngValue]="null" disabled>Seleccione una marca</option>
-                @for (marca of marcas(); track marca.idMarca) {
-                  <option [ngValue]="marca.idMarca">{{ marca.nombreMarca }}</option>
-                }
-              </select>
-            </div>
-
-            <div class="flex flex-col gap-1.5">
-              <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]"
-                >SKU Interno (cod_prod) <span class="text-[#81000A]">*</span></label
-              >
-              <input
-                name="sku"
-                type="text"
-                placeholder="Ingrese SKU..."
-                class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
-                [ngModel]="formProducto().sku"
-                (ngModelChange)="actualizarForm('sku', $event)"
-                [ngModelOptions]="{ standalone: true }"
-              />
-            </div>
-
-            <div class="flex flex-col gap-1.5">
-              <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]"
-                >Cód. Fabricante (cod_anexo)</label
-              >
-              <input
-                name="numeroParte"
-                type="text"
-                [ngModel]="formProducto().numeroParte"
-                (ngModelChange)="actualizarForm('numeroParte', $event)"
-                [ngModelOptions]="{ standalone: true }"
-                maxlength="30"
-                placeholder="Ej. AB-990-2"
-                class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
-              />
-            </div>
-
-            <div class="flex flex-col gap-1.5 md:col-span-2">
-              <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]"
-                >Descripción Técnica <span class="text-[#81000A]">*</span></label
-              >
-              <textarea
-                name="descripcion"
-                rows="3"
-                [ngModel]="formProducto().descripcion"
-                (ngModelChange)="actualizarForm('descripcion', $event)"
-                [ngModelOptions]="{ standalone: true }"
-                placeholder="Describa el producto..."
-                class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors resize-none hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
-              ></textarea>
-            </div>
-
-            <div class="flex flex-col gap-1.5 md:col-span-2">
-              <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]"
-                >Modelos Compatibles (JSONB)</label
-              >
-              <input
-                name="modelosCompatibles"
-                type="text"
-                [ngModel]="formProducto().modelosCompatiblesStr"
-                (ngModelChange)="actualizarForm('modelosCompatiblesStr', $event)"
-                [ngModelOptions]="{ standalone: true }"
-                placeholder="Separe por comas Ej. Serie 200, Serie 300"
-                class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
-              />
-              <span class="text-[11px] text-[#8A9BA8] mt-0.5"
-                >Estos datos se guardarán como estructura JSON en la base de datos.</span
-              >
-            </div>
-
-            <div class="flex flex-col gap-1.5">
-              <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]"
-                >Precio Compra (USD) <span class="text-[#81000A]">*</span></label
-              >
-              <div class="relative">
-                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#8A9BA8]">$</span>
-                <input
-                  name="precioCompra"
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  [ngModel]="formProducto().precioCompra"
-                  (ngModelChange)="actualizarForm('precioCompra', $event)"
-                  [ngModelOptions]="{ standalone: true }"
-                  placeholder="0.00"
-                  class="w-full pl-8 pr-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
-                />
-              </div>
-            </div>
-
-            <div class="flex flex-col gap-1.5">
-              <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]"
-                >Precio Venta (USD) <span class="text-[#81000A]">*</span></label
-              >
-              <div class="relative">
-                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#8A9BA8]">$</span>
-                <input
-                  name="precioVenta"
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  [ngModel]="formProducto().precioVenta"
-                  (ngModelChange)="actualizarForm('precioVenta', $event)"
-                  [ngModelOptions]="{ standalone: true }"
-                  placeholder="0.00"
-                  class="w-full pl-8 pr-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
-                />
-              </div>
-            </div>
-          </form>
-        </div>
-
-        <div
-          class="flex items-center justify-end gap-3 px-8 py-5 border-t border-gray-100 dark:border-[#313131] bg-gray-50 dark:bg-[#111111]"
-        >
-          <button
-            (click)="closeModal()"
-            class="px-5 py-2.5 font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white hover:bg-gray-200 dark:hover:bg-[#222222] rounded-lg transition-colors cursor-pointer"
-          >
-            Cancelar
-          </button>
-          <button
-            (click)="guardarProducto()"
-            [disabled]="isSaving()"
-            class="flex items-center gap-2 px-6 py-2.5 bg-[#81000A] hover:bg-[#6a0008] text-white font-['Inter'] font-semibold text-sm rounded-lg shadow-md transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            @if (isSaving() == true) {
-              <span>Guardando...</span>
-            } @else {
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-              <span>Guardar Producto</span>
-            }
-          </button>
-        </div>
-      </div>
+        <option [value]="5">5</option>
+        <option [value]="10">10</option>
+        <option [value]="20">20</option>
+      </select>
+      <span class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">
+        Página {{ currentPage() + 1 }} de {{ totalPages() }} ({{ totalItems() }} registros)
+      </span>
     </div>
+    <div class="flex items-center gap-2">
+      <button
+        (click)="previousPage()"
+        [disabled]="currentPage() === 0"
+        class="px-4 py-2 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-[#141414] hover:border-[#81000A]/50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+      >
+        Anterior
+      </button>
+      <button
+        (click)="nextPage()"
+        [disabled]="(currentPage() + 1) * pageSize() >= totalItems()"
+        class="px-4 py-2 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-[#141414] hover:border-[#81000A]/50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+      >
+        Siguiente
+      </button>
+    </div>
+  </div>
+
+  @if (isModalOpen()) {
+    <app-product-create-modal
+      [categorias]="categorias()"
+      [marcas]="marcas()"
+      (close)="closeModal()"
+      (saved)="cargarProductos(); closeModal()"
+    />
   }
   @if (isExportModalOpen()) {
-    <div
-      class="animate-fade-in fixed inset-0 z-50 flex items-center justify-center bg-[#111111]/60 dark:bg-black/80 backdrop-blur-sm p-4"
-    >
-      <div
-        class="animate-zoom-in flex flex-col w-full max-w-md bg-white dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] rounded-2xl shadow-2xl overflow-hidden"
-      >
-        <!-- Header -->
-        <div
-          class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-[#313131] bg-gray-50 dark:bg-[#222222]"
-        >
-          <div class="flex items-center gap-3">
-            <div
-              class="w-8 h-8 rounded-full bg-[rgba(129,0,10,0.1)] dark:bg-[#313131] flex items-center justify-center shrink-0"
-            >
-              <svg
-                class="w-4 h-4 text-[#81000A] dark:text-[#E2BEBA]"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                />
-              </svg>
-            </div>
-            <h3 class="font-['Work_Sans'] font-bold text-lg text-[#111D23] dark:text-white">
-              Exportar Inventario
-            </h3>
-          </div>
-          <button
-            (click)="closeExportModal()"
-            class="p-2 text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#81000A] dark:hover:text-[#E2BEBA] hover:bg-gray-200 dark:hover:bg-[#313131] rounded-full transition-colors cursor-pointer"
-          >
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-        <div class="p-6 flex flex-col gap-3">
-          <p class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8] mb-2">
-            Selecciona el formato de exportación:
-          </p>
-          <button
-            (click)="exportar('excel')"
-            class="flex items-center gap-4 p-4 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-xl hover:border-[#81000A]/50 dark:hover:border-[#E2BEBA]/50 hover:bg-[#FFF3F3]/30 dark:hover:bg-[rgba(129,0,10,0.05)] transition-all cursor-pointer group"
-          >
-            <div
-              class="w-12 h-12 rounded-lg bg-[#217346]/10 flex items-center justify-center shrink-0 group-hover:bg-[#217346]/20 transition-colors"
-            >
-              <svg class="w-6 h-6 text-[#217346]" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M14,2H6A2,2,0,0,0,4,4V20a2,2,0,0,0,2,2H18a2,2,0,0,0,2-2V8ZM18,20H6V4h7V9h5V20Z"
-                  opacity="0.4"
-                />
-                <path d="M14,2l6,6h-6V2Z" />
-                <rect x="8" y="13" width="3" height="5" rx="0.5" fill="#217346" />
-                <rect x="13" y="13" width="3" height="5" rx="0.5" fill="#217346" />
-              </svg>
-            </div>
-            <div class="flex flex-col items-start">
-              <span
-                class="font-['Inter'] font-bold text-[#111D23] dark:text-white group-hover:text-[#217346] transition-colors"
-              >
-                Microsoft Excel (.xlsx)
-              </span>
-              <span class="font-['Inter'] text-xs text-[#4C616C] dark:text-[#8A9BA8]">
-                Formato de hoja de cálculo con filtros y fórmulas
-              </span>
-            </div>
-          </button>
-          <!-- Opción PDF -->
-          <button
-            (click)="exportar('pdf')"
-            class="flex items-center gap-4 p-4 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-xl hover:border-[#81000A]/50 dark:hover:border-[#E2BEBA]/50 hover:bg-[#FFF3F3]/30 dark:hover:bg-[rgba(129,0,10,0.05)] transition-all cursor-pointer group"
-          >
-            <div
-              class="w-12 h-12 rounded-lg bg-[#B30B00]/10 flex items-center justify-center shrink-0 group-hover:bg-[#B30B00]/20 transition-colors"
-            >
-              <svg class="w-6 h-6 text-[#B30B00]" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M14,2H6A2,2,0,0,0,4,4V20a2,2,0,0,0,2,2H18a2,2,0,0,0,2-2V8ZM18,20H6V4h7V9h5V20Z"
-                  opacity="0.4"
-                />
-                <path d="M14,2l6,6h-6V2Z" />
-                <text x="8" y="18" font-size="7" font-weight="bold" fill="#B30B00">PDF</text>
-              </svg>
-            </div>
-            <div class="flex flex-col items-start">
-              <span
-                class="font-['Inter'] font-bold text-[#111D23] dark:text-white group-hover:text-[#B30B00] transition-colors"
-              >
-                Adobe PDF (.pdf)
-              </span>
-              <span class="font-['Inter'] text-xs text-[#4C616C] dark:text-[#8A9BA8]">
-                Formato portable ideal para impresión y distribución
-              </span>
-            </div>
-          </button>
-        </div>
-        <!-- Footer -->
-        <div
-          class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100 dark:border-[#313131] bg-gray-50 dark:bg-[#111111]"
-        >
-          <button
-            (click)="closeExportModal()"
-            class="px-5 py-2.5 font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white hover:bg-gray-200 dark:hover:bg-[#222222] rounded-lg transition-colors cursor-pointer"
-          >
-            Cancelar
-          </button>
-        </div>
-      </div>
-    </div>
+    <app-product-export-modal (close)="closeExportModal()" />
+  }
+  @if (isDetailModalOpen() && selectedProduct()) {
+    <app-product-detail-modal
+      [product]="selectedProduct()!"
+      (close)="closeDetail()"
+      (edit)="closeDetail(); openEdit($event)"
+      (deleted)="cargarProductos(); closeDetail()"
+    />
+  }
+  @if (isEditModalOpen() && editingProductId()) {
+    <app-product-edit-modal
+      [productId]="editingProductId()!"
+      [product]="selectedProduct()!"
+      [categorias]="categorias()"
+      [marcas]="marcas()"
+      (close)="closeEdit()"
+      (updated)="cargarProductos(); closeEdit()"
+    />
   }
 </div>

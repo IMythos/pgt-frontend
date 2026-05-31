@@ -3,11 +3,11 @@
 >
   <!-- ÁREA DEL MAPA DE CALOR -->
   <div
-    class="flex flex-col flex-1 bg-gray-50 dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] rounded-2xl p-8 shadow-sm relative overflow-hidden transition-colors"
+    class="flex flex-col flex-1 bg-gray-50 dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] rounded-2xl p-8 shadow-sm relative overflow-hidden transition-colors"
   >
     <div class="flex justify-between items-start w-full mb-8 relative z-30">
       <h2 class="font-['Work_Sans'] font-bold text-3xl text-[#111D23] dark:text-white">
-        Mapa de Calor por <span class="text-[#81000A] dark:text-[#E2BEBA]">Zonas</span>
+        Mapa de Calor por <span class="text-[#81000A] dark:text-[#EF4444]">Zonas</span>
       </h2>
       <div
         class="flex items-center gap-2 px-4 py-1.5 bg-[#81000A] rounded-full shadow-[0_0_15px_rgba(129,0,10,0.5)]"
@@ -21,7 +21,7 @@
 
     <!-- PLANO DEL ALMACÉN -->
     <div
-      class="relative w-full flex-1 flex flex-col items-center py-12 rounded-xl border border-gray-200 dark:border-[#222222] bg-white dark:bg-[#111111] overflow-hidden transition-colors"
+      class="relative w-full flex-1 flex flex-col items-center py-12 rounded-xl border border-gray-200 dark:border-[#141414] bg-white dark:bg-black overflow-hidden transition-colors"
       style="
         background-image: radial-gradient(circle, rgba(129, 0, 10, 0.15) 1px, transparent 1px);
         background-size: 24px 24px;
@@ -30,7 +30,7 @@
       <div
         class="absolute top-6 left-6 px-4 py-2 bg-[#1B1B1B] border border-[#313131] rounded-full shadow-lg z-30"
       >
-        <span class="font-['Inter'] font-bold text-xs tracking-widest text-[#E2BEBA] uppercase">
+        <span class="font-['Inter'] font-bold text-xs tracking-widest text-[#EF4444] uppercase">
           Sector 4 - Recepción
         </span>
       </div>
@@ -39,7 +39,7 @@
         @for (aisle of aisles(); track aisle.name) {
           <div class="flex flex-col items-center gap-6">
             <div
-              class="px-4 py-1 bg-gray-100 dark:bg-[#222222] rounded-md border border-gray-200 dark:border-[#313131]"
+              class="px-4 py-1 bg-gray-100 dark:bg-[#141414] rounded-md border border-gray-200 dark:border-[#1F1F1F]"
             >
               <span
                 class="font-['Inter'] font-bold text-[11px] tracking-[2px] text-[#4C616C] dark:text-[#8A9BA8] uppercase"
@@ -97,7 +97,7 @@
 
     <!-- Leyenda Térmica -->
     <div
-      class="absolute bottom-12 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-white/90 dark:bg-[#1B1B1B]/90 backdrop-blur-md border border-gray-200 dark:border-[#313131] px-5 py-3 rounded-full shadow-lg z-30"
+      class="absolute bottom-12 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-white/90 dark:bg-[#0A0A0A]/90 backdrop-blur-md border border-gray-200 dark:border-[#1F1F1F] px-5 py-3 rounded-full shadow-lg z-30"
     >
       <span
         class="font-['Inter'] font-bold text-[10px] tracking-wider uppercase text-[#4C616C] dark:text-[#8A9BA8]"
@@ -105,7 +105,7 @@
         Escala Térmica
       </span>
       <div class="flex h-3 w-48 rounded-full overflow-hidden">
-        <div class="flex-1 bg-gray-200 dark:bg-[#222222]"></div>
+        <div class="flex-1 bg-gray-200 dark:bg-[#141414]"></div>
         <div class="flex-1 bg-[#D69E2E]"></div>
         <div class="flex-1 bg-[#DD6B20]"></div>
         <div class="flex-1 bg-[#C53030]"></div>
@@ -116,18 +116,18 @@
 
   <!-- PANEL LATERAL DE DETALLES -->
   <div
-    class="w-full lg:w-[400px] flex flex-col bg-white dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] rounded-2xl shadow-sm transition-colors overflow-hidden shrink-0 relative"
+    class="w-full lg:w-[400px] flex flex-col bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] rounded-2xl shadow-sm transition-colors overflow-hidden shrink-0 relative"
   >
     <div
       class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#81000A] to-transparent opacity-50"
     ></div>
 
-    <div class="flex justify-between items-start p-8 border-b border-gray-50 dark:border-[#313131]">
+    <div class="flex justify-between items-start p-8 border-b border-gray-50 dark:border-[#1F1F1F]">
       <div class="flex flex-col">
         <div class="flex items-center gap-2 mb-1">
           <div class="w-1.5 h-1.5 rounded-full bg-[#81000A] animate-ping"></div>
           <span
-            class="font-['Inter'] font-bold text-[10px] tracking-[1.5px] uppercase text-[#81000A] dark:text-[#E2BEBA]"
+            class="font-['Inter'] font-bold text-[10px] tracking-[1.5px] uppercase text-[#81000A] dark:text-[#EF4444]"
           >
             Diagnóstico de Nodo
           </span>
@@ -137,7 +137,7 @@
         </h3>
       </div>
       <button
-        class="p-2 bg-gray-50 dark:bg-[#222222] hover:bg-gray-100 dark:hover:bg-[#313131] rounded-full text-[#4C616C] dark:text-[#8A9BA8] transition-colors cursor-pointer border-none outline-none"
+        class="p-2 bg-gray-50 dark:bg-[#141414] hover:bg-gray-100 dark:hover:bg-[#141414] rounded-full text-[#4C616C] dark:text-[#8A9BA8] transition-colors cursor-pointer border-none outline-none"
       >
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path
@@ -153,7 +153,7 @@
     <div class="flex flex-col p-8 gap-8 flex-1 overflow-y-auto">
       <div class="grid grid-cols-2 gap-4 w-full">
         <div
-          class="flex flex-col bg-gray-50 dark:bg-[#111111] border border-gray-100 dark:border-[#313131] p-5 rounded-xl"
+          class="flex flex-col bg-gray-50 dark:bg-black border border-gray-100 dark:border-[#1F1F1F] p-5 rounded-xl"
         >
           <span
             class="font-['Inter'] font-semibold text-[11px] text-[#4C616C] dark:text-[#8A9BA8] uppercase tracking-wider mb-2"
@@ -179,7 +179,7 @@
         </div>
 
         <div
-          class="flex flex-col bg-gray-50 dark:bg-[#111111] border border-gray-100 dark:border-[#313131] p-5 rounded-xl"
+          class="flex flex-col bg-gray-50 dark:bg-black border border-gray-100 dark:border-[#1F1F1F] p-5 rounded-xl"
         >
           <span
             class="font-['Inter'] font-semibold text-[11px] text-[#4C616C] dark:text-[#8A9BA8] uppercase tracking-wider mb-2"
@@ -215,10 +215,10 @@
         <div class="flex flex-col gap-3">
           @for (item of selectedNode().inventory; track item.name) {
             <div
-              class="group flex items-center gap-4 p-4 bg-white dark:bg-[#222222] border border-gray-100 dark:border-[#313131] hover:border-[#81000A] dark:hover:border-[#81000A] rounded-xl transition-all cursor-pointer"
+              class="group flex items-center gap-4 p-4 bg-white dark:bg-[#141414] border border-gray-100 dark:border-[#1F1F1F] hover:border-[#81000A] dark:hover:border-[#EF4444] rounded-xl transition-all cursor-pointer"
             >
               <div
-                class="flex justify-center items-center w-10 h-10 bg-gray-50 dark:bg-[#111111] group-hover:bg-[#81000A] rounded-lg shrink-0 transition-colors"
+                class="flex justify-center items-center w-10 h-10 bg-gray-50 dark:bg-black group-hover:bg-[#81000A] rounded-lg shrink-0 transition-colors"
               >
                 <svg
                   class="w-5 h-5 text-[#4C616C] dark:text-[#8A9BA8] group-hover:text-white transition-colors"
@@ -251,7 +251,7 @@
       </div>
     </div>
 
-    <div class="p-6 border-t border-gray-50 dark:border-[#313131] bg-[#FAFAFA] dark:bg-[#111111]">
+    <div class="p-6 border-t border-gray-50 dark:border-[#1F1F1F] bg-[#FAFAFA] dark:bg-black">
       <button
         class="relative overflow-hidden flex items-center justify-center gap-2 w-full py-4 bg-[#81000A] hover:bg-[#6a0008] text-white font-['Inter'] font-bold text-sm rounded-xl shadow-lg transition-all cursor-pointer group"
       >

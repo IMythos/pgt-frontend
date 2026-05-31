@@ -1,9 +1,9 @@
 <header
-  class="w-full h-[80px] bg-[#F4FAFF] dark:bg-[#111111] flex items-center justify-between px-8 shadow-[0px_4px_24px_rgba(17,29,35,0.04)] dark:shadow-none border-b border-[rgba(129,0,10,0.1)] dark:border-[#313131] transition-colors duration-300 z-10 shrink-0"
+  class="w-full h-[80px] bg-[#F4FAFF] dark:bg-black flex items-center justify-between px-8 shadow-[0px_4px_24px_rgba(17,29,35,0.04)] dark:shadow-none border-b border-[rgba(129,0,10,0.1)] dark:border-[#1F1F1F] transition-colors duration-300 z-10 shrink-0"
 >
   <div class="flex items-center gap-4">
     <button
-      class="lg:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 rounded-lg hover:bg-[rgba(129,0,10,0.05)] dark:hover:bg-[#222222] transition-colors cursor-pointer border-none outline-none"
+      class="lg:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 rounded-lg hover:bg-[rgba(129,0,10,0.05)] dark:hover:bg-[#141414] transition-colors cursor-pointer border-none outline-none"
       (click)="toggleSidebar.emit()"
       aria-label="Abrir menú"
     >
@@ -49,7 +49,7 @@
           <li [attr.aria-current]="last ? 'page' : null">
             <div class="flex items-center">
               <svg
-                class="w-4 h-4 text-gray-300 dark:text-[#313131]"
+                class="w-4 h-4 text-gray-300 dark:text-[#1F1F1F]"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -82,11 +82,11 @@
         }
       </ol>
     </nav>
-    <div class="hidden md:block h-5 w-px bg-gray-200 dark:bg-[#313131] transition-colors"></div>
+    <div class="hidden md:block h-5 w-px bg-gray-200 dark:bg-[#1F1F1F] transition-colors"></div>
 
     <!-- System Node Status -->
     <div
-      class="hidden md:flex items-center gap-2 bg-gray-50 dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] px-3 py-1.5 rounded-full transition-colors"
+      class="hidden md:flex items-center gap-2 bg-gray-50 dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] px-3 py-1.5 rounded-full transition-colors"
     >
       <div
         class="w-2 h-2 rounded-full bg-[#34A853] animate-pulse shadow-[0_0_8px_rgba(52,168,83,0.6)]"
@@ -107,7 +107,7 @@
         class="relative p-2 rounded-full hover:bg-[rgba(129,0,10,0.05)] dark:hover:bg-[#222222] transition-colors group cursor-pointer border-none outline-none"
       >
         <svg
-          class="w-[20px] h-[20px] text-[#4C616C] dark:text-[#8A9BA8] group-hover:text-[#81000A] dark:group-hover:text-white transition-colors"
+          class="w-[20px] h-[20px] text-[#4C616C] dark:text-[#8A9BA8] group-hover:text-[#81000A] dark:group-hover:text-[#EF4444] transition-colors"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -121,7 +121,7 @@
         </svg>
         @if (hasUnreadNotifications()) {
           <div
-            class="absolute top-[7px] right-[7px] w-2 h-2 bg-[#81000A] rounded-full border-[1.5px] border-[#F4FAFF] dark:border-[#111111] transition-colors"
+            class="absolute top-[7px] right-[7px] w-2 h-2 bg-[#81000A] rounded-full border-[1.5px] border-[#F4FAFF] dark:border-black transition-colors"
           ></div>
         }
       </button>
@@ -130,8 +130,8 @@
       <div class="relative">
         <button
           (click)="toggleSettings()"
-          class="relative p-2 rounded-full hover:bg-[rgba(129,0,10,0.05)] dark:hover:bg-[#222222] transition-colors group cursor-pointer border-none outline-none"
-          [ngClass]="{ 'bg-[rgba(129,0,10,0.05)] dark:bg-[#222222]': isSettingsOpen() }"
+          class="relative p-2 rounded-full hover:bg-[rgba(129,0,10,0.05)] dark:hover:bg-[#141414] transition-colors group cursor-pointer border-none outline-none"
+          [ngClass]="{ 'bg-[rgba(129,0,10,0.05)] dark:bg-[#141414]': isSettingsOpen() }"
         >
           <svg
             class="w-[20px] h-[20px] transition-colors"
@@ -161,10 +161,10 @@
 
         @if (isSettingsOpen()) {
           <div
-            class="absolute right-0 mt-3 w-64 bg-white dark:bg-[#1B1B1B] border border-[rgba(129,0,10,0.1)] dark:border-[#313131] rounded-xl shadow-lg z-50 animate-dropdown origin-top-right overflow-hidden"
+            class="absolute right-0 mt-3 w-64 bg-white dark:bg-[#0A0A0A] border border-[rgba(129,0,10,0.1)] dark:border-[#1F1F1F] rounded-xl shadow-lg z-50 animate-dropdown origin-top-right overflow-hidden"
           >
             <div
-              class="px-4 py-3 border-b border-[rgba(129,0,10,0.05)] dark:border-[#313131] bg-[#FAFAFA] dark:bg-[#111111]"
+              class="px-4 py-3 border-b border-[rgba(129,0,10,0.05)] dark:border-[#1F1F1F] bg-[#FAFAFA] dark:bg-black"
             >
               <h4 class="font-['Inter'] font-bold text-sm text-[#111D23] dark:text-white">
                 Configuración
@@ -172,13 +172,13 @@
             </div>
             <div class="p-2">
               <div
-                class="flex items-center justify-between p-3 hover:bg-[rgba(129,0,10,0.02)] dark:hover:bg-[#222222] rounded-lg transition-colors cursor-pointer"
+                class="flex items-center justify-between p-3 hover:bg-[rgba(129,0,10,0.02)] dark:hover:bg-[#141414] rounded-lg transition-colors cursor-pointer"
                 (click)="toggleDarkMode()"
               >
                 <div class="flex items-center gap-3">
                   @if (isDarkMode()) {
                     <svg
-                      class="w-5 h-5 text-[#E2BEBA]"
+                      class="w-5 h-5 text-[#EF4444]"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -211,7 +211,7 @@
                 </div>
                 <div
                   class="w-10 h-5.5 rounded-full relative transition-colors duration-300 shadow-inner"
-                  [ngClass]="isDarkMode() ? 'bg-[#81000A]' : 'bg-gray-200 dark:bg-[#111111]'"
+                  [ngClass]="isDarkMode() ? 'bg-[#EF4444]' : 'bg-gray-200 dark:bg-black'"
                 >
                   <div
                     class="absolute left-1 top-1 w-3.5 h-3.5 bg-white rounded-full transition-transform duration-300 shadow-sm"
@@ -226,10 +226,10 @@
 
       <!-- Ayuda -->
       <button
-        class="relative p-2 rounded-full hover:bg-[rgba(129,0,10,0.05)] dark:hover:bg-[#222222] transition-colors group cursor-pointer border-none outline-none"
+        class="relative p-2 rounded-full hover:bg-[rgba(129,0,10,0.05)] dark:hover:bg-[#141414] transition-colors group cursor-pointer border-none outline-none"
       >
         <svg
-          class="w-[20px] h-[20px] text-[#4C616C] dark:text-[#8A9BA8] group-hover:text-[#81000A] dark:group-hover:text-white transition-colors"
+          class="w-[20px] h-[20px] text-[#4C616C] dark:text-[#8A9BA8] group-hover:text-[#81000A] dark:group-hover:text-[#EF4444] transition-colors"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -244,12 +244,12 @@
       </button>
     </div>
 
-    <div class="h-8 w-px bg-[rgba(129,0,10,0.1)] dark:bg-[#313131] transition-colors"></div>
+    <div class="h-8 w-px bg-[rgba(129,0,10,0.1)] dark:bg-[#1F1F1F] transition-colors"></div>
 
     <!-- Usuario -->
     <div class="flex items-center gap-3 cursor-pointer group">
       <div
-        class="w-10 h-10 rounded-full bg-[rgba(129,0,10,0.08)] dark:bg-[#1B1B1B] flex items-center justify-center overflow-hidden transition-colors"
+        class="w-10 h-10 rounded-full bg-[rgba(129,0,10,0.08)] dark:bg-[#0A0A0A] flex items-center justify-center overflow-hidden transition-colors"
       >
         <svg
           class="w-6 h-6 text-[#81000A] dark:text-[#8A9BA8]"
@@ -265,12 +265,12 @@
       </div>
       <div class="flex items-center gap-1">
         <span
-          class="font-['Inter'] font-semibold text-sm text-[#111D23] dark:text-white group-hover:text-[#81000A] dark:group-hover:text-[#E2BEBA] transition-colors"
+          class="font-['Inter'] font-semibold text-sm text-[#111D23] dark:text-white group-hover:text-[#81000A] dark:group-hover:text-[#EF4444] transition-colors"
         >
           {{ authService.currentUserName() }}
         </span>
         <svg
-          class="w-4 h-4 text-[#4C616C] dark:text-[#8A9BA8] group-hover:text-[#81000A] dark:group-hover:text-[#E2BEBA] transition-colors"
+          class="w-4 h-4 text-[#4C616C] dark:text-[#8A9BA8] group-hover:text-[#81000A] dark:group-hover:text-[#EF4444] transition-colors"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"

@@ -1,42 +1,152 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, inject } from '@angular/core';
+import { DashboardApiService } from '../../services/dashboard-api.service';
+import { WebSocketService } from '../../../core/services/websocket.service';
+import { DashboardKpi, StockAlert, MovementPoint, TipoProporcion, Operation, ZoneCapacity, ProductTop } from '../../models/dashboard.models';
+import { KpiCard } from '../../components/kpi-card/kpi-card';
+import { MovimientosAreaChart } from '../../components/movimientos-area-chart/movimientos-area-chart';
+import { ProporcionDonutChart } from '../../components/proporcion-donut-chart/proporcion-donut-chart';
+import { StockAlertsWidget } from '../../components/stock-alerts-widget/stock-alerts-widget';
+import { TopProductsChart } from '../../components/top-products-chart/top-products-chart';
+import { UltimasOperacionesWidget } from '../../components/ultimas-operaciones-widget/ultimas-operaciones-widget';
+import { CapacidadZonaWidget } from '../../components/capacidad-zona-widget/capacidad-zona-widget';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-main-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    KpiCard,
+    MovimientosAreaChart,
+    ProporcionDonutChart,
+    StockAlertsWidget,
+    TopProductsChart,
+    UltimasOperacionesWidget,
+    CapacidadZonaWidget
+  ],
   templateUrl: './main-dashboard.html'
 })
-export class MainDashboard {
-  kpis = signal([
-    { title: 'Total Inventario', value: '12,450', trend: '+5.2%', isPositive: true, icon: 'box' },
-    { title: 'Órdenes Pendientes', value: '34', trend: '-2.1%', isPositive: false, icon: 'clipboard' },
-    { title: 'Alertas de Stock', value: '8', trend: '+1.5%', isPositive: false, icon: 'alert' },
-    { title: 'Valor Almacenado', value: '$ 145.2K', trend: '+12.4%', isPositive: true, icon: 'dollar' }
-  ]);
+export class MainDashboard implements OnInit, OnDestroy {
+  private api = inject(DashboardApiService);
+  private ws = inject(WebSocketService);
+  private destroy$ = new Subject<void>();
 
-  stockAlerts = signal([
-    { sku: '902-11A', name: 'Válvula de Presión Hidráulica', stock: 2, status: 'Crítico' },
-    { sku: '442-88B', name: 'Sensor de Temperatura PT100', stock: 5, status: 'Bajo' },
-    { sku: '110-22X', name: 'Módulo PLC Expansión', stock: 1, status: 'Crítico' }
-  ]);
-  chartData = signal([
-    { label: 'Ene', value: 40 },
-    { label: 'Feb', value: 65 },
-    { label: 'Mar', value: 45 },
-    { label: 'Abr', value: 85 },
-    { label: 'May', value: 55 }
-  ]);
-  recentOperations = signal([
-    { id: 'MOV-8901', type: 'INGRESO', product: 'Motor Servodrive 5HP', date: '28 Abr 2026 08:30 AM', user: 'Juan P.', status: 'COMPLETADO' },
-    { id: 'MOV-8902', type: 'SALIDA', product: 'Sensor de Presión', date: '28 Abr 2026 09:15 AM', user: 'Diego M.', status: 'COMPLETADO' },
-    { id: 'MOV-8903', type: 'AJUSTE', product: 'Controlador PLC', date: '28 Abr 2026 10:45 AM', user: 'Admin', status: 'REVISIÓN' },
-    { id: 'MOV-8904', type: 'PICKING', product: 'Módulo de E/S', date: '28 Abr 2026 11:20 AM', user: 'Luis F.', status: 'PENDIENTE' }
-  ]);
-  capacityStatus = signal({
-  percentage: 75,
-  label: 'Ocupado',
-  totalLocations: '1,450',
-  usedLocations: '1,087'
-});
+  kpis = signal<DashboardKpi[]>([]);
+  stockAlerts = signal<StockAlert[]>([]);
+  movements = signal<MovementPoint[]>([]);
+  proporciones = signal<TipoProporcion[]>([]);
+  operations = signal<Operation[]>([]);
+  zoneCapacities = signal<ZoneCapacity[]>([]);
+  topProducts = signal<ProductTop[]>([]);
+
+  loading = signal(true);
+
+  ngOnInit() {
+    this.loadAllData();
+    this.subscribeWebSocket();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  loadAllData() {
+    this.loading.set(true);
+    this.loadedCount = 0;
+
+    this.api.getKpis().subscribe(k => {
+      this.kpis.set(k);
+      this.checkLoading();
+    });
+    this.api.getStockAlerts().subscribe(a => {
+      this.stockAlerts.set(a);
+      this.checkLoading();
+    });
+    this.api.getMovementsByTime().subscribe(m => {
+      this.movements.set(m);
+      this.checkLoading();
+    });
+    this.api.getProporcionPorTipo().subscribe(p => {
+      this.proporciones.set(p);
+      this.checkLoading();
+    });
+    this.api.getRecentOperations().subscribe(o => {
+      this.operations.set(o);
+      this.checkLoading();
+    });
+    this.api.getZoneCapacities().subscribe(z => {
+      this.zoneCapacities.set(z);
+      this.checkLoading();
+    });
+    this.api.getTopProducts().subscribe(p => {
+      this.topProducts.set(p);
+      this.checkLoading();
+    });
+  }
+
+  private loadedCount = 0;
+
+  private checkLoading() {
+    this.loadedCount++;
+    if (this.loadedCount >= 7) {
+      this.loading.set(false);
+    }
+  }
+
+  private subscribeWebSocket() {
+    this.ws.onMovement().pipe(takeUntil(this.destroy$)).subscribe(evt => {
+      const newOp: Operation = {
+        id: 'MOV-' + Date.now().toString().slice(-4),
+        type: evt.tipo,
+        product: 'Producto #' + evt.productId.slice(0, 6),
+        date: new Date().toLocaleString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        user: 'Sistema',
+        status: 'COMPLETADO'
+      };
+      this.operations.update(ops => [newOp, ...ops.slice(0, 9)]);
+
+      this.kpis.update(current => current.map(kpi => {
+        if (kpi.id === 'total-inventario') {
+          const newVal = kpi.value + evt.cantidad;
+          const formatted = newVal >= 1000 ? newVal.toLocaleString() : String(newVal);
+          return { ...kpi, value: newVal, formattedValue: formatted, sparkline: [...kpi.sparkline.slice(1), newVal] };
+        }
+        if (kpi.id === 'ordenes-pendientes' && evt.tipo === 'SALIDA') {
+          const newVal = kpi.value + 1;
+          return { ...kpi, value: newVal, formattedValue: String(newVal), sparkline: [...kpi.sparkline.slice(1), newVal] };
+        }
+        return kpi;
+      }));
+    });
+
+    this.ws.onStockAlert().pipe(takeUntil(this.destroy$)).subscribe(evt => {
+      const alerta: StockAlert = {
+        sku: evt.productId.slice(0, 7),
+        name: 'Producto en alerta',
+        stock: evt.currentStock,
+        status: evt.currentStock <= 0 ? 'Crítico' : 'Bajo',
+        costoPromedio: 0
+      };
+      this.stockAlerts.update(alerts => {
+        const existingIdx = alerts.findIndex(a => a.sku === alerta.sku);
+        if (existingIdx >= 0) {
+          const updated = [...alerts];
+          updated[existingIdx] = alerta;
+          return updated;
+        }
+        return [alerta, ...alerts];
+      });
+
+      const totalAlerts = this.stockAlerts().filter(a => a.status === 'Crítico').length;
+      this.kpis.update(current => current.map(kpi => {
+        if (kpi.id === 'alertas-stock') {
+          const newVal = totalAlerts;
+          return { ...kpi, value: newVal, formattedValue: String(newVal), sparkline: [...kpi.sparkline.slice(1), newVal] };
+        }
+        return kpi;
+      }));
+    });
+  }
 }

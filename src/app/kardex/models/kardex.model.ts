@@ -12,6 +12,7 @@ export interface KardexDto {
   cantSalida: number;
   stockActual: number;
   costoPromedio: number;
+  metodoCosto: string;
 }
 
 export interface FiltroKardexDto {
@@ -19,6 +20,7 @@ export interface FiltroKardexDto {
   fechaDesde?: string;
   fechaHasta?: string;
   tipoMovimiento?: string;
+  metodoCosto?: string;
   pagina?: number;
   tamanioPagina?: number;
 }

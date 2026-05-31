@@ -71,7 +71,7 @@ export class TrackingHome {
     let baseClass = 'relative z-10 w-full h-full rounded-md flex items-center justify-center font-["Inter"] font-bold text-sm transition-all duration-300 cursor-pointer border backdrop-blur-sm ';
     
     if (isSelected) {
-      baseClass += 'ring-2 ring-white dark:ring-[#E2BEBA] ring-offset-2 ring-offset-gray-100 dark:ring-offset-[#111111] scale-105 z-20 ';
+      baseClass += 'ring-2 ring-white dark:ring-[#EF4444] ring-offset-2 ring-offset-gray-100 dark:ring-offset-black scale-105 z-20 ';
     }
 
     if (intensity >= 80) return baseClass + 'bg-[#81000A]/90 border-[#81000A] text-white'; // Fuego / Granate
@@ -80,7 +80,7 @@ export class TrackingHome {
     if (intensity >= 20) return baseClass + 'bg-[#D69E2E]/80 border-[#D69E2E] text-white'; // Amarillo/Ambar
     
     // Zona Fría (Gris oscuro/neutro)
-    return baseClass + 'bg-gray-100/50 dark:bg-[#222222]/80 border-gray-300 dark:border-[#313131] text-[#4C616C] dark:text-[#8A9BA8]'; 
+    return baseClass + 'bg-gray-100/50 dark:bg-[#141414]/80 border-gray-300 dark:border-[#1F1F1F] text-[#4C616C] dark:text-[#8A9BA8]'; 
   }
 
   getGlowOpacity(intensity: number): number {
