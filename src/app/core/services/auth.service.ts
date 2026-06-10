@@ -26,7 +26,7 @@ export class AuthService {
   isAuthenticated = signal<boolean>(false);
   currentUserRole = signal<string | null>(null);
   currentUserName = signal<string | null>(null);
-
+  sessionExpired = signal<boolean>(false);
   private readonly AUTH_API_URL = 'http://localhost:8080/api/v1/auth'; 
 
   constructor(
@@ -90,8 +90,16 @@ export class AuthService {
     this.router.navigate(['/auth/login']);
   }
 
-  // Método auxiliar para el JwtInterceptor que te mostré antes
   getToken(): string | null {
     return localStorage.getItem('token');
+  }
+  
+  handleSessionExpired(): void {
+    this.sessionExpired.set(true);
+  }
+
+  confirmSessionExpired(): void {
+    this.sessionExpired.set(false);
+    this.logout();
   }
 }

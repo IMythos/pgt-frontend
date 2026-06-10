@@ -1,0 +1,170 @@
+@let p = product();
+@let stock = p.stockTotal ?? 0;
+@let minStock = p.stockMinimo ?? 0;
+@let margin = p.precioVenta - p.precioCompra;
+@let marginPct = p.precioVenta > 0 ? (margin / p.precioVenta * 100) : 0;
+@let stockStatus = getStockStatus(stock);
+@let stockBarPct = stockBarPercent(stock, minStock);
+
+<div class="animate-fade-in fixed inset-0 z-50 flex items-center justify-center bg-[#111111]/60 dark:bg-black/80 backdrop-blur-sm p-4">
+  <div class="animate-zoom-in flex flex-col w-full max-w-xl bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] rounded-2xl shadow-2xl overflow-hidden">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-[#1F1F1F] bg-gray-50 dark:bg-[#141414]">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-full bg-[rgba(129,0,10,0.1)] dark:bg-[#313131] flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5 text-[#81000A] dark:text-[#EF4444]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+        </div>
+        <div class="flex flex-col">
+          <h3 class="font-['Work_Sans'] font-bold text-lg text-[#111D23] dark:text-white leading-tight">{{ p.sku }}</h3>
+          <span class="font-['Inter'] text-[11px] text-[#4C616C] dark:text-[#8A9BA8]">{{ p.categoria.nombreCategoria }}{{ p.marca.nombreMarca ? ' · ' + p.marca.nombreMarca : '' }}</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span
+          class="flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wide"
+          [ngClass]="p.estado ? 'bg-[#E6F4EA] dark:bg-[rgba(52,168,83,0.15)] text-[#34A853]' : 'bg-[#FCE8E8] dark:bg-[rgba(239,68,68,0.15)] text-[#81000A] dark:text-[#EF4444]'"
+        >
+          <span class="w-1.5 h-1.5 rounded-full" [ngClass]="p.estado ? 'bg-[#34A853]' : 'bg-[#81000A] dark:bg-[#EF4444]'"></span>
+          {{ p.estado ? 'Activo' : 'Inactivo' }}
+        </span>
+        <button (click)="close.emit()" type="button" class="p-1.5 text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#81000A] dark:hover:text-[#EF4444] hover:bg-gray-200 dark:hover:bg-[#313131] rounded-full transition-colors cursor-pointer">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="p-6 overflow-y-auto max-h-[70vh] flex flex-col gap-5">
+
+      <!-- Stock Card -->
+      <div class="bg-gray-50 dark:bg-black border border-gray-100 dark:border-[#1F1F1F] rounded-xl p-5 transition-colors">
+        <div class="flex items-start gap-4">
+          <div class="flex flex-col items-center justify-center w-16 h-16 rounded-xl bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] shrink-0">
+            <span class="font-['Work_Sans'] text-2xl font-bold text-[#111D23] dark:text-white leading-none">{{ stock }}</span>
+            <span class="font-['Inter'] text-[10px] text-[#8A9BA8] font-semibold mt-0.5">und.</span>
+          </div>
+          <div class="flex flex-col gap-2 flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="font-['Inter'] text-xs font-bold uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8]">Stock Total</span>
+              <span class="font-['Inter'] text-[11px] font-semibold text-[#4C616C] dark:text-[#8A9BA8]">Mín: {{ minStock }}</span>
+            </div>
+            <div class="w-full h-2 bg-gray-200 dark:bg-[#1F1F1F] rounded-full overflow-hidden">
+              <div
+                class="h-full rounded-full transition-all duration-300"
+                [ngClass]="stockBarPct <= 25 ? 'bg-[#EF4444]' : stockBarPct <= 60 ? 'bg-[#F5A623]' : 'bg-[#34A853]'"
+                [style.width.%]="stockBarPct"
+              ></div>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase" [ngClass]="stockStatus.colorClass">{{ stockStatus.label }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pricing Card -->
+      <div class="bg-gray-50 dark:bg-black border border-gray-100 dark:border-[#1F1F1F] rounded-xl p-5 transition-colors">
+        <span class="font-['Inter'] text-xs font-bold uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8] block mb-3">Precios</span>
+        <div class="grid grid-cols-3 gap-4">
+          <div class="flex flex-col">
+            <span class="font-['Inter'] text-[11px] font-semibold text-[#4C616C] dark:text-[#8A9BA8]">Compra</span>
+            <span class="font-['Work_Sans'] text-lg font-bold text-[#111D23] dark:text-white">${{ p.precioCompra | number:'1.2-2' }}</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-['Inter'] text-[11px] font-semibold text-[#4C616C] dark:text-[#8A9BA8]">Venta</span>
+            <span class="font-['Work_Sans'] text-lg font-bold text-[#111D23] dark:text-white">${{ p.precioVenta | number:'1.2-2' }}</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-['Inter'] text-[11px] font-semibold text-[#4C616C] dark:text-[#8A9BA8]">Margen</span>
+            <div class="flex items-baseline gap-1.5">
+              <span class="font-['Work_Sans'] text-lg font-bold" [ngClass]="margin >= 0 ? 'text-[#34A853]' : 'text-[#EF4444]'">
+                ${{ margin | number:'1.2-2' }}
+              </span>
+              <span
+                class="text-[11px] font-bold px-1.5 py-0.5 rounded"
+                [ngClass]="marginPct >= 30 ? 'bg-[#E6F4EA] dark:bg-[rgba(52,168,83,0.15)] text-[#34A853]' : marginPct >= 10 ? 'bg-[#FEF3C7] dark:bg-[rgba(245,166,35,0.15)] text-[#F5A623]' : 'bg-[#FCE8E8] dark:bg-[rgba(239,68,68,0.15)] text-[#EF4444]'"
+              >
+                {{ marginPct | number:'1.0-0' }}%
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Card -->
+      <div class="bg-gray-50 dark:bg-black border border-gray-100 dark:border-[#1F1F1F] rounded-xl p-5 transition-colors">
+        <span class="font-['Inter'] text-xs font-bold uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8] block mb-3">Información</span>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+          <div class="flex flex-col gap-0.5">
+            <span class="font-['Inter'] text-[11px] font-semibold text-[#8A9BA8] uppercase tracking-wider">SKU</span>
+            <span class="font-['Inter'] text-sm font-bold text-[#111D23] dark:text-white">{{ p.sku }}</span>
+          </div>
+          <div class="flex flex-col gap-0.5">
+            <span class="font-['Inter'] text-[11px] font-semibold text-[#8A9BA8] uppercase tracking-wider">N° Parte</span>
+            <span class="font-['Inter'] text-sm font-semibold text-[#111D23] dark:text-white">{{ p.numeroParte || '—' }}</span>
+          </div>
+          <div class="flex flex-col gap-0.5">
+            <span class="font-['Inter'] text-[11px] font-semibold text-[#8A9BA8] uppercase tracking-wider">Categoría</span>
+            <span class="font-['Inter'] text-sm font-semibold text-[#111D23] dark:text-white">{{ p.categoria.nombreCategoria }}</span>
+          </div>
+          <div class="flex flex-col gap-0.5">
+            <span class="font-['Inter'] text-[11px] font-semibold text-[#8A9BA8] uppercase tracking-wider">Marca</span>
+            <span class="font-['Inter'] text-sm font-semibold text-[#111D23] dark:text-white">{{ p.marca.nombreMarca }}</span>
+          </div>
+          <div class="md:col-span-2 flex flex-col gap-0.5">
+            <span class="font-['Inter'] text-[11px] font-semibold text-[#8A9BA8] uppercase tracking-wider">Descripción</span>
+            <span class="font-['Inter'] text-sm text-[#111D23] dark:text-white leading-relaxed">{{ p.descripcion }}</span>
+          </div>
+          <div class="md:col-span-2 flex flex-col gap-1.5">
+            <span class="font-['Inter'] text-[11px] font-semibold text-[#8A9BA8] uppercase tracking-wider">Modelos Compatibles</span>
+            @if (p.modelosCompatibles.length > 0) {
+            <div class="flex flex-wrap gap-1.5">
+              @for (modelo of p.modelosCompatibles; track modelo) {
+              <span class="px-2.5 py-1 rounded-full bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] font-['Inter'] text-[11px] font-semibold text-[#4C616C] dark:text-[#8A9BA8] transition-colors">{{ modelo }}</span>
+              }
+            </div>
+            } @else {
+            <span class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">—</span>
+            }
+          </div>
+          <div class="flex flex-col gap-0.5">
+            <span class="font-['Inter'] text-[11px] font-semibold text-[#8A9BA8] uppercase tracking-wider">Fecha Creación</span>
+            <span class="font-['Inter'] text-sm font-semibold text-[#111D23] dark:text-white">{{ p.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="flex items-center justify-between px-6 py-4 border-t border-gray-100 dark:border-[#1F1F1F] bg-gray-50 dark:bg-black">
+      <button (click)="eliminarProducto(p.idProducto)"
+        class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-[#0A0A0A] border border-[#81000A]/30 dark:border-[#EF4444]/30 text-[#81000A] dark:text-[#EF4444] font-['Inter'] font-semibold text-sm rounded-lg hover:bg-[#FFF3F3] dark:hover:bg-[rgba(239,68,68,0.1)] transition-colors cursor-pointer">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+        Eliminar
+      </button>
+      <div class="flex items-center gap-2">
+        <button (click)="edit.emit(p)"
+          class="flex items-center gap-2 px-4 py-2 bg-[#81000A] hover:bg-[#6a0008] text-white font-['Inter'] font-semibold text-sm rounded-lg shadow-sm transition-colors cursor-pointer">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+          </svg>
+          Editar
+        </button>
+        <button (click)="close.emit()"
+          class="px-4 py-2 font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white hover:bg-gray-200 dark:hover:bg-[#141414] rounded-lg transition-colors cursor-pointer">
+          Cerrar
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

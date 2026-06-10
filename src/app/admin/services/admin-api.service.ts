@@ -2,48 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { AdminAccount, AdminRole, AdminUser, CreateAdminUserPayload } from '../models/admin.models';
 
 interface ApiResponse<T> {
   success: boolean;
   message: string;
   data: T;
   timestamp?: string;
-}
-
-export interface AdminRole {
-  id: number;
-  name: string;
-  createdAt: string | null;
-}
-
-export interface AdminUser {
-  uuid: string;
-  firstName: string;
-  lastName: string;
-  dni: string;
-  roles: string[];
-  createdAt: string | null;
-  updatedAt: string | null;
-}
-
-export interface AdminAccount {
-  uuid: string;
-  username: string;
-  firstName: string | null;
-  lastName: string | null;
-  active: boolean;
-  headquarterId: number | null;
-  createdAt: string | null;
-}
-
-export interface CreateAdminUserPayload {
-  firstName: string;
-  lastName: string;
-  dni: string;
-  username: string;
-  password: string;
-  headquarterId: number;
-  roleName: string;
 }
 
 @Injectable({

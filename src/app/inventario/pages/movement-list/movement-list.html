@@ -22,7 +22,7 @@
   </div>
 
   <!-- Controles y Filtros -->
-  <div class="flex flex-col md:flex-row justify-between items-center w-full gap-4 p-4 bg-white dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] rounded-xl transition-colors shadow-sm">
+  <div class="flex flex-col md:flex-row justify-between items-center w-full gap-4 p-4 bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] rounded-xl transition-colors shadow-sm">
     <div class="relative w-full md:w-96">
       <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
         <svg class="w-5 h-5 text-[#4C616C] dark:text-[#8A9BA8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -32,7 +32,7 @@
       <input
         type="text"
         placeholder="Buscar por SKU, Doc. Referencia o Usuario..."
-        class="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#4C616C] dark:placeholder-[#8A9BA8] focus:outline-none focus:ring-1 focus:ring-[#81000A] transition-colors"
+        class="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#4C616C] dark:placeholder-[#8A9BA8] focus:outline-none focus:ring-1 focus:ring-[#81000A] transition-colors"
         [ngModel]="filtroTexto()"
         (ngModelChange)="filtroTexto.set($event); cargarMovimientos()"
       />
@@ -40,7 +40,7 @@
 
     <div class="flex items-center gap-3 w-full md:w-auto">
       <select
-        class="w-full md:w-auto bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-[#313131] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#81000A] transition-colors cursor-pointer"
+        class="w-full md:w-auto bg-gray-50 dark:bg-black border border-gray-200 dark:border-[#1F1F1F] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#81000A] transition-colors cursor-pointer"
         [ngModel]="filtroTipo()"
         (ngModelChange)="filtroTipo.set($event); cargarMovimientos()"
       >
@@ -51,7 +51,7 @@
       </select>
       <input
         type="date"
-        class="w-full md:w-auto bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-[#313131] text-[#111D23] dark:text-[#8A9BA8] font-['Inter'] text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#81000A] transition-colors cursor-pointer [color-scheme:light] dark:[color-scheme:dark]"
+        class="w-full md:w-auto bg-gray-50 dark:bg-black border border-gray-200 dark:border-[#1F1F1F] text-[#111D23] dark:text-[#8A9BA8] font-['Inter'] text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#81000A] transition-colors cursor-pointer [color-scheme:light] dark:[color-scheme:dark]"
         [ngModel]="filtroFecha()"
         (ngModelChange)="filtroFecha.set($event); cargarMovimientos()"
       />
@@ -59,18 +59,18 @@
   </div>
 
   <!-- Tabla de Movimientos -->
-  <div class="w-full bg-white dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] rounded-xl overflow-hidden shadow-sm transition-colors">
+  <div class="w-full bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] rounded-xl overflow-hidden shadow-sm transition-colors">
     <div class="overflow-x-auto w-full">
       <table class="w-full text-left border-collapse whitespace-nowrap">
-        <thead class="bg-gray-50 dark:bg-[#111111] border-b border-gray-100 dark:border-[#313131] transition-colors">
+        <thead class="bg-gray-50 dark:bg-black border-b border-gray-100 dark:border-[#1F1F1F] transition-colors">
           <tr>
-            <th class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA] opacity-90">ID Operación</th>
-            <th class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA] opacity-90">Tipo</th>
-            <th class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA] opacity-90">Producto / SKU</th>
-            <th class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA] opacity-90 text-center">Cant.</th>
-            <th class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA] opacity-90">Fecha y Hora</th>
-            <th class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA] opacity-90">Usuario</th>
-            <th class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#E2BEBA] opacity-90">Doc. Referencia</th>
+            <th class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#EF4444] opacity-90">ID Operación</th>
+            <th class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#EF4444] opacity-90">Tipo</th>
+            <th class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#EF4444] opacity-90">Producto / SKU</th>
+            <th class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#EF4444] opacity-90 text-center">Cant.</th>
+            <th class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#EF4444] opacity-90">Fecha y Hora</th>
+            <th class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#EF4444] opacity-90">Usuario</th>
+            <th class="px-6 py-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#EF4444] opacity-90">Doc. Referencia</th>
           </tr>
         </thead>
 
@@ -89,7 +89,7 @@
             </tr>
           } @else {
             @for (mov of movements(); track mov.idMovimiento) {
-              <tr class="border-b border-gray-50 dark:border-[#313131] hover:bg-gray-50 dark:hover:bg-[#222222] transition-colors cursor-default">
+              <tr class="border-b border-gray-50 dark:border-[#1F1F1F] hover:bg-gray-50 dark:hover:bg-[#141414] transition-colors cursor-default">
 
                 <td class="px-6 py-4 font-semibold text-[#111D23] dark:text-white text-xs font-mono">{{ mov.idMovimiento | slice:0:8 }}...</td>
 
@@ -123,163 +123,293 @@
     </div>
   </div>
 
+  <!-- Paginación -->
+  <div class="flex items-center justify-between w-full">
+    <div class="flex items-center gap-2">
+      <span class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">Filas:</span>
+      <select
+        [ngModel]="pageSize()"
+        (ngModelChange)="onPageSizeChange($event)"
+        class="bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#81000A] cursor-pointer"
+      >
+        <option [value]="5">5</option>
+        <option [value]="10">10</option>
+        <option [value]="20">20</option>
+      </select>
+      <span class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">
+        Página {{ currentPage() + 1 }} de {{ totalPages() }} ({{ totalItems() }} registros)
+      </span>
+    </div>
+    <div class="flex items-center gap-2">
+      <button
+        (click)="previousPage()"
+        [disabled]="currentPage() === 0"
+        class="px-4 py-2 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-[#141414] hover:border-[#81000A]/50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+      >
+        Anterior
+      </button>
+      <button
+        (click)="nextPage()"
+        [disabled]="(currentPage() + 1) * pageSize() >= totalItems()"
+        class="px-4 py-2 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-[#141414] hover:border-[#81000A]/50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+      >
+        Siguiente
+      </button>
+    </div>
+  </div>
+
   <!-- Modal para Registrar Movimiento -->
   @if (isModalOpen()) {
     <div class="animate-fade-in fixed inset-0 z-50 flex items-center justify-center bg-[#111111]/60 dark:bg-black/80 backdrop-blur-sm p-4">
-      <div class="animate-zoom-in flex flex-col w-full max-w-2xl bg-white dark:bg-[#1B1B1B] border border-gray-100 dark:border-[#313131] rounded-2xl shadow-2xl overflow-hidden">
+      <div class="animate-zoom-in flex flex-col w-full max-w-2xl bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] rounded-2xl shadow-2xl overflow-hidden">
 
-        <!-- Modal Header -->
-        <div class="flex items-center justify-between px-8 py-5 border-b border-gray-100 dark:border-[#313131] bg-gray-50 dark:bg-[#222222]">
+        <!-- Header -->
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-[#1F1F1F] bg-gray-50 dark:bg-[#141414]">
           <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-full bg-[rgba(129,0,10,0.1)] dark:bg-[#313131] flex items-center justify-center shrink-0">
-              <svg class="w-4 h-4 text-[#81000A] dark:text-[#E2BEBA]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="w-9 h-9 rounded-full bg-[rgba(129,0,10,0.1)] dark:bg-[#313131] flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5 text-[#81000A] dark:text-[#EF4444]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
               </svg>
             </div>
             <div class="flex flex-col">
-              <h3 class="font-['Work_Sans'] font-bold text-xl text-[#111D23] dark:text-white leading-tight">
-                Registrar Operación
-              </h3>
+              <h3 class="font-['Work_Sans'] font-bold text-lg text-[#111D23] dark:text-white leading-tight">Registrar Operación</h3>
               <span class="font-['Inter'] text-[11px] text-[#4C616C] dark:text-[#8A9BA8]">Ingresa los detalles del movimiento de inventario</span>
             </div>
           </div>
-          <button (click)="closeModal()" type="button" class="p-2 text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#81000A] dark:hover:text-[#E2BEBA] hover:bg-gray-200 dark:hover:bg-[#313131] rounded-full transition-colors cursor-pointer">
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          <button (click)="closeModal()" type="button" class="p-1.5 text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#81000A] dark:hover:text-[#EF4444] rounded-full transition-colors cursor-pointer hover:bg-gray-200 dark:hover:bg-[#1F1F1F]">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
           </button>
         </div>
 
-        <!-- Modal Body -->
-        <div class="p-8 overflow-y-auto max-h-[70vh]">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Body -->
+        <div class="p-6 overflow-y-auto max-h-[70vh] flex flex-col gap-5">
 
-            <div class="flex flex-col gap-1.5 md:col-span-2">
-              <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Tipo de Movimiento <span class="text-[#81000A]">*</span></label>
-              <div class="grid grid-cols-3 gap-3">
-                @for (tipo of ['INGRESO', 'SALIDA', 'AJUSTE']; track tipo) {
-                  <label class="cursor-pointer relative">
-                    <input type="radio" name="movType" [value]="tipo" class="peer sr-only"
-                      [checked]="formTipo() === tipo"
-                      (change)="setFormTipo(tipo)" />
-                    <div class="p-3 text-center rounded-lg border border-gray-200 dark:border-[#313131] peer-checked:border-[#81000A] peer-checked:bg-[rgba(129,0,10,0.05)] dark:peer-checked:bg-[rgba(129,0,10,0.2)] transition-all">
-                      <span class="font-['Inter'] font-bold text-xs text-[#111D23] dark:text-white peer-checked:text-[#81000A] dark:peer-checked:text-[#E2BEBA]">{{ tipo }}</span>
-                    </div>
-                  </label>
+          <!-- Card: Tipo de Operación -->
+          <div class="bg-gray-50 dark:bg-black border border-gray-100 dark:border-[#1F1F1F] rounded-xl p-5 transition-colors">
+            <span class="font-['Inter'] text-xs font-bold uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8] block mb-3">Tipo de Operación</span>
+
+            <div class="flex flex-wrap gap-2">
+              @for (tipo of ['INGRESO', 'SALIDA', 'AJUSTE']; track tipo) {
+              <button (click)="setFormTipo(tipo)" type="button"
+                class="px-4 py-2 rounded-lg font-['Inter'] text-sm font-semibold transition-all cursor-pointer"
+                [class.bg-[#81000A]]="formTipo() === tipo"
+                [class.text-white]="formTipo() === tipo"
+                [class.shadow-md]="formTipo() === tipo"
+                [class.bg-white]="formTipo() !== tipo"
+                [class.dark:bg-black]="formTipo() !== tipo"
+                [class.text-[#4C616C]]="formTipo() !== tipo"
+                [class.dark:text-[#8A9BA8]]="formTipo() !== tipo"
+                [class.border]="formTipo() !== tipo"
+                [class.border-gray-200]="formTipo() !== tipo"
+                [class.dark:border-[#1F1F1F]]="formTipo() !== tipo"
+                [class.hover:bg-gray-100]="formTipo() !== tipo"
+                [class.dark:hover:bg-[#141414]]="formTipo() !== tipo">
+                @if (tipo === 'INGRESO') {
+                <svg class="w-4 h-4 inline mr-1.5 -mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                } @else if (tipo === 'SALIDA') {
+                <svg class="w-4 h-4 inline mr-1.5 -mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
+                } @else {
+                <svg class="w-4 h-4 inline mr-1.5 -mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 }
-              </div>
+                {{ tipo === 'INGRESO' ? 'Ingreso' : tipo === 'SALIDA' ? 'Salida' : 'Ajuste' }}
+              </button>
+              }
             </div>
 
-            @if (formTipo() === 'INGRESO' || formTipo() === 'AJUSTE') {
-              <div class="flex flex-col gap-1.5 md:col-span-2">
-                <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Producto <span class="text-[#81000A]">*</span></label>
-                <select
-                  class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors cursor-pointer"
-                  [ngModel]="formProducto()"
-                  (ngModelChange)="formProducto.set($event)"
-                >
-                  <option value="">Seleccione un producto</option>
-                  @for (p of productos(); track p.idProducto) {
-                    <option [value]="p.idProducto">{{ p.sku }} - {{ p.descripcion }}</option>
-                  }
-                </select>
+            @if (formTipo() === 'AJUSTE') {
+            <div class="mt-3 pt-3 border-t border-gray-200 dark:border-[#1F1F1F]">
+              <div class="flex gap-2">
+                <button (click)="setFormTipoAjuste('POSITIVO')" type="button"
+                  class="flex items-center gap-1.5 px-4 py-2 rounded-lg font-['Inter'] text-sm font-semibold transition-all cursor-pointer"
+                  [class.bg-[rgba(52,168,83,0.15)]]="formTipoAjuste() === 'POSITIVO'"
+                  [class.text-[#34A853]]="formTipoAjuste() === 'POSITIVO'"
+                  [class.border-2]="formTipoAjuste() === 'POSITIVO'"
+                  [class.border-[#34A853]]="formTipoAjuste() === 'POSITIVO'"
+                  [class.bg-white]="formTipoAjuste() !== 'POSITIVO'"
+                  [class.dark:bg-black]="formTipoAjuste() !== 'POSITIVO'"
+                  [class.text-[#4C616C]]="formTipoAjuste() !== 'POSITIVO'"
+                  [class.dark:text-[#8A9BA8]]="formTipoAjuste() !== 'POSITIVO'"
+                  [class.border]="formTipoAjuste() !== 'POSITIVO'"
+                  [class.border-gray-200]="formTipoAjuste() !== 'POSITIVO'"
+                  [class.dark:border-[#1F1F1F]]="formTipoAjuste() !== 'POSITIVO'">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                  POSITIVO (suma stock)
+                </button>
+                <button (click)="setFormTipoAjuste('NEGATIVO')" type="button"
+                  class="flex items-center gap-1.5 px-4 py-2 rounded-lg font-['Inter'] text-sm font-semibold transition-all cursor-pointer"
+                  [class.bg-[rgba(239,68,68,0.1)]]="formTipoAjuste() === 'NEGATIVO'"
+                  [class.text-[#EF4444]]="formTipoAjuste() === 'NEGATIVO'"
+                  [class.border-2]="formTipoAjuste() === 'NEGATIVO'"
+                  [class.border-[#EF4444]]="formTipoAjuste() === 'NEGATIVO'"
+                  [class.bg-white]="formTipoAjuste() !== 'NEGATIVO'"
+                  [class.dark:bg-black]="formTipoAjuste() !== 'NEGATIVO'"
+                  [class.text-[#4C616C]]="formTipoAjuste() !== 'NEGATIVO'"
+                  [class.dark:text-[#8A9BA8]]="formTipoAjuste() !== 'NEGATIVO'"
+                  [class.border]="formTipoAjuste() !== 'NEGATIVO'"
+                  [class.border-gray-200]="formTipoAjuste() !== 'NEGATIVO'"
+                  [class.dark:border-[#1F1F1F]]="formTipoAjuste() !== 'NEGATIVO'">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
+                  NEGATIVO (resta stock)
+                </button>
               </div>
+              @if (formTipoAjuste() === 'POSITIVO') {
+              <div class="mt-4 pt-4 border-t border-gray-200 dark:border-[#1F1F1F]">
+                <div>
+                  <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Costo Unitario <span class="text-[#81000A]">*</span></label>
+                  <div class="relative mt-1">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">$</span>
+                    <input
+                      class="w-full pl-7 pr-4 py-2.5 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
+                      type="number" step="0.01" placeholder="0.00"
+                      [ngModel]="formCostoUnit()"
+                      (ngModelChange)="formCostoUnit.set($event)"
+                    />
+                  </div>
+                </div>
+              </div>
+              }
+            </div>
             }
 
-            @if (formTipo() === 'INGRESO') {
-              <div class="flex flex-col gap-1.5 md:col-span-2">
-                <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Locación <span class="text-[#81000A]">*</span></label>
+          </div>
+
+          <!-- Card: Producto -->
+          <div class="bg-gray-50 dark:bg-black border border-gray-100 dark:border-[#1F1F1F] rounded-xl p-5 transition-colors">
+            <span class="font-['Inter'] text-xs font-bold uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8] block mb-3">Producto <span class="text-[#81000A]">*</span></span>
+            <select
+              class="w-full px-4 py-2.5 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50 appearance-none cursor-pointer"
+              [ngModel]="formProducto()"
+              (ngModelChange)="formProducto.set($event)"
+            >
+              <option value="" disabled>Seleccione un producto</option>
+              @for (p of productos(); track p.idProducto) {
+              <option [value]="p.idProducto">{{ p.sku }} — {{ p.descripcion }}</option>
+              }
+            </select>
+          </div>
+
+          <!-- Card: Detalles de Ingreso -->
+          @if (formTipo() === 'INGRESO') {
+          <div class="bg-gray-50 dark:bg-black border border-gray-100 dark:border-[#1F1F1F] rounded-xl p-5 transition-colors">
+            <span class="font-['Inter'] text-xs font-bold uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8] block mb-3">Detalles de Ingreso</span>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Locación</label>
                 <select
-                  class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors cursor-pointer"
+                  class="w-full mt-1 px-4 py-2.5 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50 appearance-none cursor-pointer"
                   [ngModel]="formLocacion()"
                   (ngModelChange)="formLocacion.set($event)"
                 >
-                  <option value="">Seleccione una locación</option>
-                  @for (l of locaciones(); track l.idLocacion) {
-                    <option [value]="l.idLocacion">{{ l.zona }} - {{ l.pasillo }}{{ l.estante ? ' - ' + l.estante : '' }}</option>
+                  <option value="">Seleccione</option>
+                  @for (loc of locaciones(); track loc.idLocacion) {
+                  <option [value]="loc.idLocacion">{{ loc.zona }} - {{ loc.pasillo }}{{ loc.estante ? ' - ' + loc.estante : '' }}</option>
                   }
                 </select>
               </div>
-
-              <div class="flex flex-col gap-1.5">
+              <div>
                 <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Proveedor</label>
                 <input
-                  type="text"
+                  class="w-full mt-1 px-4 py-2.5 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
                   placeholder="Nombre del proveedor"
-                  class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors"
                   [ngModel]="formProveedor()"
                   (ngModelChange)="formProveedor.set($event)"
                 />
               </div>
-
-              <div class="flex flex-col gap-1.5">
+              <div>
                 <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Nro. Lote</label>
                 <input
-                  type="text"
+                  class="w-full mt-1 px-4 py-2.5 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
                   placeholder="Número de lote"
-                  class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors"
                   [ngModel]="formNroLote()"
                   (ngModelChange)="formNroLote.set($event)"
                 />
               </div>
+              <div>
+                <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Costo Unitario <span class="text-[#81000A]">*</span></label>
+                <div class="relative mt-1">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">$</span>
+                  <input
+                    class="w-full pl-7 pr-4 py-2.5 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
+                    type="number" step="0.01" placeholder="0.00"
+                    [ngModel]="formCostoUnit()"
+                    (ngModelChange)="formCostoUnit.set($event)"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          }
 
-              <div class="flex flex-col gap-1.5">
-                <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Costo Unitario</label>
+          <!-- Card: Datos de Salida -->
+          @if (formTipo() === 'SALIDA') {
+          <div class="bg-gray-50 dark:bg-black border border-gray-100 dark:border-[#1F1F1F] rounded-xl p-5 transition-colors">
+            <span class="font-['Inter'] text-xs font-bold uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8] block mb-3">Datos de Salida</span>
+            <div>
+              <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Cliente</label>
+              <input
+                class="w-full mt-1 px-4 py-2.5 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
+                placeholder="Nombre del cliente"
+                [ngModel]="formCliente()"
+                (ngModelChange)="formCliente.set($event)"
+              />
+            </div>
+          </div>
+          }
+
+          <!-- Card: Operación -->
+          <div class="bg-gray-50 dark:bg-black border border-gray-100 dark:border-[#1F1F1F] rounded-xl p-5 transition-colors">
+            <span class="font-['Inter'] text-xs font-bold uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8] block mb-3">Operación</span>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Cantidad <span class="text-[#81000A]">*</span></label>
                 <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  placeholder="0.00"
-                  class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors"
-                  [ngModel]="formCostoUnit()"
-                  (ngModelChange)="formCostoUnit.set($event)"
+                  class="w-full mt-1 px-4 py-2.5 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
+                  type="number" min="1" step="1" placeholder="0"
+                  [ngModel]="formCantidad()"
+                  (ngModelChange)="formCantidad.set($event)"
                 />
               </div>
-            }
-
-            <div class="flex flex-col gap-1.5">
-              <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Cantidad <span class="text-[#81000A]">*</span></label>
-              <input
-                type="number"
-                min="1"
-                placeholder="0"
-                class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
-                [ngModel]="formCantidad()"
-                (ngModelChange)="formCantidad.set($event)"
-              />
+              <div>
+                <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Documento Ref.</label>
+                <input
+                  class="w-full mt-1 px-4 py-2.5 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
+                  placeholder="Factura, guía, etc."
+                  [ngModel]="formDocumentoRef()"
+                  (ngModelChange)="formDocumentoRef.set($event)"
+                />
+              </div>
             </div>
-
-            <div class="flex flex-col gap-1.5">
-              <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Documento Ref. (Factura/Guía) <span class="text-[#81000A]">*</span></label>
-              <input
-                type="text"
-                placeholder="Ej. FAC-001-987"
-                class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
-                [ngModel]="formDocumentoRef()"
-                (ngModelChange)="formDocumentoRef.set($event)"
-              />
-            </div>
-
-            <div class="flex flex-col gap-1.5 md:col-span-2">
-              <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Motivo / Proveedor / Cliente <span class="text-[#81000A]">*</span></label>
+            <div>
+              <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Motivo <span class="text-[#81000A]">*</span></label>
               <textarea
                 rows="2"
-                placeholder="Especifique el motivo del movimiento o la entidad involucrada..."
-                class="w-full px-4 py-2.5 bg-white dark:bg-[#111111] border border-gray-200 dark:border-[#313131] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors resize-none hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
+                placeholder="Especifique el motivo del movimiento..."
+                class="w-full mt-1 px-4 py-2.5 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors resize-none hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
                 [ngModel]="formMotivo()"
                 (ngModelChange)="formMotivo.set($event)"
               ></textarea>
             </div>
-
           </div>
+
         </div>
 
-        <!-- Modal Footer -->
-        <div class="flex items-center justify-end gap-3 px-8 py-5 border-t border-gray-100 dark:border-[#313131] bg-gray-50 dark:bg-[#111111]">
-          <button (click)="closeModal()" type="button" class="px-5 py-2.5 font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white hover:bg-gray-200 dark:hover:bg-[#222222] rounded-lg transition-colors cursor-pointer">
+        <!-- Footer -->
+        <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100 dark:border-[#1F1F1F] bg-gray-50 dark:bg-black">
+          <button (click)="closeModal()" type="button" class="px-5 py-2.5 font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white hover:bg-gray-200 dark:hover:bg-[#141414] rounded-lg transition-colors cursor-pointer">
             Cancelar
           </button>
-          <button (click)="registrarMovimiento()" class="flex items-center gap-2 px-6 py-2.5 bg-[#81000A] hover:bg-[#6a0008] text-white font-['Inter'] font-semibold text-sm rounded-lg shadow-md transition-colors cursor-pointer">
+          <button (click)="registrarMovimiento()" [disabled]="isSaving()"
+            class="flex items-center gap-2 px-6 py-2.5 bg-[#81000A] hover:bg-[#6a0008] text-white font-['Inter'] font-semibold text-sm rounded-lg shadow-md transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+            @if (isSaving()) {
+            <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+            </svg>
+            <span>Guardando...</span>
+            } @else {
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
             Confirmar Movimiento
+            }
           </button>
         </div>
 

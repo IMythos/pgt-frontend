@@ -31,6 +31,7 @@ export interface CrearProductoDto {
   precioVenta: number;
   estado?: boolean;
   stockMinimo?: number | null;
+  stockInicial?: number | null;
 }
 
 export interface ActualizarProductoDto {

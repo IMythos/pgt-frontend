@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal, inject, OnInit } from '@angular/core';
+import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MovementApiService } from '../../services/movement-api.service';
 import { ProductApiService } from '../../services/product-api.service';
@@ -19,6 +19,12 @@ import { WebSocketService } from '../../../core/services/websocket.service';
   imports: [CommonModule, FormsModule],
   templateUrl: './movement-list.html',
   styleUrl: './movement-list.css',
+  styles: [`
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes zoomIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    .animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
+    .animate-zoom-in { animation: zoomIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  `],
 })
 export class MovementList implements OnInit {
   private readonly movementApi = inject(MovementApiService);
@@ -30,7 +36,12 @@ export class MovementList implements OnInit {
   productos = signal<ProductoCatalogoDto[]>([]);
   locaciones = signal<LocationDto[]>([]);
   loading = signal(false);
+  currentPage = signal(0);
+  pageSize = signal(10);
+  totalItems = signal(0);
+  totalPages = computed(() => Math.max(1, Math.ceil(this.totalItems() / this.pageSize())));
   isModalOpen = signal<boolean>(false);
+  isSaving = signal(false);
 
   filtroTexto = signal('');
   filtroTipo = signal<string>('');
@@ -45,6 +56,8 @@ export class MovementList implements OnInit {
   formProveedor = signal('');
   formNroLote = signal('');
   formCostoUnit = signal<number | null>(null);
+  formCliente = signal('');
+  formTipoAjuste = signal<'POSITIVO' | 'NEGATIVO'>('POSITIVO');
 
   ngOnInit(): void {
     this.cargarMovimientos();
@@ -69,20 +82,44 @@ export class MovementList implements OnInit {
 
   cargarMovimientos(): void {
     this.loading.set(true);
-    const filtros: FiltroMovimientoDto = {};
+    const filtros: FiltroMovimientoDto = {
+      pagina: this.currentPage(),
+      tamanioPagina: this.pageSize(),
+    };
     if (this.filtroTipo()) filtros.tipo = this.filtroTipo() as TipoMovimiento;
     if (this.filtroFecha()) filtros.fechaDesde = this.filtroFecha();
     if (this.filtroTexto()) filtros.texto = this.filtroTexto();
 
     this.movementApi.listar(filtros).subscribe({
       next: (data) => {
-        this.movements.set(data);
+        this.movements.set(data.items ?? []);
+        this.totalItems.set(data.total);
         this.loading.set(false);
       },
       error: () => {
         this.loading.set(false);
       }
     });
+  }
+
+  onPageSizeChange(size: number): void {
+    this.pageSize.set(size);
+    this.currentPage.set(0);
+    this.cargarMovimientos();
+  }
+
+  previousPage(): void {
+    if (this.currentPage() > 0) {
+      this.currentPage.update(p => p - 1);
+      this.cargarMovimientos();
+    }
+  }
+
+  nextPage(): void {
+    if ((this.currentPage() + 1) * this.pageSize() < this.totalItems()) {
+      this.currentPage.update(p => p + 1);
+      this.cargarMovimientos();
+    }
   }
 
   openModal(): void {
@@ -99,40 +136,44 @@ export class MovementList implements OnInit {
   registrarMovimiento(): void {
     if (!this.formCantidad() || this.formCantidad()! <= 0) return;
     if (!this.formMotivo()) return;
+    if (!this.formProducto()) return;
+
+    let tipo: TipoMovimiento = this.formTipo();
+    if (tipo === 'AJUSTE') {
+      tipo = this.formTipoAjuste() === 'POSITIVO' ? 'AJUSTE' : 'AJUSTE_NEGATIVO';
+    }
+
+    if ((tipo === 'INGRESO' || tipo === 'AJUSTE') && (!this.formCostoUnit() || this.formCostoUnit()! <= 0)) return;
 
     const payload: RegistrarMovimientoRequest = {
-      tipo: this.formTipo(),
+      tipo,
       cantidad: this.formCantidad()!,
       motivo: this.formMotivo(),
-      documentoRef: this.formDocumentoRef() || undefined
+      documentoRef: this.formDocumentoRef() || undefined,
+      idProducto: this.formProducto()
     };
 
-    if (this.formProducto()) {
-      payload.idProducto = this.formProducto();
+    if (tipo === 'INGRESO') {
+      if (this.formLocacion()) payload.idLocacion = this.formLocacion();
     }
 
-    if (this.formLocacion()) {
-      payload.idLocacion = this.formLocacion();
-    }
-
-    if (this.formProveedor()) {
-      payload.proveedor = this.formProveedor();
-    }
-
-    if (this.formNroLote()) {
-      payload.nroLote = this.formNroLote();
-    }
-
-    if (this.formCostoUnit()) {
+    if (tipo === 'INGRESO' || tipo === 'AJUSTE') {
+      if (this.formProveedor()) payload.proveedor = this.formProveedor();
+      if (this.formNroLote()) payload.nroLote = this.formNroLote();
       payload.costoUnit = this.formCostoUnit()!;
+    } else if (tipo === 'SALIDA') {
+      if (this.formCliente()) payload.proveedor = this.formCliente();
     }
 
+    this.isSaving.set(true);
     this.movementApi.registrar(payload).subscribe({
       next: () => {
+        this.isSaving.set(false);
         this.closeModal();
         this.cargarMovimientos();
       },
       error: (err) => {
+        this.isSaving.set(false);
         console.error('Error al registrar movimiento:', err);
       }
     });
@@ -140,6 +181,18 @@ export class MovementList implements OnInit {
 
   setFormTipo(tipo: string): void {
     this.formTipo.set(tipo as any);
+    this.formCliente.set('');
+    this.formProveedor.set('');
+    this.formLocacion.set('');
+    this.formNroLote.set('');
+    this.formCostoUnit.set(null);
+    this.formTipoAjuste.set('POSITIVO');
+  }
+
+  setFormTipoAjuste(valor: string): void {
+    if (valor === 'POSITIVO' || valor === 'NEGATIVO') {
+      this.formTipoAjuste.set(valor);
+    }
   }
 
   private limpiarFormulario(): void {
@@ -152,20 +205,22 @@ export class MovementList implements OnInit {
     this.formProveedor.set('');
     this.formNroLote.set('');
     this.formCostoUnit.set(null);
+    this.formCliente.set('');
+    this.formTipoAjuste.set('POSITIVO');
   }
 
   getMovementBadgeClass(type: string): string {
     switch(type) {
       case 'INGRESO':
-        return 'bg-[rgba(129,0,10,0.08)] dark:bg-[rgba(226,190,186,0.15)] text-[#81000A] dark:text-[#E2BEBA]';
+        return 'bg-[rgba(239,68,68,0.1)] text-[#EF4444]';
       case 'SALIDA':
-        return 'border border-[#81000A] text-[#81000A] dark:border-[#E2BEBA] dark:text-[#E2BEBA]';
+        return 'border border-[#EF4444] text-[#EF4444]';
       case 'AJUSTE':
       case 'AJUSTE_POSITIVO':
       case 'AJUSTE_NEGATIVO':
-        return 'bg-gray-100 dark:bg-[#313131] text-[#4C616C] dark:text-[#8A9BA8]';
+        return 'bg-gray-100 dark:bg-[#1F1F1F] text-[#4C616C] dark:text-[#8A9BA8]';
       default:
-        return 'bg-gray-100 dark:bg-[#313131] text-[#4C616C] dark:text-[#8A9BA8]';
+        return 'bg-gray-100 dark:bg-[#1F1F1F] text-[#4C616C] dark:text-[#8A9BA8]';
     }
   }
 

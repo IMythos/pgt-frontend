@@ -1,2 +1,42 @@
 @import 'tailwindcss';
 @custom-variant dark (&:is(.dark *));
+
+@theme {
+  /* ─── LIGHT MODE ─── */
+  --color-bg-body: #F4FAFF;
+  --color-bg-card: #FFFFFF;
+  --color-bg-elevated: #FFFFFF;
+  --color-bg-input: #DDEAF2;
+  --color-bg-hover: #F9FAFB;
+  --color-text-primary: #111D23;
+  --color-text-secondary: #4C616C;
+  --color-text-muted: #8A9BA8;
+  --color-red-brand: #81000A;
+  --color-red-brand-hover: #6A0008;
+  --color-red-light: rgba(129, 0, 10, 0.05);
+  --color-red-medium: rgba(129, 0, 10, 0.1);
+  --color-red-strong: rgba(129, 0, 10, 0.2);
+  --color-border-light: rgba(129, 0, 10, 0.1);
+  --color-border-default: #E5E7EB;
+  --color-border-strong: #D1D5DB;
+
+  /* ─── DARK MODE (High Contrast Red + Black) ─── */
+  --color-dark-bg-body: #000000;
+  --color-dark-bg-card: #0A0A0A;
+  --color-dark-bg-elevated: #111111;
+  --color-dark-bg-input: #1A1A1A;
+  --color-dark-bg-hover: #141414;
+  --color-dark-text-primary: #FFFFFF;
+  --color-dark-text-secondary: #9CA3AF;
+  --color-dark-text-muted: #6B7280;
+  --color-dark-red-text: #EF4444;
+  --color-dark-red-hover: #F87171;
+  --color-dark-red-light: rgba(239, 68, 68, 0.1);
+  --color-dark-red-medium: rgba(239, 68, 68, 0.2);
+  --color-dark-red-strong: rgba(239, 68, 68, 0.3);
+  --color-dark-border: #1F1F1F;
+  --color-dark-border-red: #2A0000;
+
+  /* ─── SHARED ─── */
+  --color-gray-base: #4C616C;
+}
