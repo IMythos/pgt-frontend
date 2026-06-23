@@ -35,6 +35,7 @@ export class KardexApiService {
     if (filtros.pagina !== undefined) params = params.set('pagina', filtros.pagina);
     if (filtros.tamanioPagina !== undefined) params = params.set('tamanioPagina', filtros.tamanioPagina);
     if (filtros.tipoMovimiento) params = params.set('tipoMovimiento', filtros.tipoMovimiento);
+    if (filtros.texto) params = params.set('texto', filtros.texto);
     if (filtros.metodoCosto) params = params.set('metodoCosto', filtros.metodoCosto);
     if (filtros.fechaDesde) params = params.set('fechaDesde', filtros.fechaDesde);
     if (filtros.fechaHasta) params = params.set('fechaHasta', filtros.fechaHasta);

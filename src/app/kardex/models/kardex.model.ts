@@ -20,6 +20,7 @@ export interface FiltroKardexDto {
   fechaDesde?: string;
   fechaHasta?: string;
   tipoMovimiento?: string;
+  texto?: string;
   metodoCosto?: string;
   pagina?: number;
   tamanioPagina?: number;

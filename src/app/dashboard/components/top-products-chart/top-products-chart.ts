@@ -7,39 +7,7 @@ import { ProductTop } from '../../models/dashboard.models';
   selector: 'app-top-products-chart',
   standalone: true,
   imports: [CommonModule, ChartComponent],
-  template: `
-    <div class="flex flex-col items-start p-6 h-[400px] bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] shadow-sm rounded-xl transition-all duration-300">
-      <div class="flex justify-between items-start w-full mb-4">
-        <div class="flex flex-col gap-1">
-          <h3 class="font-['Work_Sans'] font-bold text-xl text-[#111D23] dark:text-white">
-            Top Productos (Alta Rotación)
-          </h3>
-          <p class="font-['Inter'] font-medium text-sm text-[#4C616C] dark:text-[#8A9BA8]">
-            Productos con mayor movimiento
-          </p>
-        </div>
-        <select class="bg-gray-50 dark:bg-[#141414] border border-gray-200 dark:border-[#1F1F1F] text-[#111D23] dark:text-white font-['Inter'] text-sm font-medium rounded-md px-3 py-1.5 focus:outline-none cursor-pointer">
-          <option>Este mes</option>
-          <option>Últimos 3 meses</option>
-        </select>
-      </div>
-      <div class="w-full flex-1">
-        <apx-chart
-          [series]="chartSeries()"
-          [chart]="chartOptions()"
-          [xaxis]="xaxis()"
-          [yaxis]="yaxis()"
-          [stroke]="stroke()"
-          [colors]="colors()"
-          [plotOptions]="plotOptions()"
-          [dataLabels]="dataLabels()"
-          [grid]="grid()"
-          [tooltip]="tooltip()"
-        />
-      </div>
-    </div>
-  `
-})
+  templateUrl: './top-products-chart.html'})
 export class TopProductsChart {
   data = input<ProductTop[]>([]);
 

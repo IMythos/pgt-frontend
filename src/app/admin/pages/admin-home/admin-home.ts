@@ -2,48 +2,36 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { finalize, forkJoin } from 'rxjs';
-import {
-  AdminAccount,
-  AdminApiService,
-  AdminRole,
-  AdminUser,
-  CreateAdminUserPayload,
-} from '../../services/admin-api.service';
+import { AdminApiService } from '../../services/admin-api.service';
+import { AdminAccount, AdminRole, AdminUser } from '../../models/admin.models';
+import { AdminCreateUserModal } from './components/admin-create-user-modal/admin-create-user-modal';
 
 type AdminTab = 'users' | 'roles';
 
 @Component({
   selector: 'app-admin-home',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AdminCreateUserModal],
   templateUrl: './admin-home.html',
-  styleUrl: './admin-home.css',
 })
 export class AdminHome implements OnInit {
+  readonly Math = Math;
+  readonly skeletonRows = [0, 1, 2, 3, 4];
   private readonly adminApi = inject(AdminApiService);
 
   activeTab = signal<AdminTab>('users');
   loading = signal(false);
-  savingUser = signal(false);
-  savingRole = signal(false);
   errorMessage = signal('');
   successMessage = signal('');
   searchTerm = signal('');
+
+  showCreateUserModal = signal(false);
 
   users = signal<AdminUser[]>([]);
   roles = signal<AdminRole[]>([]);
   accounts = signal<AdminAccount[]>([]);
 
-  userForm = signal({
-    firstName: '',
-    lastName: '',
-    dni: '',
-    username: '',
-    password: '',
-    headquarterId: 1,
-    roleName: '',
-  });
-
-  roleName = signal('');
+  page = signal(1);
+  pageSize = 10;
 
   accountsByName = computed(() => {
     const map = new Map<string, AdminAccount>();
@@ -72,6 +60,15 @@ export class AdminHome implements OnInit {
     });
   });
 
+  totalPages = computed(() => Math.max(1, Math.ceil(this.filteredUsers().length / this.pageSize)));
+
+  pageButtons = computed(() => Array.from({ length: this.totalPages() }, (_, i) => i + 1));
+
+  paginatedUsers = computed(() => {
+    const start = (this.page() - 1) * this.pageSize;
+    return this.filteredUsers().slice(start, start + this.pageSize);
+  });
+
   activeAccountsCount = computed(() => this.accounts().filter((account) => account.active).length);
   inactiveAccountsCount = computed(() => this.accounts().filter((account) => !account.active).length);
 
@@ -94,10 +91,6 @@ export class AdminHome implements OnInit {
           this.users.set(users);
           this.roles.set(roles);
           this.accounts.set(accounts);
-
-          if (!this.userForm().roleName && roles.length > 0) {
-            this.updateUserForm('roleName', roles[0].name);
-          }
         },
         error: (error) => {
           console.error('Error cargando administracion:', error);
@@ -108,83 +101,24 @@ export class AdminHome implements OnInit {
 
   setTab(tab: AdminTab): void {
     this.activeTab.set(tab);
+    this.page.set(1);
   }
 
   updateSearch(value: string): void {
     this.searchTerm.set(value);
+    this.page.set(1);
   }
 
-  updateUserForm<K extends keyof ReturnType<typeof this.userForm>>(
-    field: K,
-    value: ReturnType<typeof this.userForm>[K],
-  ): void {
-    this.userForm.update((form) => ({ ...form, [field]: value }));
+  goToPage(p: number): void {
+    if (p >= 1 && p <= this.totalPages()) {
+      this.page.set(p);
+    }
   }
 
-  createUser(): void {
-    const form = this.userForm();
-    this.clearMessages();
-
-    if (!form.firstName || !form.lastName || !form.dni || !form.username || !form.password || !form.roleName) {
-      this.errorMessage.set('Completa los datos requeridos del usuario.');
-      return;
-    }
-
-    if (!/^\d{8}$/.test(form.dni)) {
-      this.errorMessage.set('El DNI debe tener 8 digitos.');
-      return;
-    }
-
-    const payload: CreateAdminUserPayload = {
-      ...form,
-      firstName: form.firstName.trim(),
-      lastName: form.lastName.trim(),
-      username: form.username.trim(),
-      roleName: form.roleName.trim(),
-      headquarterId: Number(form.headquarterId),
-    };
-
-    this.savingUser.set(true);
-    this.adminApi
-      .createUser(payload)
-      .pipe(finalize(() => this.savingUser.set(false)))
-      .subscribe({
-        next: () => {
-          this.successMessage.set('Usuario creado correctamente.');
-          this.resetUserForm();
-          this.loadAdminData();
-        },
-        error: (error) => {
-          console.error('Error creando usuario:', error);
-          this.errorMessage.set(error.error?.message ?? 'No se pudo crear el usuario.');
-        },
-      });
-  }
-
-  createRole(): void {
-    const name = this.roleName().trim();
-    this.clearMessages();
-
-    if (!name) {
-      this.errorMessage.set('Escribe el nombre del rol.');
-      return;
-    }
-
-    this.savingRole.set(true);
-    this.adminApi
-      .createRole(name)
-      .pipe(finalize(() => this.savingRole.set(false)))
-      .subscribe({
-        next: () => {
-          this.successMessage.set('Rol creado correctamente.');
-          this.roleName.set('');
-          this.loadAdminData();
-        },
-        error: (error) => {
-          console.error('Error creando rol:', error);
-          this.errorMessage.set(error.error?.message ?? 'No se pudo crear el rol.');
-        },
-      });
+  onUserCreated(): void {
+    this.showCreateUserModal.set(false);
+    this.successMessage.set('Usuario creado correctamente.');
+    this.loadAdminData();
   }
 
   toggleAccount(account: AdminAccount): void {
@@ -217,18 +151,6 @@ export class AdminHome implements OnInit {
       month: 'short',
       year: 'numeric',
     }).format(new Date(value));
-  }
-
-  private resetUserForm(): void {
-    this.userForm.set({
-      firstName: '',
-      lastName: '',
-      dni: '',
-      username: '',
-      password: '',
-      headquarterId: 1,
-      roleName: this.roles()[0]?.name ?? '',
-    });
   }
 
   private clearMessages(): void {

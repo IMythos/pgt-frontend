@@ -12,12 +12,30 @@
           <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <svg class="w-5 h-5 text-[#8A9BA8]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm14 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
           </div>
-          <input type="text" [value]="orderId()" readonly class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm font-bold text-[#111D23] dark:text-white focus:outline-none transition-colors" />
+          <input type="text" [value]="ordenId()" readonly class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm font-bold text-[#111D23] dark:text-white focus:outline-none transition-colors" />
         </div>
-        <button class="p-3 bg-gray-50 dark:bg-[#141414] border border-gray-200 dark:border-[#1F1F1F] hover:bg-[#81000A] hover:border-[#81000A] text-[#4C616C] dark:text-[#8A9BA8] hover:text-white rounded-lg transition-colors cursor-pointer">
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+        <button (click)="optimizarRuta()" [disabled]="optimizing()"
+          class="p-3 bg-gray-50 dark:bg-[#141414] border border-gray-200 dark:border-[#1F1F1F] hover:bg-[#81000A] hover:border-[#81000A] text-[#4C616C] dark:text-[#8A9BA8] hover:text-white rounded-lg transition-colors cursor-pointer disabled:opacity-50">
+          @if (optimizing()) {
+            <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          } @else {
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+          }
         </button>
       </div>
+
+      @if (orderData()) {
+        <div class="flex items-center gap-3 px-4 py-2 bg-gray-50 dark:bg-black/50 rounded-lg">
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase bg-[#D1FAE5] dark:bg-[rgba(52,168,83,0.15)] text-[#34A853]">
+            {{ orderData()!.tipoSalida || 'SALIDA' }}
+          </span>
+          @if (orderData()!.docRef) {
+            <span class="font-['Inter'] text-[11px] text-[#4C616C] dark:text-[#8A9BA8]">
+              Ref: <span class="font-bold">{{ orderData()!.docRef }}</span>
+            </span>
+          }
+        </div>
+      }
 
       <div class="flex justify-between items-center px-4 py-3 bg-[#FFF3F3] dark:bg-[rgba(239,68,68,0.1)] rounded-lg">
         <span class="font-['Inter'] font-semibold text-xs text-[#81000A] dark:text-[#EF4444]">Tiempo Estimado (Nearest Neighbor)</span>
@@ -78,7 +96,7 @@
       </div>
       
       @if (!isRouteActive()) {
-        <button class="mt-4 w-full py-3 bg-[#34A853] hover:bg-[#2b8a44] text-white font-['Inter'] font-bold text-sm rounded-xl shadow-md transition-colors cursor-pointer">
+        <button (click)="completarRuta()" class="mt-4 w-full py-3 bg-[#34A853] hover:bg-[#2b8a44] text-white font-['Inter'] font-bold text-sm rounded-xl shadow-md transition-colors cursor-pointer">
           Cerrar Ruta y Actualizar Kardex
         </button>
       }

@@ -1,0 +1,6 @@
+@keyframes barGrow {
+  from { width: 0% !important; }
+}
+.bar-animate div div {
+  animation: barGrow 1s ease-out both;
+}

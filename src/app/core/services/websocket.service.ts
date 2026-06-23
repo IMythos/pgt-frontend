@@ -7,11 +7,19 @@ export interface MovementWsEvent {
   productId: string;
   tipo: string;
   cantidad: number;
+  stockAfter?: number;
 }
 export interface StockAlertWsEvent {
   productId: string;
   currentStock: number;
   minStock: number;
+}
+export interface HeatmapWsEvent {
+  locacionId: string;
+  idAlmacen: number;
+  movementCount: number;
+  dailyPicks: number;
+  intensity: number;
 }
 @Injectable({ providedIn: 'root' })
 export class WebSocketService {
@@ -19,6 +27,7 @@ export class WebSocketService {
   private client: Client;
   private movements$ = new Subject<MovementWsEvent>();
   private stockAlerts$ = new Subject<StockAlertWsEvent>();
+  private heatmap$ = new Subject<HeatmapWsEvent>();
   constructor() {
     this.client = new Client({
       brokerURL: 'ws://localhost:8080/ws',
@@ -30,10 +39,13 @@ export class WebSocketService {
           this.movements$.next(JSON.parse(msg.body)));
         this.client.subscribe('/topic/inventory/stock-alerts', msg =>
           this.stockAlerts$.next(JSON.parse(msg.body)));
+        this.client.subscribe('/topic/heatmap', msg =>
+          this.heatmap$.next(JSON.parse(msg.body)));
       }
     });
     this.client.activate();
   }
   onMovement() { return this.movements$.asObservable(); }
   onStockAlert() { return this.stockAlerts$.asObservable(); }
+  onHeatmapUpdate() { return this.heatmap$.asObservable(); }
 }

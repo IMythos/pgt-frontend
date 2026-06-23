@@ -1,0 +1,163 @@
+<div class="animate-fade-in fixed inset-0 z-50 flex items-center justify-center bg-[#111111]/60 dark:bg-black/80 backdrop-blur-sm p-4" (click)="close.emit()">
+  <div class="animate-zoom-in flex flex-col w-full max-w-4xl bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] rounded-2xl shadow-2xl overflow-hidden max-h-[90vh]" (click)="$event.stopPropagation()">
+
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-[#1F1F1F] bg-gray-50 dark:bg-[#141414] shrink-0">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-[rgba(129,0,10,0.1)] dark:bg-[#313131] flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5 text-[#81000A] dark:text-[#EF4444]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+        </div>
+        <div class="flex flex-col">
+          <h3 class="font-['Work_Sans'] font-bold text-lg text-[#111D23] dark:text-white leading-tight">Alertas de Stock</h3>
+          <span class="font-['Inter'] text-[11px] text-[#4C616C] dark:text-[#8A9BA8]">
+            {{ totalCriticalCount() }} crítica{{ totalCriticalCount() !== 1 ? 's' : '' }} &middot; {{ totalLowCount() }} baja{{ totalLowCount() !== 1 ? 's' : '' }}
+          </span>
+        </div>
+      </div>
+      <button (click)="close.emit()" type="button" class="p-1.5 text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#81000A] dark:hover:text-[#EF4444] hover:bg-gray-200 dark:hover:bg-[#313131] rounded-full transition-colors cursor-pointer">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 px-6 py-3 border-b border-gray-100 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A] shrink-0">
+      <div class="flex items-center gap-1.5 bg-gray-100 dark:bg-black rounded-lg p-1 w-fit">
+        @for (tab of tabs(); track tab.value) {
+          <button
+            type="button"
+            (click)="activeFilter.set(tab.value)"
+            class="px-4 py-1.5 rounded-md font-['Inter'] text-xs font-bold transition-all cursor-pointer"
+            [ngClass]="activeFilter() === tab.value
+              ? 'bg-white dark:bg-[#2A2A2A] text-[#111D23] dark:text-white shadow-sm'
+              : 'text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white'"
+          >
+            {{ tab.label }}
+            <span class="ml-1.5 text-[10px] opacity-70">({{ tab.count }})</span>
+          </button>
+        }
+      </div>
+
+      <div class="relative w-full lg:w-72">
+        <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#4C616C] dark:text-[#8A9BA8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <input
+          type="search"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+          placeholder="Buscar por SKU o nombre..."
+          class="w-full rounded-lg border border-gray-200 dark:border-[#1F1F1F] bg-gray-50 dark:bg-black py-2 pl-9 pr-3 font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] outline-none transition focus:border-[#81000A] dark:focus:border-[#EF4444] focus:bg-white dark:focus:bg-[#0A0A0A]"
+        />
+      </div>
+    </div>
+
+    <div class="overflow-y-auto flex-1 p-0">
+      @if (loading()) {
+        <div class="flex items-center justify-center py-16">
+          <svg class="w-8 h-8 text-[#81000A] dark:text-[#EF4444] animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+          </svg>
+          <span class="ml-3 font-['Inter'] text-sm font-semibold text-[#4C616C] dark:text-[#8A9BA8]">Cargando alertas...</span>
+        </div>
+      } @else if (filteredAlerts().length === 0) {
+        <div class="flex flex-col items-center justify-center py-16 gap-3 text-center px-6">
+          <div class="w-16 h-16 rounded-full bg-[#E6F4EA] dark:bg-[rgba(52,168,83,0.1)] flex items-center justify-center">
+            <svg class="w-8 h-8 text-[#34A853]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <p class="font-['Inter'] font-bold text-base text-[#111D23] dark:text-white">
+            @if (searchQuery()) {
+              Sin resultados para "{{ searchQuery() }}"
+            } @else if (activeFilter() !== 'TODAS') {
+              No hay alertas {{ activeFilter() === 'CRITICAS' ? 'críticas' : 'bajas' }}
+            } @else {
+              No hay alertas de stock
+            }
+          </p>
+          <p class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8] max-w-sm">
+            @if (searchQuery()) {
+              Intenta con otro término de búsqueda o limpia el filtro.
+            } @else {
+              Todos los repuestos están dentro del mínimo operativo.
+            }
+          </p>
+          @if (searchQuery()) {
+            <button (click)="searchQuery.set('')" class="mt-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-[#1F1F1F] font-['Inter'] text-sm font-semibold text-[#4C616C] dark:text-[#8A9BA8] hover:bg-gray-50 dark:hover:bg-[#141414] transition-colors cursor-pointer">
+              Limpiar búsqueda
+            </button>
+          }
+        </div>
+      } @else {
+        <table class="w-full text-left">
+          <thead class="sticky top-0 z-10">
+            <tr class="border-b border-gray-100 dark:border-[#1F1F1F] bg-gray-50 dark:bg-[#141414] text-[11px] uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8]">
+              <th class="px-5 py-3.5 font-['Inter'] font-bold w-12">#</th>
+              <th class="px-5 py-3.5 font-['Inter'] font-bold">SKU</th>
+              <th class="px-5 py-3.5 font-['Inter'] font-bold">Nombre</th>
+              <th class="px-5 py-3.5 font-['Inter'] font-bold text-right">Stock</th>
+              <th class="px-5 py-3.5 font-['Inter'] font-bold">Estado</th>
+              <th class="px-5 py-3.5 font-['Inter'] font-bold text-right">Costo Prom.</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-50 dark:divide-[#222222]">
+            @for (alert of filteredAlerts(); track alert.sku; let i = $index) {
+              <tr class="transition-colors hover:bg-gray-50 dark:hover:bg-[#222222]/60"
+                  [style.animation-delay.ms]="i * 30"
+                  [class.animate-row-in]="true">
+                <td class="px-5 py-4 font-['Inter'] text-xs text-[#8A9BA8] dark:text-[#6B7D8A]">{{ i + 1 }}</td>
+                <td class="px-5 py-4">
+                  <span class="font-['Inter'] text-sm font-bold text-[#111D23] dark:text-white font-mono">{{ alert.sku }}</span>
+                </td>
+                <td class="px-5 py-4">
+                  <span class="font-['Inter'] text-sm text-[#111D23] dark:text-white line-clamp-1">{{ alert.name }}</span>
+                </td>
+                <td class="px-5 py-4 text-right">
+                  <div class="flex flex-col items-end gap-1.5">
+                    <span class="font-['Work_Sans'] text-base font-bold"
+                          [ngClass]="alert.stock <= 0 ? 'text-[#81000A] dark:text-[#EF4444]' : alert.stock <= 5 ? 'text-[#F5A623]' : 'text-[#111D23] dark:text-white'">
+                      {{ alert.stock }}
+                    </span>
+                    <div class="w-24 h-1.5 bg-gray-200 dark:bg-[#1F1F1F] rounded-full overflow-hidden">
+                      <div class="h-full rounded-full transition-all duration-500"
+                           [ngClass]="stockBarClass(alert)"
+                           [style.width.%]="stockBarPercent(alert)"></div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-5 py-4">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wide"
+                        [ngClass]="alert.status === 'Crítico'
+                          ? 'text-[#81000A] dark:text-[#EF4444] bg-[rgba(129,0,10,0.1)] dark:bg-[rgba(239,68,68,0.25)]'
+                          : 'text-[#B45309] bg-[#FEF3C7] dark:bg-[rgba(180,83,9,0.2)]'">
+                    <span class="w-1.5 h-1.5 rounded-full"
+                          [ngClass]="alert.status === 'Crítico' ? 'bg-[#81000A] dark:bg-[#EF4444] animate-pulse' : 'bg-[#F5A623]'"></span>
+                    {{ alert.status }}
+                  </span>
+                </td>
+                <td class="px-5 py-4 text-right font-['Inter'] text-sm font-semibold text-[#4C616C] dark:text-[#8A9BA8]">
+                  {{ formatCost(alert.costoPromedio) }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+
+    <div class="flex items-center justify-between px-6 py-3 border-t border-gray-100 dark:border-[#1F1F1F] bg-gray-50 dark:bg-black shrink-0">
+      <span class="font-['Inter'] text-xs text-[#4C616C] dark:text-[#8A9BA8]">
+        Mostrando <strong class="text-[#111D23] dark:text-white">{{ filteredAlerts().length }}</strong>
+        de <strong class="text-[#111D23] dark:text-white">{{ alerts().length }}</strong> alertas
+      </span>
+      <button (click)="close.emit()"
+        class="px-5 py-2 font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white hover:bg-gray-200 dark:hover:bg-[#141414] rounded-lg transition-colors cursor-pointer">
+        Cerrar
+      </button>
+    </div>
+
+  </div>
+</div>

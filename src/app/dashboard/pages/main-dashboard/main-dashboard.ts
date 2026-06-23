@@ -52,38 +52,19 @@ export class MainDashboard implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  private finishLoad = () => this.checkLoading();
+
   loadAllData() {
     this.loading.set(true);
     this.loadedCount = 0;
 
-    this.api.getKpis().subscribe(k => {
-      this.kpis.set(k);
-      this.checkLoading();
-    });
-    this.api.getStockAlerts().subscribe(a => {
-      this.stockAlerts.set(a);
-      this.checkLoading();
-    });
-    this.api.getMovementsByTime().subscribe(m => {
-      this.movements.set(m);
-      this.checkLoading();
-    });
-    this.api.getProporcionPorTipo().subscribe(p => {
-      this.proporciones.set(p);
-      this.checkLoading();
-    });
-    this.api.getRecentOperations().subscribe(o => {
-      this.operations.set(o);
-      this.checkLoading();
-    });
-    this.api.getZoneCapacities().subscribe(z => {
-      this.zoneCapacities.set(z);
-      this.checkLoading();
-    });
-    this.api.getTopProducts().subscribe(p => {
-      this.topProducts.set(p);
-      this.checkLoading();
-    });
+    this.api.getKpis().subscribe({ next: k => this.kpis.set(k), error: this.finishLoad });
+    this.api.getStockAlerts().subscribe({ next: a => this.stockAlerts.set(a), error: this.finishLoad });
+    this.api.getMovementsByTime().subscribe({ next: m => this.movements.set(m), error: this.finishLoad });
+    this.api.getProporcionPorTipo().subscribe({ next: p => this.proporciones.set(p), error: this.finishLoad });
+    this.api.getRecentOperations().subscribe({ next: o => this.operations.set(o), error: this.finishLoad });
+    this.api.getZoneCapacities().subscribe({ next: z => this.zoneCapacities.set(z), error: this.finishLoad });
+    this.api.getTopProducts().subscribe({ next: p => this.topProducts.set(p), error: this.finishLoad });
   }
 
   private loadedCount = 0;
@@ -113,9 +94,12 @@ export class MainDashboard implements OnInit, OnDestroy {
           const formatted = newVal >= 1000 ? newVal.toLocaleString() : String(newVal);
           return { ...kpi, value: newVal, formattedValue: formatted, sparkline: [...kpi.sparkline.slice(1), newVal] };
         }
-        if (kpi.id === 'ordenes-pendientes' && evt.tipo === 'SALIDA') {
+        if (kpi.id === 'salidas-mes' && evt.tipo === 'SALIDA') {
           const newVal = kpi.value + 1;
           return { ...kpi, value: newVal, formattedValue: String(newVal), sparkline: [...kpi.sparkline.slice(1), newVal] };
+        }
+        if (kpi.id === 'alertas-stock' && evt.stockAfter !== undefined) {
+          // would need stock threshold data — keep as-is for now
         }
         return kpi;
       }));

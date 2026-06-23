@@ -12,18 +12,16 @@
       </p>
     </div>
 
-    <div class="flex flex-col gap-2 sm:flex-row">
-      <button
-        type="button"
-        (click)="loadAdminData()"
-        class="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 font-['Inter'] text-sm font-semibold text-[#111D23] shadow-sm transition-colors hover:bg-gray-50 dark:border-[#1F1F1F] dark:bg-[#0A0A0A] dark:text-white dark:hover:bg-[#141414]"
-      >
-        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v6h6M20 20v-6h-6M20 8A8 8 0 006.34 4.34M4 16a8 8 0 0013.66 3.66" />
-        </svg>
-        Actualizar
-      </button>
-    </div>
+    <button
+      type="button"
+      (click)="loadAdminData()"
+      class="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 font-['Inter'] text-sm font-semibold text-[#111D23] shadow-sm transition-colors hover:bg-gray-50 dark:border-[#1F1F1F] dark:bg-[#0A0A0A] dark:text-white dark:hover:bg-[#141414]"
+    >
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v6h6M20 20v-6h-6M20 8A8 8 0 006.34 4.34M4 16a8 8 0 0013.66 3.66" />
+      </svg>
+      Actualizar
+    </button>
   </header>
 
   @if (errorMessage()) {
@@ -38,8 +36,9 @@
     </div>
   }
 
+  <!-- STATS CARDS -->
   <section class="grid w-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-    <article class="rounded-lg border border-gray-100 bg-white p-5 shadow-sm dark:border-[#1F1F1F] dark:bg-[#0A0A0A]">
+    <article class="rounded-xl border border-gray-100 bg-white p-5 shadow-sm dark:border-[#1F1F1F] dark:bg-[#0A0A0A]">
       <span class="font-['Inter'] text-xs font-bold uppercase text-[#4C616C] dark:text-[#8A9BA8]">Usuarios</span>
       <div class="mt-3 flex items-end justify-between">
         <strong class="font-['Work_Sans'] text-3xl text-[#111D23] dark:text-white">{{ users().length }}</strong>
@@ -47,7 +46,7 @@
       </div>
     </article>
 
-    <article class="rounded-lg border border-gray-100 bg-white p-5 shadow-sm dark:border-[#1F1F1F] dark:bg-[#0A0A0A]">
+    <article class="rounded-xl border border-gray-100 bg-white p-5 shadow-sm dark:border-[#1F1F1F] dark:bg-[#0A0A0A]">
       <span class="font-['Inter'] text-xs font-bold uppercase text-[#4C616C] dark:text-[#8A9BA8]">Cuentas activas</span>
       <div class="mt-3 flex items-end justify-between">
         <strong class="font-['Work_Sans'] text-3xl text-[#111D23] dark:text-white">{{ activeAccountsCount() }}</strong>
@@ -55,7 +54,7 @@
       </div>
     </article>
 
-    <article class="rounded-lg border border-gray-100 bg-white p-5 shadow-sm dark:border-[#1F1F1F] dark:bg-[#0A0A0A]">
+    <article class="rounded-xl border border-gray-100 bg-white p-5 shadow-sm dark:border-[#1F1F1F] dark:bg-[#0A0A0A]">
       <span class="font-['Inter'] text-xs font-bold uppercase text-[#4C616C] dark:text-[#8A9BA8]">Cuentas inactivas</span>
       <div class="mt-3 flex items-end justify-between">
         <strong class="font-['Work_Sans'] text-3xl text-[#111D23] dark:text-white">{{ inactiveAccountsCount() }}</strong>
@@ -63,7 +62,7 @@
       </div>
     </article>
 
-    <article class="rounded-lg border border-gray-100 bg-white p-5 shadow-sm dark:border-[#1F1F1F] dark:bg-[#0A0A0A]">
+    <article class="rounded-xl border border-gray-100 bg-white p-5 shadow-sm dark:border-[#1F1F1F] dark:bg-[#0A0A0A]">
       <span class="font-['Inter'] text-xs font-bold uppercase text-[#4C616C] dark:text-[#8A9BA8]">Roles</span>
       <div class="mt-3 flex items-end justify-between">
         <strong class="font-['Work_Sans'] text-3xl text-[#111D23] dark:text-white">{{ roles().length }}</strong>
@@ -72,8 +71,10 @@
     </article>
   </section>
 
-  <section class="grid w-full grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
-    <div class="min-w-0 rounded-lg border border-gray-100 bg-white shadow-sm dark:border-[#1F1F1F] dark:bg-[#0A0A0A]">
+  <!-- MAIN CONTENT -->
+  <section class="grid w-full grid-cols-1 gap-6">
+    <!-- LEFT COLUMN -->
+    <div class="min-w-0 rounded-xl border border-gray-100 bg-white shadow-sm dark:border-[#1F1F1F] dark:bg-[#0A0A0A]">
       <div class="flex flex-col gap-4 border-b border-gray-100 p-5 dark:border-[#1F1F1F] lg:flex-row lg:items-center lg:justify-between">
         <div class="inline-flex w-fit rounded-lg bg-gray-100 p-1 dark:bg-black">
           <button
@@ -94,154 +95,228 @@
           </button>
         </div>
 
-        <div class="relative w-full lg:w-80">
-          <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#4C616C] dark:text-[#8A9BA8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <input
-            type="search"
-            [ngModel]="searchTerm()"
-            (ngModelChange)="updateSearch($event)"
-            placeholder="Buscar usuario, DNI o rol"
-            class="w-full rounded-lg border border-gray-200 bg-gray-50 py-2.5 pl-9 pr-3 font-['Inter'] text-sm text-[#111D23] outline-none transition focus:border-[#81000A] focus:bg-white dark:border-[#1F1F1F] dark:bg-black dark:text-white dark:bg-[#141414]"
-          />
-        </div>
+        @if (activeTab() === 'users') {
+          <div class="flex items-center gap-3 w-full lg:w-auto">
+            <div class="relative flex-1 lg:w-72">
+              <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#4C616C] dark:text-[#8A9BA8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="search"
+                [ngModel]="searchTerm()"
+                (ngModelChange)="updateSearch($event)"
+                placeholder="Buscar usuario, DNI o rol"
+                class="w-full rounded-lg border border-gray-200 bg-gray-50 py-2.5 pl-9 pr-3 font-['Inter'] text-sm text-[#111D23] outline-none transition-all focus:border-[#81000A] focus:bg-white focus:shadow-[0_0_0_1px_rgba(129,0,10,0.08)] dark:border-[#1F1F1F] dark:bg-[#141414] dark:text-white dark:focus:border-[#EF4444] dark:focus:bg-black"
+              />
+            </div>
+            <button
+              type="button"
+              (click)="showCreateUserModal.set(true)"
+              class="inline-flex items-center gap-2 rounded-lg bg-[#81000A] px-4 py-2.5 font-['Inter'] text-sm font-bold text-white transition-colors hover:bg-[#6A0008] shadow-sm"
+            >
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+              </svg>
+              <span class="hidden sm:inline">Nuevo usuario</span>
+            </button>
+          </div>
+        }
       </div>
 
-      @if (loading()) {
-        <div class="p-8 font-['Inter'] text-sm font-semibold text-[#4C616C] dark:text-[#8A9BA8]">
-          Cargando datos de administracion...
-        </div>
-      } @else if (activeTab() === 'users') {
-        <div class="overflow-x-auto">
-          <table class="w-full text-left whitespace-nowrap">
-            <thead>
-              <tr class="border-b border-gray-100 text-[11px] uppercase text-[#81000A] dark:border-[#1F1F1F] dark:text-[#EF4444]">
-                <th class="px-5 py-4 font-['Inter'] font-bold">Usuario</th>
-                <th class="px-5 py-4 font-['Inter'] font-bold">Cuenta</th>
-                <th class="px-5 py-4 font-['Inter'] font-bold">Rol</th>
-                <th class="px-5 py-4 font-['Inter'] font-bold">Sede</th>
-                <th class="px-5 py-4 font-['Inter'] font-bold">Estado</th>
-                <th class="px-5 py-4 font-['Inter'] font-bold">Accion</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-50 dark:divide-[#222222]">
-              @for (user of filteredUsers(); track user.uuid) {
-                @let account = accountForUser(user);
-                <tr class="transition-colors hover:bg-gray-50 dark:hover:bg-[#222222]/60">
-                  <td class="px-5 py-4">
-                    <div class="flex items-center gap-3">
-                      <div class="flex h-9 w-9 items-center justify-center rounded-full bg-[#81000A] font-['Inter'] text-xs font-bold text-white">
-                        {{ initials(user) }}
+      <!-- USERS TAB -->
+      @if (activeTab() === 'users') {
+        @if (loading()) {
+          <div class="overflow-x-auto">
+            <table class="w-full text-left whitespace-nowrap">
+              <thead>
+                <tr class="border-b border-gray-100 text-[11px] uppercase text-[#81000A] dark:border-[#1F1F1F] dark:text-[#EF4444]">
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Usuario</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Cuenta</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Rol</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Estado</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Accion</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-50 dark:divide-[#222222]">
+                @for (_ of skeletonRows; track $index) {
+                  <tr>
+                    <td class="px-5 py-4">
+                      <div class="flex items-center gap-3">
+                        <div class="h-9 w-9 animate-pulse rounded-full bg-gray-200 dark:bg-[#222222]"></div>
+                        <div class="flex flex-col gap-1.5">
+                          <div class="h-3.5 w-36 animate-pulse rounded bg-gray-200 dark:bg-[#222222]"></div>
+                          <div class="h-3 w-24 animate-pulse rounded bg-gray-100 dark:bg-[#1A1A1A]"></div>
+                        </div>
                       </div>
-                      <div>
-                        <p class="font-['Inter'] text-sm font-bold text-[#111D23] dark:text-white">{{ user.firstName }} {{ user.lastName }}</p>
-                        <p class="font-['Inter'] text-xs text-[#4C616C] dark:text-[#8A9BA8]">DNI {{ user.dni }}</p>
+                    </td>
+                    <td class="px-5 py-4"><div class="h-3.5 w-28 animate-pulse rounded bg-gray-200 dark:bg-[#222222]"></div></td>
+                    <td class="px-5 py-4"><div class="h-6 w-16 animate-pulse rounded-md bg-gray-200 dark:bg-[#222222]"></div></td>
+                    <td class="px-5 py-4"><div class="h-6 w-16 animate-pulse rounded-full bg-gray-200 dark:bg-[#222222]"></div></td>
+                    <td class="px-5 py-4"><div class="h-8 w-20 animate-pulse rounded-lg bg-gray-200 dark:bg-[#222222]"></div></td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else if (filteredUsers().length === 0) {
+          <div class="flex flex-col items-center justify-center gap-3 px-5 py-16">
+            <svg class="h-12 w-12 text-[#4C616C] dark:text-[#8A9BA8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            <span class="font-['Inter'] text-sm font-medium text-[#4C616C] dark:text-[#8A9BA8]">
+              {{ searchTerm() ? 'No hay resultados para esta búsqueda.' : 'No hay usuarios registrados.' }}
+            </span>
+          </div>
+        } @else {
+          <div class="overflow-x-auto">
+            <table class="w-full text-left whitespace-nowrap">
+              <thead>
+                <tr class="border-b border-gray-100 text-[11px] uppercase text-[#81000A] dark:border-[#1F1F1F] dark:text-[#EF4444]">
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Usuario</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Cuenta</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Rol</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Estado</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Accion</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-50 dark:divide-[#222222]">
+                @for (user of paginatedUsers(); track user.uuid) {
+                  @let account = accountForUser(user);
+                  <tr class="transition-colors hover:bg-gray-50 dark:hover:bg-[#222222]/60">
+                    <td class="px-5 py-4">
+                      <div class="flex items-center gap-3">
+                        <div class="flex h-9 w-9 items-center justify-center rounded-full bg-[#81000A] font-['Inter'] text-xs font-bold text-white">
+                          {{ initials(user) }}
+                        </div>
+                        <div>
+                          <p class="font-['Inter'] text-sm font-bold text-[#111D23] dark:text-white">{{ user.firstName }} {{ user.lastName }}</p>
+                          <p class="font-['Inter'] text-xs text-[#4C616C] dark:text-[#8A9BA8]">DNI {{ user.dni }}</p>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td class="px-5 py-4 font-['Inter'] text-sm text-[#111D23] dark:text-white">{{ account?.username ?? '-' }}</td>
-                  <td class="px-5 py-4">
-                    <span class="rounded-md bg-gray-100 px-2.5 py-1 font-['Inter'] text-xs font-bold text-[#4C616C] dark:bg-[#141414] dark:text-[#8A9BA8]">
-                      {{ user.roles[0] || 'Sin rol' }}
-                    </span>
-                  </td>
-                  <td class="px-5 py-4 font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">{{ account?.headquarterId ?? '-' }}</td>
-                  <td class="px-5 py-4">
-                    <span
-                      class="rounded-full px-2.5 py-1 font-['Inter'] text-xs font-bold"
-                      [ngClass]="account?.active ? 'bg-[#E6F4EA] text-[#1E7A3A] dark:bg-[#132218] dark:text-[#8DE0A2]' : 'bg-[#F3F4F6] text-[#4C616C] dark:bg-[#141414] dark:text-[#8A9BA8]'"
-                    >
-                      {{ account?.active ? 'Activo' : 'Inactivo' }}
-                    </span>
-                  </td>
-                  <td class="px-5 py-4">
-                    @if (account) {
-                      <button
-                        type="button"
-                        (click)="toggleAccount(account)"
-                        class="rounded-lg border border-gray-200 px-3 py-2 font-['Inter'] text-xs font-bold text-[#111D23] transition-colors hover:bg-gray-50 dark:border-[#1F1F1F] dark:text-white dark:hover:bg-[#222222]"
+                    </td>
+                    <td class="px-5 py-4 font-['Inter'] text-sm text-[#111D23] dark:text-white">{{ account?.username ?? '-' }}</td>
+                    <td class="px-5 py-4">
+                      <span class="rounded-md bg-gray-100 px-2.5 py-1 font-['Inter'] text-xs font-bold text-[#4C616C] dark:bg-[#141414] dark:text-[#8A9BA8]">
+                        {{ user.roles[0] || 'Sin rol' }}
+                      </span>
+                    </td>
+                    <td class="px-5 py-4">
+                      <span
+                        class="rounded-full px-2.5 py-1 font-['Inter'] text-xs font-bold"
+                        [ngClass]="account?.active ? 'bg-[#E6F4EA] text-[#1E7A3A] dark:bg-[#132218] dark:text-[#8DE0A2]' : 'bg-[#F3F4F6] text-[#4C616C] dark:bg-[#141414] dark:text-[#8A9BA8]'"
                       >
-                        {{ account.active ? 'Desactivar' : 'Activar' }}
-                      </button>
-                    }
-                  </td>
-                </tr>
-              } @empty {
-                <tr>
-                  <td colspan="6" class="px-5 py-8 text-center font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">
-                    No hay usuarios para mostrar.
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      } @else {
-        <div class="grid gap-3 p-5 sm:grid-cols-2 xl:grid-cols-3">
-          @for (role of roles(); track role.id) {
-            <article class="rounded-lg border border-gray-100 bg-gray-50 p-4 dark:border-[#1F1F1F] dark:bg-black">
-              <div class="flex items-start justify-between gap-3">
-                <div>
-                  <h3 class="font-['Inter'] text-sm font-bold text-[#111D23] dark:text-white">{{ role.name }}</h3>
-                  <p class="mt-1 font-['Inter'] text-xs text-[#4C616C] dark:text-[#8A9BA8]">Creado {{ formatDate(role.createdAt) }}</p>
-                </div>
-                <span class="rounded-full bg-[#81000A]/10 px-2 py-1 font-['Inter'] text-[10px] font-bold uppercase text-[#81000A] dark:bg-[#81000A]/20 dark:text-[#EF4444]">Rol</span>
+                        {{ account?.active ? 'Activo' : 'Inactivo' }}
+                      </span>
+                    </td>
+                    <td class="px-5 py-4">
+                      @if (account) {
+                        <button
+                          type="button"
+                          (click)="toggleAccount(account)"
+                          class="rounded-lg border border-gray-200 px-3 py-2 font-['Inter'] text-xs font-bold text-[#111D23] transition-colors hover:bg-gray-50 dark:border-[#1F1F1F] dark:text-white dark:hover:bg-[#222222]"
+                        >
+                          {{ account.active ? 'Desactivar' : 'Activar' }}
+                        </button>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+          <!-- PAGINATION -->
+          @if (totalPages() > 1) {
+            <div class="flex items-center justify-between border-t border-gray-100 px-5 py-4 dark:border-[#1F1F1F]">
+              <span class="font-['Inter'] text-xs text-[#4C616C] dark:text-[#8A9BA8]">
+                Mostrando {{ ((page() - 1) * pageSize) + 1 }}–{{ Math.min(page() * pageSize, filteredUsers().length) }} de {{ filteredUsers().length }} usuarios
+              </span>
+              <div class="flex items-center gap-1">
+                <button
+                  type="button"
+                  (click)="goToPage(page() - 1)"
+                  [disabled]="page() <= 1"
+                  class="rounded-lg border border-gray-200 px-3 py-1.5 font-['Inter'] text-xs font-bold text-[#111D23] transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-[#1F1F1F] dark:text-white dark:hover:bg-[#222222]"
+                >
+                  Anterior
+                </button>
+                @for (p of pageButtons(); track p) {
+                  <button
+                    type="button"
+                    (click)="goToPage(p)"
+                    class="flex h-8 w-8 items-center justify-center rounded-lg font-['Inter'] text-xs font-bold transition-colors"
+                    [ngClass]="p === page()
+                      ? 'bg-[#81000A] text-white'
+                      : 'text-[#4C616C] hover:bg-gray-50 dark:text-[#8A9BA8] dark:hover:bg-[#222222]'"
+                  >
+                    {{ p }}
+                  </button>
+                }
+                <button
+                  type="button"
+                  (click)="goToPage(page() + 1)"
+                  [disabled]="page() >= totalPages()"
+                  class="rounded-lg border border-gray-200 px-3 py-1.5 font-['Inter'] text-xs font-bold text-[#111D23] transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-[#1F1F1F] dark:text-white dark:hover:bg-[#222222]"
+                >
+                  Siguiente
+                </button>
               </div>
-            </article>
-          } @empty {
-            <p class="p-4 font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">No hay roles registrados.</p>
+            </div>
           }
-        </div>
+        }
+      }
+
+      <!-- ROLES TAB -->
+      @if (activeTab() === 'roles') {
+        @if (loading()) {
+          <div class="grid gap-3 p-5 sm:grid-cols-2 xl:grid-cols-3">
+                @for (_ of skeletonRows; track $index) {
+              <article class="rounded-lg border border-gray-100 bg-gray-50 p-4 dark:border-[#1F1F1F] dark:bg-black">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="flex flex-col gap-2 flex-1">
+                    <div class="h-4 w-28 animate-pulse rounded bg-gray-200 dark:bg-[#222222]"></div>
+                    <div class="h-3 w-20 animate-pulse rounded bg-gray-100 dark:bg-[#1A1A1A]"></div>
+                  </div>
+                  <div class="h-5 w-10 animate-pulse rounded-full bg-gray-200 dark:bg-[#222222]"></div>
+                </div>
+              </article>
+            }
+          </div>
+        } @else if (roles().length === 0) {
+          <div class="flex flex-col items-center justify-center gap-3 px-5 py-16">
+            <svg class="h-12 w-12 text-[#4C616C] dark:text-[#8A9BA8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+            </svg>
+            <span class="font-['Inter'] text-sm font-medium text-[#4C616C] dark:text-[#8A9BA8]">
+              No hay roles registrados.
+            </span>
+          </div>
+        } @else {
+          <div class="grid gap-3 p-5 sm:grid-cols-2 xl:grid-cols-3">
+            @for (role of roles(); track role.id) {
+              <article class="rounded-lg border border-gray-100 bg-gray-50 p-4 dark:border-[#1F1F1F] dark:bg-black">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <h3 class="font-['Inter'] text-sm font-bold text-[#111D23] dark:text-white">{{ role.name }}</h3>
+                    <p class="mt-1 font-['Inter'] text-xs text-[#4C616C] dark:text-[#8A9BA8]">Creado {{ formatDate(role.createdAt) }}</p>
+                  </div>
+                  <span class="rounded-full bg-[#81000A]/10 px-2 py-1 font-['Inter'] text-[10px] font-bold uppercase text-[#81000A] dark:bg-[#81000A]/20 dark:text-[#EF4444]">Rol</span>
+                </div>
+              </article>
+            }
+          </div>
+        }
       }
     </div>
 
-    <aside class="flex flex-col gap-6">
-      <form
-        (ngSubmit)="createUser()"
-        class="rounded-lg border border-gray-100 bg-white p-5 shadow-sm dark:border-[#1F1F1F] dark:bg-[#0A0A0A]"
-      >
-        <h3 class="font-['Work_Sans'] text-lg font-bold text-[#111D23] dark:text-white">Nuevo usuario</h3>
-        <div class="mt-4 grid gap-3">
-          <input class="admin-input" type="text" placeholder="Nombres" [ngModel]="userForm().firstName" (ngModelChange)="updateUserForm('firstName', $event)" name="firstName" />
-          <input class="admin-input" type="text" placeholder="Apellidos" [ngModel]="userForm().lastName" (ngModelChange)="updateUserForm('lastName', $event)" name="lastName" />
-          <input class="admin-input" type="text" inputmode="numeric" maxlength="8" placeholder="DNI" [ngModel]="userForm().dni" (ngModelChange)="updateUserForm('dni', $event)" name="dni" />
-          <input class="admin-input" type="text" placeholder="Usuario" [ngModel]="userForm().username" (ngModelChange)="updateUserForm('username', $event)" name="username" />
-          <input class="admin-input" type="password" placeholder="Contrasena inicial" [ngModel]="userForm().password" (ngModelChange)="updateUserForm('password', $event)" name="password" />
-          <div class="grid grid-cols-[1fr_90px] gap-3">
-            <select class="admin-input" [ngModel]="userForm().roleName" (ngModelChange)="updateUserForm('roleName', $event)" name="roleName">
-              @for (role of roles(); track role.id) {
-                <option [value]="role.name">{{ role.name }}</option>
-              }
-            </select>
-            <input class="admin-input" type="number" min="1" [ngModel]="userForm().headquarterId" (ngModelChange)="updateUserForm('headquarterId', +$event)" name="headquarterId" />
-          </div>
-        </div>
-        <button
-          type="submit"
-          [disabled]="savingUser()"
-          class="mt-4 w-full rounded-lg bg-[#81000A] px-4 py-2.5 font-['Inter'] text-sm font-bold text-white transition-colors hover:bg-[#6A0008] disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {{ savingUser() ? 'Guardando...' : 'Crear usuario' }}
-        </button>
-      </form>
-
-      <form
-        (ngSubmit)="createRole()"
-        class="rounded-lg border border-gray-100 bg-white p-5 shadow-sm dark:border-[#1F1F1F] dark:bg-[#0A0A0A]"
-      >
-        <h3 class="font-['Work_Sans'] text-lg font-bold text-[#111D23] dark:text-white">Nuevo rol</h3>
-        <div class="mt-4 flex gap-3">
-          <input class="admin-input" type="text" placeholder="Nombre del rol" [ngModel]="roleName()" (ngModelChange)="roleName.set($event)" name="roleNameQuick" />
-          <button
-            type="submit"
-            [disabled]="savingRole()"
-            class="rounded-lg border border-gray-200 px-4 py-2.5 font-['Inter'] text-sm font-bold text-[#111D23] transition-colors hover:bg-gray-50 disabled:opacity-60 dark:border-[#1F1F1F] dark:text-white dark:hover:bg-[#222222]"
-          >
-            Crear
-          </button>
-        </div>
-      </form>
-    </aside>
   </section>
+
+  <!-- CREATE USER MODAL -->
+  @if (showCreateUserModal()) {
+    <app-admin-create-user-modal
+      [roles]="roles()"
+      (close)="showCreateUserModal.set(false)"
+      (saved)="onUserCreated()"
+    />
+  }
 </div>

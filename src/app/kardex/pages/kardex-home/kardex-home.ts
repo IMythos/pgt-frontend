@@ -46,6 +46,7 @@ export class KardexHome implements OnInit {
     if (this.filtroTipo()) filtros.tipoMovimiento = this.filtroTipo();
     if (this.filtroFechaDesde()) filtros.fechaDesde = this.filtroFechaDesde();
     if (this.filtroFechaHasta()) filtros.fechaHasta = this.filtroFechaHasta();
+    if (this.filtroProducto()) filtros.texto = this.filtroProducto();
     if (this.metodoCosto()) filtros.metodoCosto = this.metodoCosto();
     this.kardexApi.listar(filtros).subscribe({
       next: (data) => {

@@ -1,0 +1,89 @@
+<div class="flex flex-col p-8 lg:p-10 gap-6 w-full min-h-full transition-colors duration-300">
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center w-full gap-4">
+    <div class="flex flex-col">
+      <h2 class="font-['Work_Sans'] font-bold text-3xl text-[#111D23] dark:text-white transition-colors">
+        Órdenes de Picking
+      </h2>
+      <p class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8] transition-colors">
+        Gestión de rutas de recolección optimizadas
+      </p>
+    </div>
+  </div>
+
+  <!-- Tabs de filtro -->
+  <div class="flex flex-wrap gap-2">
+    @for (tab of ['TODAS', 'PENDIENTE', 'EN_PROCESO', 'COMPLETADO']; track tab) {
+      <button (click)="setTab(tab)"
+        class="px-4 py-2 font-['Inter'] font-semibold text-sm rounded-lg transition-all cursor-pointer"
+        [ngClass]="activeTab() === tab
+          ? 'bg-[#81000A] text-white shadow-md'
+          : 'bg-gray-100 dark:bg-[#1F1F1F] text-[#4C616C] dark:text-[#8A9BA8] hover:bg-gray-200 dark:hover:bg-[#2A2A2A]'">
+        {{ tab === 'TODAS' ? 'Todas' : tab.replace('_', ' ') }}
+      </button>
+    }
+  </div>
+
+  <!-- Tabla -->
+  <div class="w-full bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] shadow-sm rounded-xl overflow-hidden transition-colors">
+    @if (loading()) {
+      <div class="flex items-center justify-center p-12">
+        <div class="w-8 h-8 border-4 border-[#81000A] border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    } @else if (orders().length === 0) {
+      <div class="flex flex-col items-center justify-center p-12 text-center">
+        <svg class="w-16 h-16 text-[#4C616C] opacity-30 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+        </svg>
+        <p class="font-['Inter'] font-medium text-sm text-[#4C616C] dark:text-[#8A9BA8]">No hay órdenes de picking</p>
+        <p class="font-['Inter'] text-xs text-[#8A9BA8] dark:text-[#6B7D8A] mt-1">Las órdenes aparecerán aquí una vez creadas</p>
+      </div>
+    } @else {
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-gray-100 dark:border-[#1F1F1F] bg-gray-50 dark:bg-[#0A0A0A]">
+              <th class="p-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#EF4444]">Orden</th>
+              <th class="p-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#EF4444]">Tipo</th>
+              <th class="p-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#EF4444]">Referencia</th>
+              <th class="p-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#EF4444]">Estado</th>
+              <th class="p-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#EF4444]">Operario</th>
+              <th class="p-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#EF4444]">Creación</th>
+              <th class="p-4 font-['Inter'] font-bold text-xs tracking-[1px] uppercase text-[#81000A] dark:text-[#EF4444] text-right">Acción</th>
+            </tr>
+          </thead>
+          <tbody class="font-['Inter'] text-sm">
+            @for (order of orders(); track order.idOrden) {
+              <tr class="border-b border-gray-50 dark:border-[#1F1F1F] hover:bg-gray-50 dark:hover:bg-[#141414] transition-colors">
+                <td class="p-4 font-semibold text-[#111D23] dark:text-white">{{ order.idOrden | slice:0:8 }}...</td>
+                <td class="p-4">
+                  <span class="px-2.5 py-1 rounded text-[10px] font-bold tracking-wide uppercase"
+                        [ngClass]="tipoClass(order.tipoSalida)">
+                    {{ order.tipoSalida || 'SALIDA' }}
+                  </span>
+                </td>
+                <td class="p-4 text-[#4C616C] dark:text-[#8A9BA8] max-w-[120px] truncate">{{ order.docRef || '—' }}</td>
+                <td class="p-4">
+                  <span class="px-2.5 py-1 rounded text-[10px] font-bold tracking-wide uppercase"
+                        [ngClass]="estadoClass(order.estado)">
+                    {{ order.estado }}
+                  </span>
+                </td>
+                <td class="p-4 text-[#4C616C] dark:text-[#8A9BA8]">{{ order.usuarioPickingId || '—' }}</td>
+                <td class="p-4 text-[#4C616C] dark:text-[#8A9BA8]">{{ fechaFormateada(order.fecCreacion) }}</td>
+                <td class="p-4 text-right">
+                  <a [routerLink]="['/tracking/picking', order.idOrden]"
+                    class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#81000A] hover:bg-[#6a0008] text-white font-semibold text-xs rounded-lg transition-colors">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                    </svg>
+                    Ir
+                  </a>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>
