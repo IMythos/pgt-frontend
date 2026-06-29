@@ -18,14 +18,44 @@
     </main>
   </div>
   @if (authService.sessionExpired()) {
-  <div class="modal-overlay">
-    <div class="modal-content">
-      <h2>Sesión Expirada</h2>
-      <p>Tu sesión ha caducado por inactividad o porque el token es inválido. Por favor, vuelve a iniciar sesión.</p>
-      
-      <button (click)="authService.confirmSessionExpired()">
-        Ir al Login
-      </button>
+  <div class="animate-fade-in fixed inset-0 z-50 flex items-center justify-center bg-[#111111]/60 dark:bg-black/80 backdrop-blur-sm p-4">
+    <div class="animate-zoom-in flex flex-col w-full max-w-md bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] rounded-2xl shadow-2xl overflow-hidden">
+
+      <!-- Header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-[#1F1F1F] bg-gray-50 dark:bg-[#141414]">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-[rgba(129,0,10,0.1)] dark:bg-[#313131] flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-[#81000A] dark:text-[#EF4444]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <div class="flex flex-col">
+            <h3 class="font-['Work_Sans'] font-bold text-lg text-[#111D23] dark:text-white leading-tight">Sesión Expirada</h3>
+            <span class="font-['Inter'] text-[11px] text-[#4C616C] dark:text-[#8A9BA8]">Tu sesión ha caducado</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="p-6">
+        <div class="bg-red-light dark:bg-[rgba(239,68,68,0.05)] border border-red-strong dark:border-[#2A0000] rounded-xl p-5">
+          <p class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#9CA3AF] leading-relaxed">
+            Tu sesión ha caducado por inactividad o porque el token es inválido. Por favor, vuelve a iniciar sesión para continuar usando el sistema.
+          </p>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="flex items-center justify-end px-6 py-4 border-t border-gray-100 dark:border-[#1F1F1F] bg-gray-50 dark:bg-black">
+        <button (click)="authService.confirmSessionExpired()"
+          class="flex items-center gap-2 px-6 py-2.5 bg-[#81000A] hover:bg-[#6a0008] dark:bg-[#EF4444] dark:hover:bg-[#F87171] text-white font-['Inter'] font-semibold text-sm rounded-lg shadow-md transition-colors cursor-pointer">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+          </svg>
+          <span>Ir al Login</span>
+        </button>
+      </div>
+
     </div>
   </div>
 }

@@ -32,6 +32,7 @@ export interface CrearProductoDto {
   estado?: boolean;
   stockMinimo?: number | null;
   stockInicial?: number | null;
+  idLocacion?: string | null;
 }
 
 export interface ActualizarProductoDto {

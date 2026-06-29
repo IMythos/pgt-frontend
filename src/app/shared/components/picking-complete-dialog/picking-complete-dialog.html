@@ -1,0 +1,22 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-[#111111]/60 dark:bg-black/80 backdrop-blur-sm p-4">
+  <div class="flex flex-col items-center w-full max-w-md bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] rounded-2xl p-8 shadow-xl transition-colors">
+
+    <div class="w-16 h-16 rounded-full bg-[#D1FAE5] dark:bg-[rgba(52,168,83,0.15)] flex items-center justify-center mb-4">
+      <svg class="w-8 h-8 text-[#34A853]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+      </svg>
+    </div>
+
+    <h3 class="font-['Work_Sans'] font-bold text-xl text-[#111D23] dark:text-white mb-2">
+      Ruta Completada
+    </h3>
+    <p class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8] text-center mb-6">
+      La ruta de picking se ha completado exitosamente. El kardex ha sido actualizado.
+    </p>
+
+    <a [routerLink]="['/tracking/picking']"
+       class="w-full py-3 bg-[#81000A] hover:bg-[#6a0008] text-white font-['Inter'] font-bold text-sm rounded-xl shadow-md transition-colors text-center cursor-pointer">
+      Volver a Órdenes de Picking
+    </a>
+  </div>
+</div>

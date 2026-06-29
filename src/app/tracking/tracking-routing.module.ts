@@ -9,9 +9,14 @@ const routes: Routes = [
     data: { breadcrumb: 'Mapa de calor' }
   },
   {
-    path: 'picking-route',
+    path: 'picking',
+    loadComponent: () => import('./pages/picking-orders/picking-orders').then(m => m.PickingOrders),
+    data: { breadcrumb: 'Órdenes de Picking' }
+  },
+  {
+    path: 'picking/:id',
     loadComponent: () => import('./pages/picking-route/picking-route').then(m => m.PickingRoute),
-    data: { breadcrumb: 'Rutas de Picking' }
+    data: { breadcrumb: 'Ruta de Picking' }
   }
 ];
 

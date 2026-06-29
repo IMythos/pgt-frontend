@@ -1,0 +1,7 @@
+@keyframes slideInRow {
+  from { opacity: 0; transform: translateX(-15px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.slide-in {
+  animation: slideInRow 0.35s ease-out both;
+}

@@ -1,7 +1,9 @@
-import { Component, inject, signal, input, output } from '@angular/core';
+import { Component, inject, signal, input, output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductApiService } from '../../../../services/product-api.service';
+import { LocationApiService } from '../../../../services/location-api.service';
+import { LocationDto } from '../../../../models/location.model';
 import {
   CategoriaProductoDto,
   CrearProductoDto,
@@ -19,8 +21,9 @@ import {
     .animate-zoom-in { animation: zoomIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
   `],
 })
-export class ProductCreateModal {
+export class ProductCreateModal implements OnInit {
   private readonly productApi = inject(ProductApiService);
+  private readonly locationApi = inject(LocationApiService);
 
   readonly categorias = input<CategoriaProductoDto[]>([]);
   readonly marcas = input<MarcaProductoDto[]>([]);
@@ -29,6 +32,7 @@ export class ProductCreateModal {
   readonly saved = output<void>();
 
   isSaving = signal(false);
+  locaciones = signal<LocationDto[]>([]);
   formProducto = signal({
     idCategoria: null as number | null,
     idMarca: null as number | null,
@@ -40,7 +44,15 @@ export class ProductCreateModal {
     precioVenta: null as number | null,
     stockMinimo: null as number | null,
     stockInicial: null as number | null,
+    idLocacion: null as string | null,
   });
+
+  ngOnInit(): void {
+    this.locationApi.listarActivas().subscribe({
+      next: (data) => this.locaciones.set(data),
+      error: () => console.error('Error cargando locaciones'),
+    });
+  }
 
   guardarProducto(): void {
     const form = this.formProducto();
@@ -60,6 +72,10 @@ export class ProductCreateModal {
       alert('El stock inicial no puede ser negativo');
       return;
     }
+    if (form.stockInicial !== null && form.stockInicial > 0 && !form.idLocacion) {
+      alert('Debes seleccionar una ubicación (rack/estante) para el stock inicial');
+      return;
+    }
     let modelosCompatibles: string[] = [];
     if (form.modelosCompatiblesStr && form.modelosCompatiblesStr.trim()) {
       modelosCompatibles = form.modelosCompatiblesStr.split(',').map(m => m.trim()).filter(m => m.length > 0);
@@ -75,6 +91,7 @@ export class ProductCreateModal {
       precioVenta: form.precioVenta,
       stockMinimo: form.stockMinimo ?? null,
       stockInicial: form.stockInicial ?? null,
+      idLocacion: form.idLocacion ?? null,
     };
     this.isSaving.set(true);
     this.productApi.crear(payload).subscribe({
@@ -104,6 +121,7 @@ export class ProductCreateModal {
       precioVenta: null,
       stockMinimo: null,
       stockInicial: null,
+      idLocacion: null,
     });
   }
 

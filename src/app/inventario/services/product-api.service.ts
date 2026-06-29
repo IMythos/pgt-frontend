@@ -79,6 +79,7 @@ export class ProductApiService {
       preVen: payload.precioVenta,
       stockMinimo: payload.stockMinimo ?? null,
       stockInicial: payload.stockInicial ?? null,
+      idLocacion: payload.idLocacion ?? null,
     };
     return this.http
       .post<ProductoResponseBe>(this.baseUrl, payloadBe)

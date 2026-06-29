@@ -7,33 +7,7 @@ import { TipoProporcion } from '../../models/dashboard.models';
   selector: 'app-proporcion-donut-chart',
   standalone: true,
   imports: [CommonModule, ChartComponent],
-  template: `
-    <div class="flex flex-col p-4 h-[268px] bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] shadow-sm rounded-xl transition-all duration-300">
-      <div class="flex flex-col gap-0 w-full mb-2 shrink-0">
-        <h3 class="font-['Work_Sans'] font-bold text-xl text-[#111D23] dark:text-white">
-          Proporción por Tipo
-        </h3>
-        <p class="font-['Inter'] font-medium text-sm text-[#4C616C] dark:text-[#8A9BA8]">
-          Distribución de movimientos por categoría
-        </p>
-      </div>
-      <div class="w-full flex-1 flex items-center justify-center">
-        <apx-chart
-          [series]="chartSeries()"
-          [chart]="chartOptions()"
-          [labels]="labels()"
-          [colors]="colors()"
-          [legend]="legend()"
-          [dataLabels]="dataLabels()"
-          [plotOptions]="plotOptions()"
-          [stroke]="stroke()"
-          [tooltip]="tooltip()"
-          [responsive]="responsive()"
-        />
-      </div>
-    </div>
-  `
-})
+  templateUrl: './proporcion-donut-chart.html'})
 export class ProporcionDonutChart {
   data = input<TipoProporcion[]>([]);
 
