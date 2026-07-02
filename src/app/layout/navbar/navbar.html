@@ -103,28 +103,56 @@
   <div class="flex items-center gap-4">
     <div class="flex items-center gap-1">
       <!-- Notificaciones -->
-      <button
-        class="relative p-2 rounded-full hover:bg-[rgba(129,0,10,0.05)] dark:hover:bg-[#222222] transition-colors group cursor-pointer border-none outline-none"
-      >
-        <svg
-          class="w-[20px] h-[20px] text-[#4C616C] dark:text-[#8A9BA8] group-hover:text-[#81000A] dark:group-hover:text-[#EF4444] transition-colors"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
+      <div class="relative">
+        <button
+          (click)="toggleNotifications()"
+          class="relative p-2 rounded-full hover:bg-[rgba(129,0,10,0.05)] dark:hover:bg-[#222222] transition-colors group cursor-pointer border-none outline-none"
+          [ngClass]="{ 'bg-[rgba(129,0,10,0.05)] dark:bg-[#141414]': isNotificationsOpen() }"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-          />
-        </svg>
-        @if (hasUnreadNotifications()) {
+          <svg
+            class="w-[20px] h-[20px] transition-colors"
+            [ngClass]="isNotificationsOpen() ? 'text-[#81000A] dark:text-white' : 'text-[#4C616C] dark:text-[#8A9BA8] group-hover:text-[#81000A] dark:group-hover:text-[#EF4444]'"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+            />
+          </svg>
+          @if (hasUnreadNotifications()) {
+            <div
+              class="absolute top-[7px] right-[7px] w-2 h-2 bg-[#81000A] rounded-full border-[1.5px] border-[#F4FAFF] dark:border-black transition-colors"
+            ></div>
+          }
+        </button>
+
+        @if (isNotificationsOpen()) {
           <div
-            class="absolute top-[7px] right-[7px] w-2 h-2 bg-[#81000A] rounded-full border-[1.5px] border-[#F4FAFF] dark:border-black transition-colors"
-          ></div>
+            class="absolute right-0 mt-3 w-80 bg-white dark:bg-[#0A0A0A] border border-[rgba(129,0,10,0.1)] dark:border-[#1F1F1F] rounded-xl shadow-lg z-50 animate-dropdown origin-top-right overflow-hidden"
+          >
+            <div
+              class="px-4 py-3 border-b border-[rgba(129,0,10,0.05)] dark:border-[#1F1F1F] bg-[#FAFAFA] dark:bg-black"
+            >
+              <h4 class="font-['Inter'] font-bold text-sm text-[#111D23] dark:text-white">
+                Notificaciones
+              </h4>
+            </div>
+            <div class="p-4">
+              <div class="flex flex-col items-center justify-center gap-3 py-8">
+                <svg class="w-10 h-10 text-[#4C616C] dark:text-[#8A9BA8] opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                </svg>
+                <span class="font-['Inter'] text-sm font-medium text-[#4C616C] dark:text-[#8A9BA8]">No hay notificaciones</span>
+                <span class="font-['Inter'] text-xs text-[#4C616C] dark:text-[#8A9BA8] opacity-60">Las alertas de stock y movimientos aparecerán aquí.</span>
+              </div>
+            </div>
+          </div>
         }
-      </button>
+      </div>
 
       <!-- Settings -->
       <div class="relative">
@@ -226,6 +254,7 @@
 
       <!-- Ayuda -->
       <button
+        (click)="toggleHelpGuide()"
         class="relative p-2 rounded-full hover:bg-[rgba(129,0,10,0.05)] dark:hover:bg-[#141414] transition-colors group cursor-pointer border-none outline-none"
       >
         <svg
@@ -286,3 +315,73 @@
     </div>
   </div>
 </header>
+
+@if (showHelpGuide()) {
+  <app-modal size="lg" (close)="toggleHelpGuide()">
+    <app-modal-header
+      [icon]="true"
+      title="Guía de uso - PGT ERP"
+      subtitle="Descripción general de los módulos y funcionalidades del sistema"
+      (close)="toggleHelpGuide()"
+    >
+      <svg icon class="w-5 h-5 text-[#81000A] dark:text-[#EF4444]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+    </app-modal-header>
+
+    <div class="flex flex-col gap-6 p-6 overflow-y-auto max-h-[70vh]">
+      <section>
+        <h3 class="font-['Work_Sans'] font-bold text-lg text-[#111D23] dark:text-white mb-2">Dashboard</h3>
+        <p class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8] leading-relaxed">
+          El panel principal muestra KPIs en tiempo real: inventario total, salidas del mes, alertas de stock y valor almacenado. También incluye gráficos de movimientos, proporción por tipo de operación, alertas de stock, productos más rotados, últimas operaciones y capacidad por zona. Los datos se actualizan automáticamente vía WebSocket.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="font-['Work_Sans'] font-bold text-lg text-[#111D23] dark:text-white mb-2">Inventario</h3>
+        <p class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8] leading-relaxed">
+          Gestión completa de productos: registro, edición, eliminación y consulta. Puedes filtrar por categoría, estado y texto. También incluye exportación a Excel/PDF, control de stock mínimo, y registro de movimientos iniciales. Las categorías y marcas se administran directamente desde los formularios de producto con el botón "+".
+        </p>
+      </section>
+
+      <section>
+        <h3 class="font-['Work_Sans'] font-bold text-lg text-[#111D23] dark:text-white mb-2">Movimientos y Kardex</h3>
+        <p class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8] leading-relaxed">
+          Trazabilidad completa de ingresos, salidas y ajustes de inventario. El módulo Kardex te permite visualizar el historial detallado de cada producto con su costo promedio, saldo final y valorización.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="font-['Work_Sans'] font-bold text-lg text-[#111D23] dark:text-white mb-2">Tracking y Picking</h3>
+        <p class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8] leading-relaxed">
+          Gestión de órdenes de picking con optimización de rutas (algoritmo Dijkstra) y generación de heatmaps para tracking de ubicaciones. Permite asignar recorridos eficientes dentro del almacén.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="font-['Work_Sans'] font-bold text-lg text-[#111D23] dark:text-white mb-2">Administración</h3>
+        <p class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8] leading-relaxed">
+          Gestión de usuarios, roles y cuentas del sistema. Los administradores pueden crear usuarios, asignar roles (ADMIN/EMPLEADO), activar/desactivar cuentas y gestionar accesos al sistema.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="font-['Work_Sans'] font-bold text-lg text-[#111D23] dark:text-white mb-2">Roles y permisos</h3>
+        <p class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8] leading-relaxed">
+          El sistema cuenta con dos roles principales: <strong class="text-[#111D23] dark:text-white">ADMIN</strong> (acceso completo a todos los módulos incluyendo administración) y <strong class="text-[#111D23] dark:text-white">EMPLEADO</strong> (acceso a dashboard, inventario, movimientos, kardex y tracking). La sección de Administración está restringida solo para usuarios ADMIN.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="font-['Work_Sans'] font-bold text-lg text-[#111D23] dark:text-white mb-2">Notificaciones en tiempo real</h3>
+        <p class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8] leading-relaxed">
+          El sistema se conecta vía WebSocket para recibir alertas de stock bajo, movimientos de inventario y notificaciones en vivo. Los KPIs y widgets del dashboard se actualizan automáticamente sin necesidad de recargar la página.
+        </p>
+      </section>
+    </div>
+
+    <app-modal-footer>
+      <button app-btn variant="primary" (click)="toggleHelpGuide()" type="button">Cerrar</button>
+    </app-modal-footer>
+  </app-modal>
+}

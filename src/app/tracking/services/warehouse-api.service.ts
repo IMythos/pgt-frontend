@@ -9,7 +9,7 @@ import { WarehouseDto } from '../models/warehouse.model';
 })
 export class WarehouseApiService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = `${environment.apiUrl}/v1/warehouses`;
+  private readonly baseUrl = `${environment.apiUrl}/warehouses`;
 
   listar(): Observable<WarehouseDto[]> {
     return this.http.get<{ data: WarehouseDto[] }>(this.baseUrl).pipe(

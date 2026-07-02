@@ -8,15 +8,11 @@
         Usuarios, roles y accesos
       </h2>
       <p class="mt-1 font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">
-        Gestiona cuentas del sistema y valida el estado de acceso desde el backend.
+        Gestiona cuentas del sistema, almacenes y ubicaciones.
       </p>
     </div>
 
-    <button
-      type="button"
-      (click)="loadAdminData()"
-      class="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 font-['Inter'] text-sm font-semibold text-[#111D23] shadow-sm transition-colors hover:bg-gray-50 dark:border-[#1F1F1F] dark:bg-[#0A0A0A] dark:text-white dark:hover:bg-[#141414]"
-    >
+    <button app-btn variant="secondary" (click)="loadAdminData()">
       <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v6h6M20 20v-6h-6M20 8A8 8 0 006.34 4.34M4 16a8 8 0 0013.66 3.66" />
       </svg>
@@ -73,25 +69,28 @@
 
   <!-- MAIN CONTENT -->
   <section class="grid w-full grid-cols-1 gap-6">
-    <!-- LEFT COLUMN -->
     <div class="min-w-0 rounded-xl border border-gray-100 bg-white shadow-sm dark:border-[#1F1F1F] dark:bg-[#0A0A0A]">
       <div class="flex flex-col gap-4 border-b border-gray-100 p-5 dark:border-[#1F1F1F] lg:flex-row lg:items-center lg:justify-between">
-        <div class="inline-flex w-fit rounded-lg bg-gray-100 p-1 dark:bg-black">
-          <button
-            type="button"
-            (click)="setTab('users')"
+        <div class="inline-flex flex-wrap w-fit rounded-lg bg-gray-100 p-1 dark:bg-black">
+          <button type="button" (click)="setTab('users')"
             class="rounded-md px-4 py-2 font-['Inter'] text-sm font-bold transition-colors"
-            [ngClass]="activeTab() === 'users' ? 'bg-white text-[#111D23] shadow-sm dark:bg-[#2A2A2A] dark:text-white' : 'text-[#4C616C] dark:text-[#8A9BA8]'"
-          >
+            [ngClass]="activeTab() === 'users' ? 'bg-white text-[#111D23] shadow-sm dark:bg-[#2A2A2A] dark:text-white' : 'text-[#4C616C] dark:text-[#8A9BA8]'">
             Usuarios
           </button>
-          <button
-            type="button"
-            (click)="setTab('roles')"
+          <button type="button" (click)="setTab('roles')"
             class="rounded-md px-4 py-2 font-['Inter'] text-sm font-bold transition-colors"
-            [ngClass]="activeTab() === 'roles' ? 'bg-white text-[#111D23] shadow-sm dark:bg-[#2A2A2A] dark:text-white' : 'text-[#4C616C] dark:text-[#8A9BA8]'"
-          >
+            [ngClass]="activeTab() === 'roles' ? 'bg-white text-[#111D23] shadow-sm dark:bg-[#2A2A2A] dark:text-white' : 'text-[#4C616C] dark:text-[#8A9BA8]'">
             Roles
+          </button>
+          <button type="button" (click)="setTab('warehouses')"
+            class="rounded-md px-4 py-2 font-['Inter'] text-sm font-bold transition-colors"
+            [ngClass]="activeTab() === 'warehouses' ? 'bg-white text-[#111D23] shadow-sm dark:bg-[#2A2A2A] dark:text-white' : 'text-[#4C616C] dark:text-[#8A9BA8]'">
+            Almacenes
+          </button>
+          <button type="button" (click)="setTab('locations')"
+            class="rounded-md px-4 py-2 font-['Inter'] text-sm font-bold transition-colors"
+            [ngClass]="activeTab() === 'locations' ? 'bg-white text-[#111D23] shadow-sm dark:bg-[#2A2A2A] dark:text-white' : 'text-[#4C616C] dark:text-[#8A9BA8]'">
+            Ubicaciones
           </button>
         </div>
 
@@ -101,19 +100,11 @@
               <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#4C616C] dark:text-[#8A9BA8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
-              <input
-                type="search"
-                [ngModel]="searchTerm()"
-                (ngModelChange)="updateSearch($event)"
+              <input type="search" [ngModel]="searchTerm()" (ngModelChange)="updateSearch($event)"
                 placeholder="Buscar usuario, DNI o rol"
-                class="w-full rounded-lg border border-gray-200 bg-gray-50 py-2.5 pl-9 pr-3 font-['Inter'] text-sm text-[#111D23] outline-none transition-all focus:border-[#81000A] focus:bg-white focus:shadow-[0_0_0_1px_rgba(129,0,10,0.08)] dark:border-[#1F1F1F] dark:bg-[#141414] dark:text-white dark:focus:border-[#EF4444] dark:focus:bg-black"
-              />
+                class="w-full rounded-lg border border-gray-200 bg-gray-50 py-2.5 pl-9 pr-3 font-['Inter'] text-sm text-[#111D23] outline-none transition-all focus:border-[#81000A] focus:bg-white focus:shadow-[0_0_0_1px_rgba(129,0,10,0.08)] dark:border-[#1F1F1F] dark:bg-[#141414] dark:text-white dark:focus:border-[#EF4444] dark:focus:bg-black" />
             </div>
-            <button
-              type="button"
-              (click)="showCreateUserModal.set(true)"
-              class="inline-flex items-center gap-2 rounded-lg bg-[#81000A] px-4 py-2.5 font-['Inter'] text-sm font-bold text-white transition-colors hover:bg-[#6A0008] shadow-sm"
-            >
+            <button app-btn variant="primary" (click)="showCreateUserModal.set(true)">
               <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
               </svg>
@@ -121,9 +112,47 @@
             </button>
           </div>
         }
+
+        @if (activeTab() === 'warehouses') {
+          <div class="flex items-center gap-3 w-full lg:w-auto">
+            <div class="relative flex-1 lg:w-72">
+              <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#4C616C] dark:text-[#8A9BA8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input type="search" [ngModel]="searchTerm()" (ngModelChange)="updateSearch($event)"
+                placeholder="Buscar almacén..."
+                class="w-full rounded-lg border border-gray-200 bg-gray-50 py-2.5 pl-9 pr-3 font-['Inter'] text-sm text-[#111D23] outline-none transition-all focus:border-[#81000A] focus:bg-white focus:shadow-[0_0_0_1px_rgba(129,0,10,0.08)] dark:border-[#1F1F1F] dark:bg-[#141414] dark:text-white dark:focus:border-[#EF4444] dark:focus:bg-black" />
+            </div>
+            <button app-btn variant="primary" (click)="openCreateWarehouse()">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+              <span class="hidden sm:inline">Nuevo Almacén</span>
+            </button>
+          </div>
+        }
+
+        @if (activeTab() === 'locations') {
+          <div class="flex items-center gap-3 w-full lg:w-auto">
+            <div class="relative flex-1 lg:w-72">
+              <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#4C616C] dark:text-[#8A9BA8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input type="search" [ngModel]="searchTerm()" (ngModelChange)="updateSearch($event)"
+                placeholder="Buscar ubicación..."
+                class="w-full rounded-lg border border-gray-200 bg-gray-50 py-2.5 pl-9 pr-3 font-['Inter'] text-sm text-[#111D23] outline-none transition-all focus:border-[#81000A] focus:bg-white focus:shadow-[0_0_0_1px_rgba(129,0,10,0.08)] dark:border-[#1F1F1F] dark:bg-[#141414] dark:text-white dark:focus:border-[#EF4444] dark:focus:bg-black" />
+            </div>
+            <button app-btn variant="primary" (click)="openCreateLocation()">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+              <span class="hidden sm:inline">Nueva Ubicación</span>
+            </button>
+          </div>
+        }
       </div>
 
-      <!-- USERS TAB -->
+      <!-- ══════ USERS TAB ══════ -->
       @if (activeTab() === 'users') {
         @if (loading()) {
           <div class="overflow-x-auto">
@@ -201,23 +230,31 @@
                       </span>
                     </td>
                     <td class="px-5 py-4">
-                      <span
-                        class="rounded-full px-2.5 py-1 font-['Inter'] text-xs font-bold"
-                        [ngClass]="account?.active ? 'bg-[#E6F4EA] text-[#1E7A3A] dark:bg-[#132218] dark:text-[#8DE0A2]' : 'bg-[#F3F4F6] text-[#4C616C] dark:bg-[#141414] dark:text-[#8A9BA8]'"
-                      >
+                      <span class="rounded-full px-2.5 py-1 font-['Inter'] text-xs font-bold"
+                        [ngClass]="account?.active ? 'bg-[#E6F4EA] text-[#1E7A3A] dark:bg-[#132218] dark:text-[#8DE0A2]' : 'bg-[#F3F4F6] text-[#4C616C] dark:bg-[#141414] dark:text-[#8A9BA8]'">
                         {{ account?.active ? 'Activo' : 'Inactivo' }}
                       </span>
                     </td>
                     <td class="px-5 py-4">
-                      @if (account) {
-                        <button
-                          type="button"
-                          (click)="toggleAccount(account)"
-                          class="rounded-lg border border-gray-200 px-3 py-2 font-['Inter'] text-xs font-bold text-[#111D23] transition-colors hover:bg-gray-50 dark:border-[#1F1F1F] dark:text-white dark:hover:bg-[#222222]"
-                        >
-                          {{ account.active ? 'Desactivar' : 'Activar' }}
+                      <div class="flex items-center gap-2">
+                        <button type="button" (click)="openEditUser(user)"
+                          class="rounded-lg border border-gray-200 px-3 py-2 font-['Inter'] text-xs font-bold text-[#111D23] transition-colors hover:bg-gray-50 dark:border-[#1F1F1F] dark:text-white dark:hover:bg-[#222222]">
+                          Editar
                         </button>
-                      }
+                        @if (account) {
+                          <button type="button" (click)="toggleAccount(account)"
+                            class="rounded-lg border border-gray-200 px-3 py-2 font-['Inter'] text-xs font-bold transition-colors hover:bg-gray-50 dark:border-[#1F1F1F] dark:hover:bg-[#222222]"
+                            [ngClass]="account.active ? 'text-[#B45309]' : 'text-[#1E7A3A]'">
+                            {{ account.active ? 'Desactivar' : 'Activar' }}
+                          </button>
+                        }
+                        <button type="button" (click)="confirmDeleteUser(user)"
+                          class="rounded-lg border border-gray-200 px-3 py-2 font-['Inter'] text-xs font-bold text-[#81000A] transition-colors hover:bg-red-50 dark:border-[#1F1F1F] dark:text-[#EF4444] dark:hover:bg-[#2A0A0A]">
+                          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 }
@@ -225,52 +262,17 @@
             </table>
           </div>
 
-          <!-- PAGINATION -->
-          @if (totalPages() > 1) {
-            <div class="flex items-center justify-between border-t border-gray-100 px-5 py-4 dark:border-[#1F1F1F]">
-              <span class="font-['Inter'] text-xs text-[#4C616C] dark:text-[#8A9BA8]">
-                Mostrando {{ ((page() - 1) * pageSize) + 1 }}–{{ Math.min(page() * pageSize, filteredUsers().length) }} de {{ filteredUsers().length }} usuarios
-              </span>
-              <div class="flex items-center gap-1">
-                <button
-                  type="button"
-                  (click)="goToPage(page() - 1)"
-                  [disabled]="page() <= 1"
-                  class="rounded-lg border border-gray-200 px-3 py-1.5 font-['Inter'] text-xs font-bold text-[#111D23] transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-[#1F1F1F] dark:text-white dark:hover:bg-[#222222]"
-                >
-                  Anterior
-                </button>
-                @for (p of pageButtons(); track p) {
-                  <button
-                    type="button"
-                    (click)="goToPage(p)"
-                    class="flex h-8 w-8 items-center justify-center rounded-lg font-['Inter'] text-xs font-bold transition-colors"
-                    [ngClass]="p === page()
-                      ? 'bg-[#81000A] text-white'
-                      : 'text-[#4C616C] hover:bg-gray-50 dark:text-[#8A9BA8] dark:hover:bg-[#222222]'"
-                  >
-                    {{ p }}
-                  </button>
-                }
-                <button
-                  type="button"
-                  (click)="goToPage(page() + 1)"
-                  [disabled]="page() >= totalPages()"
-                  class="rounded-lg border border-gray-200 px-3 py-1.5 font-['Inter'] text-xs font-bold text-[#111D23] transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-[#1F1F1F] dark:text-white dark:hover:bg-[#222222]"
-                >
-                  Siguiente
-                </button>
-              </div>
-            </div>
-          }
+          <app-pagination [currentPage]="page()" [pageSize]="pageSize"
+            [totalItems]="filteredUsers().length" [showPageButtons]="true"
+            (pageChange)="page.set($event)" />
         }
       }
 
-      <!-- ROLES TAB -->
+      <!-- ══════ ROLES TAB ══════ -->
       @if (activeTab() === 'roles') {
         @if (loading()) {
           <div class="grid gap-3 p-5 sm:grid-cols-2 xl:grid-cols-3">
-                @for (_ of skeletonRows; track $index) {
+            @for (_ of skeletonRows; track $index) {
               <article class="rounded-lg border border-gray-100 bg-gray-50 p-4 dark:border-[#1F1F1F] dark:bg-black">
                 <div class="flex items-start justify-between gap-3">
                   <div class="flex flex-col gap-2 flex-1">
@@ -292,6 +294,14 @@
             </span>
           </div>
         } @else {
+          <div class="flex justify-end px-5 pt-4">
+            <button app-btn variant="primary" (click)="createRole()">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+              <span>Nuevo Rol</span>
+            </button>
+          </div>
           <div class="grid gap-3 p-5 sm:grid-cols-2 xl:grid-cols-3">
             @for (role of roles(); track role.id) {
               <article class="rounded-lg border border-gray-100 bg-gray-50 p-4 dark:border-[#1F1F1F] dark:bg-black">
@@ -300,23 +310,247 @@
                     <h3 class="font-['Inter'] text-sm font-bold text-[#111D23] dark:text-white">{{ role.name }}</h3>
                     <p class="mt-1 font-['Inter'] text-xs text-[#4C616C] dark:text-[#8A9BA8]">Creado {{ formatDate(role.createdAt) }}</p>
                   </div>
-                  <span class="rounded-full bg-[#81000A]/10 px-2 py-1 font-['Inter'] text-[10px] font-bold uppercase text-[#81000A] dark:bg-[#81000A]/20 dark:text-[#EF4444]">Rol</span>
+                  <div class="flex items-center gap-1">
+                    <span class="rounded-full bg-[#81000A]/10 px-2 py-1 font-['Inter'] text-[10px] font-bold uppercase text-[#81000A] dark:bg-[#81000A]/20 dark:text-[#EF4444]">Rol</span>
+                    <button type="button" (click)="openEditRole(role)"
+                      class="p-1.5 rounded-lg text-[#4C616C] hover:text-[#111D23] hover:bg-gray-200 dark:text-[#8A9BA8] dark:hover:text-white dark:hover:bg-[#222222] transition-colors">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                    </button>
+                    <button type="button" (click)="confirmDeleteRole(role)"
+                      class="p-1.5 rounded-lg text-[#4C616C] hover:text-[#81000A] hover:bg-red-50 dark:text-[#8A9BA8] dark:hover:text-[#EF4444] dark:hover:bg-[#2A0A0A] transition-colors">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </article>
             }
           </div>
         }
       }
-    </div>
 
+      <!-- ══════ WAREHOUSES TAB ══════ -->
+      @if (activeTab() === 'warehouses') {
+        @if (loading()) {
+          <div class="overflow-x-auto">
+            <table class="w-full text-left whitespace-nowrap">
+              <thead>
+                <tr class="border-b border-gray-100 text-[11px] uppercase text-[#81000A] dark:border-[#1F1F1F] dark:text-[#EF4444]">
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Código</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Nombre</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Tipo</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">ID Sede</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Estado</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Accion</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-50 dark:divide-[#222222]">
+                @for (_ of skeletonRows; track $index) {
+                  <tr>
+                    <td class="px-5 py-4"><div class="h-3.5 w-20 animate-pulse rounded bg-gray-200 dark:bg-[#222222]"></div></td>
+                    <td class="px-5 py-4"><div class="h-3.5 w-36 animate-pulse rounded bg-gray-200 dark:bg-[#222222]"></div></td>
+                    <td class="px-5 py-4"><div class="h-3.5 w-16 animate-pulse rounded bg-gray-200 dark:bg-[#222222]"></div></td>
+                    <td class="px-5 py-4"><div class="h-3.5 w-12 animate-pulse rounded bg-gray-200 dark:bg-[#222222]"></div></td>
+                    <td class="px-5 py-4"><div class="h-6 w-16 animate-pulse rounded-full bg-gray-200 dark:bg-[#222222]"></div></td>
+                    <td class="px-5 py-4"><div class="h-8 w-24 animate-pulse rounded-lg bg-gray-200 dark:bg-[#222222]"></div></td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else if (filteredWarehouses().length === 0) {
+          <div class="flex flex-col items-center justify-center gap-3 px-5 py-16">
+            <svg class="h-12 w-12 text-[#4C616C] dark:text-[#8A9BA8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+            <span class="font-['Inter'] text-sm font-medium text-[#4C616C] dark:text-[#8A9BA8]">
+              {{ searchTerm() ? 'No hay resultados para esta búsqueda.' : 'No hay almacenes registrados.' }}
+            </span>
+          </div>
+        } @else {
+          <div class="overflow-x-auto">
+            <table class="w-full text-left whitespace-nowrap">
+              <thead>
+                <tr class="border-b border-gray-100 text-[11px] uppercase text-[#81000A] dark:border-[#1F1F1F] dark:text-[#EF4444]">
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Código</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Nombre</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Tipo</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">ID Sede</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Estado</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Accion</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-50 dark:divide-[#222222]">
+                @for (wh of filteredWarehouses(); track wh.id) {
+                  <tr class="transition-colors hover:bg-gray-50 dark:hover:bg-[#222222]/60">
+                    <td class="px-5 py-4 font-['Inter'] text-sm font-bold text-[#111D23] dark:text-white">{{ wh.codAlm }}</td>
+                    <td class="px-5 py-4 font-['Inter'] text-sm text-[#111D23] dark:text-white">{{ wh.nombre }}</td>
+                    <td class="px-5 py-4 font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">{{ wh.tipo || '-' }}</td>
+                    <td class="px-5 py-4 font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">{{ wh.idSede }}</td>
+                    <td class="px-5 py-4">
+                      <span class="rounded-full px-2.5 py-1 font-['Inter'] text-xs font-bold"
+                        [ngClass]="wh.activo ? 'bg-[#E6F4EA] text-[#1E7A3A] dark:bg-[#132218] dark:text-[#8DE0A2]' : 'bg-[#F3F4F6] text-[#4C616C] dark:bg-[#141414] dark:text-[#8A9BA8]'">
+                        {{ wh.activo ? 'Activo' : 'Inactivo' }}
+                      </span>
+                    </td>
+                    <td class="px-5 py-4">
+                      <div class="flex items-center gap-2">
+                        <button type="button" (click)="openEditWarehouse(wh)"
+                          class="rounded-lg border border-gray-200 px-3 py-2 font-['Inter'] text-xs font-bold text-[#111D23] transition-colors hover:bg-gray-50 dark:border-[#1F1F1F] dark:text-white dark:hover:bg-[#222222]">
+                          Editar
+                        </button>
+                        <button type="button" (click)="confirmDeleteWarehouse(wh)"
+                          class="rounded-lg border border-gray-200 px-3 py-2 font-['Inter'] text-xs font-bold text-[#81000A] transition-colors hover:bg-red-50 dark:border-[#1F1F1F] dark:text-[#EF4444] dark:hover:bg-[#2A0A0A]">
+                          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      }
+
+      <!-- ══════ LOCATIONS TAB ══════ -->
+      @if (activeTab() === 'locations') {
+        @if (loading()) {
+          <div class="overflow-x-auto">
+            <table class="w-full text-left whitespace-nowrap">
+              <thead>
+                <tr class="border-b border-gray-100 text-[11px] uppercase text-[#81000A] dark:border-[#1F1F1F] dark:text-[#EF4444]">
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Código Barras</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Almacén</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Zona</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Pasillo</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Estante</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Capacidad</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Estado</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Accion</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-50 dark:divide-[#222222]">
+                @for (_ of skeletonRows; track $index) {
+                  <tr>
+                    <td class="px-5 py-4"><div class="h-3.5 w-24 animate-pulse rounded bg-gray-200 dark:bg-[#222222]"></div></td>
+                    <td class="px-5 py-4"><div class="h-3.5 w-28 animate-pulse rounded bg-gray-200 dark:bg-[#222222]"></div></td>
+                    <td class="px-5 py-4"><div class="h-3.5 w-8 animate-pulse rounded bg-gray-200 dark:bg-[#222222]"></div></td>
+                    <td class="px-5 py-4"><div class="h-3.5 w-8 animate-pulse rounded bg-gray-200 dark:bg-[#222222]"></div></td>
+                    <td class="px-5 py-4"><div class="h-3.5 w-8 animate-pulse rounded bg-gray-200 dark:bg-[#222222]"></div></td>
+                    <td class="px-5 py-4"><div class="h-3.5 w-12 animate-pulse rounded bg-gray-200 dark:bg-[#222222]"></div></td>
+                    <td class="px-5 py-4"><div class="h-6 w-16 animate-pulse rounded-full bg-gray-200 dark:bg-[#222222]"></div></td>
+                    <td class="px-5 py-4"><div class="h-8 w-24 animate-pulse rounded-lg bg-gray-200 dark:bg-[#222222]"></div></td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else if (filteredLocations().length === 0) {
+          <div class="flex flex-col items-center justify-center gap-3 px-5 py-16">
+            <svg class="h-12 w-12 text-[#4C616C] dark:text-[#8A9BA8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span class="font-['Inter'] text-sm font-medium text-[#4C616C] dark:text-[#8A9BA8]">
+              {{ searchTerm() ? 'No hay resultados para esta búsqueda.' : 'No hay ubicaciones registradas.' }}
+            </span>
+          </div>
+        } @else {
+          <div class="overflow-x-auto">
+            <table class="w-full text-left whitespace-nowrap">
+              <thead>
+                <tr class="border-b border-gray-100 text-[11px] uppercase text-[#81000A] dark:border-[#1F1F1F] dark:text-[#EF4444]">
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Código Barras</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Almacén</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Zona</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Pasillo</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Estante</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Capacidad</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Estado</th>
+                  <th class="px-5 py-4 font-['Inter'] font-bold">Accion</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-50 dark:divide-[#222222]">
+                @for (loc of filteredLocations(); track loc.idLocacion) {
+                  <tr class="transition-colors hover:bg-gray-50 dark:hover:bg-[#222222]/60">
+                    <td class="px-5 py-4 font-['Inter'] text-sm font-bold text-[#111D23] dark:text-white">{{ loc.codBarras }}</td>
+                    <td class="px-5 py-4 font-['Inter'] text-sm text-[#111D23] dark:text-white">{{ warehouseNames().get(loc.idAlmacen) || loc.idAlmacen }}</td>
+                    <td class="px-5 py-4 font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">{{ loc.zona || '-' }}</td>
+                    <td class="px-5 py-4 font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">{{ loc.pasillo || '-' }}</td>
+                    <td class="px-5 py-4 font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">{{ loc.estante || '-' }}</td>
+                    <td class="px-5 py-4 font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">{{ loc.capacidad || '-' }}</td>
+                    <td class="px-5 py-4">
+                      <span class="rounded-full px-2.5 py-1 font-['Inter'] text-xs font-bold"
+                        [ngClass]="loc.activo ? 'bg-[#E6F4EA] text-[#1E7A3A] dark:bg-[#132218] dark:text-[#8DE0A2]' : 'bg-[#F3F4F6] text-[#4C616C] dark:bg-[#141414] dark:text-[#8A9BA8]'">
+                        {{ loc.activo ? 'Activo' : 'Inactivo' }}
+                      </span>
+                    </td>
+                    <td class="px-5 py-4">
+                      <div class="flex items-center gap-2">
+                        <button type="button" (click)="openEditLocation(loc)"
+                          class="rounded-lg border border-gray-200 px-3 py-2 font-['Inter'] text-xs font-bold text-[#111D23] transition-colors hover:bg-gray-50 dark:border-[#1F1F1F] dark:text-white dark:hover:bg-[#222222]">
+                          Editar
+                        </button>
+                        <button type="button" (click)="confirmDeleteLocation(loc)"
+                          class="rounded-lg border border-gray-200 px-3 py-2 font-['Inter'] text-xs font-bold text-[#81000A] transition-colors hover:bg-red-50 dark:border-[#1F1F1F] dark:text-[#EF4444] dark:hover:bg-[#2A0A0A]">
+                          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      }
+    </div>
   </section>
 
-  <!-- CREATE USER MODAL -->
+  <!-- ── MODALS ── -->
+
   @if (showCreateUserModal()) {
-    <app-admin-create-user-modal
-      [roles]="roles()"
-      (close)="showCreateUserModal.set(false)"
-      (saved)="onUserCreated()"
+    <app-admin-create-user-modal [roles]="roles()"
+      (close)="showCreateUserModal.set(false)" (saved)="onUserCreated()" />
+  }
+
+  @if (showEditUserModal()) {
+    <app-admin-edit-user-modal [user]="selectedUser()!" [roles]="roles()"
+      (close)="showEditUserModal.set(false)" (saved)="onUserUpdated()" />
+  }
+
+  @if (showEditRoleModal()) {
+    <app-admin-edit-role-modal [role]="selectedRole()!"
+      (close)="showEditRoleModal.set(false)" (saved)="onRoleUpdated()" />
+  }
+
+  @if (showWarehouseModal()) {
+    <app-admin-warehouse-modal [warehouse]="selectedWarehouse()"
+      (close)="showWarehouseModal.set(false)" (saved)="onWarehouseSaved()" />
+  }
+
+  @if (showLocationModal()) {
+    <app-admin-location-modal [location]="selectedLocation()" [warehouses]="warehouses()"
+      (close)="showLocationModal.set(false)" (saved)="onLocationSaved()" />
+  }
+
+  @if (showConfirmDelete()) {
+    <app-confirm-dialog
+      title="Confirmar eliminación"
+      [message]="'¿Estás seguro de eliminar ' + (deleteTarget()?.label ?? ' este elemento') + '? Esta acción no se puede deshacer.'"
+      confirmText="Eliminar"
+      cancelText="Cancelar"
+      variant="danger"
+      (confirm)="onDeleteConfirmed()"
+      (cancel)="showConfirmDelete.set(false); deleteTarget.set(null); roleToDelete.set(null); selectedUser.set(null); selectedWarehouse.set(null); selectedLocation.set(null)"
     />
   }
 </div>

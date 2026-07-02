@@ -8,17 +8,28 @@
     </p>
   </div>
   <div class="w-full flex-1 flex items-center justify-center">
-    <apx-chart
-      [series]="chartSeries()"
-      [chart]="chartOptions()"
-      [labels]="labels()"
-      [colors]="colors()"
-      [legend]="legend()"
-      [dataLabels]="dataLabels()"
-      [plotOptions]="plotOptions()"
-      [stroke]="stroke()"
-      [tooltip]="tooltip()"
-      [responsive]="responsive()"
-    />
+    @if (data().length > 0) {
+      <apx-chart
+        [series]="chartSeries()"
+        [chart]="chartOptions()"
+        [labels]="labels()"
+        [colors]="colors()"
+        [legend]="legend()"
+        [dataLabels]="dataLabels()"
+        [plotOptions]="plotOptions()"
+        [stroke]="stroke()"
+        [tooltip]="tooltip()"
+        [responsive]="responsive()"
+      />
+    } @else {
+      <div class="flex flex-col items-center justify-center gap-3 py-12">
+        <svg class="w-16 h-16 text-[#4C616C] dark:text-[#8A9BA8] opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/>
+        </svg>
+        <span class="font-['Inter'] text-sm font-medium text-[#4C616C] dark:text-[#8A9BA8]">No hay proporciones disponibles</span>
+        <span class="font-['Inter'] text-xs text-[#4C616C] dark:text-[#8A9BA8] opacity-60">Los datos aparecerán cuando haya movimientos de diferentes tipos.</span>
+      </div>
+    }
   </div>
 </div>

@@ -1,0 +1,47 @@
+<app-modal size="sm" (close)="close.emit()">
+  <app-modal-header [title]="title" [subtitle]="subtitle" (close)="close.emit()" />
+
+  <div class="flex flex-col gap-4 p-6">
+    @if (formErrors()['general']) {
+      <div class="rounded-lg border border-[#E2BEBA] bg-[#81000A]/10 px-4 py-3 font-['Inter'] text-sm font-semibold text-[#81000A] dark:bg-[#81000A]/20 dark:text-[#EF4444]">
+        {{ formErrors()['general'] }}
+      </div>
+    }
+
+    <div class="flex flex-col gap-1.5">
+      <label class="font-['Inter'] text-xs font-bold uppercase text-[#4C616C] dark:text-[#8A9BA8]">
+        Nombre
+      </label>
+      <input
+        type="text"
+        [ngModel]="name()"
+        (ngModelChange)="updateName($event)"
+        placeholder="Ingrese el nombre"
+        class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 font-['Inter'] text-sm text-[#111D23] outline-none transition-all focus:border-[#81000A] focus:bg-white focus:shadow-[0_0_0_1px_rgba(129,0,10,0.08)] dark:border-[#1F1F1F] dark:bg-[#141414] dark:text-white dark:focus:border-[#EF4444] dark:focus:bg-black"
+      />
+      @if (formErrors()['name']) {
+        <span class="font-['Inter'] text-xs text-[#EF4444]">{{ formErrors()['name'] }}</span>
+      }
+    </div>
+
+    @if (type() === 'category') {
+      <div class="flex flex-col gap-1.5">
+        <label class="font-['Inter'] text-xs font-bold uppercase text-[#4C616C] dark:text-[#8A9BA8]">
+          Descripción (opcional)
+        </label>
+        <input
+          type="text"
+          [ngModel]="description()"
+          (ngModelChange)="updateDescription($event)"
+          placeholder="Breve descripción"
+          class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 font-['Inter'] text-sm text-[#111D23] outline-none transition-all focus:border-[#81000A] focus:bg-white focus:shadow-[0_0_0_1px_rgba(129,0,10,0.08)] dark:border-[#1F1F1F] dark:bg-[#141414] dark:text-white dark:focus:border-[#EF4444] dark:focus:bg-black"
+        />
+      </div>
+    }
+  </div>
+
+  <app-modal-footer>
+    <button type="button" app-btn variant="cancel" (click)="close.emit()">Cancelar</button>
+    <button type="button" app-btn variant="primary" [loading]="isSaving()" (click)="save()">Guardar</button>
+  </app-modal-footer>
+</app-modal>

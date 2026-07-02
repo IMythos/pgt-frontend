@@ -9,7 +9,7 @@ import { LocationDto } from '../models/location.model';
 })
 export class LocationApiService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = `${environment.apiUrl}/v1/locations`;
+  private readonly baseUrl = `${environment.apiUrl}/locations`;
 
   listarActivas(): Observable<LocationDto[]> {
     return this.http.get<{ data: LocationDto[] }>(this.baseUrl).pipe(

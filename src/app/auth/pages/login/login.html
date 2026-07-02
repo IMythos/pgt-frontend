@@ -17,9 +17,7 @@
       ></div>
     </div>
     <div class="relative z-10 flex items-center gap-3 h-12">
-      <div class="flex justify-center items-center w-12 h-12 bg-[#81000A]">
-        <div class="w-[22.54px] h-[23.13px] bg-white"></div>
-      </div>
+      <img src="assets/img/logo.png" alt="PGT Logo" class="w-12 h-12 rounded-full object-cover">
       <span
         class="font-['Work_Sans'] font-black text-2xl leading-8 tracking-[-0.6px] uppercase text-[#F4FAFF]"
       >
@@ -59,6 +57,7 @@
   >
     <div class="flex flex-col items-start gap-0 w-full max-w-[448px] -mb-28">
       <div class="flex flex-col gap-0 w-full -mb-10">
+        <img src="assets/img/logo.png" alt="PGT Logo" class="w-14 h-14 rounded-full object-cover mb-4">
         <h3
           class="font-['Work_Sans'] font-bold text-[30px] leading-9 tracking-[-0.75px] text-[#111D23] dark:text-white transition-colors w-full text-left"
         >
@@ -125,12 +124,7 @@
               >
                 Contraseña
               </label>
-              <a
-                href="#"
-                class="font-['Inter'] font-bold text-[10px] tracking-[-0.5px] uppercase text-[#81000A] hover:underline"
-              >
-                Recuperar Acceso
-              </a>
+
             </div>
             <div
               class="relative flex items-center w-full h-14 bg-[#DDEAF2] dark:bg-[#1A1A1A] transition-colors"
@@ -197,6 +191,7 @@
           <label class="flex items-center gap-2 cursor-pointer group">
             <input
               type="checkbox"
+              formControlName="rememberMe"
               class="w-5 h-5 bg-white dark:bg-[#1A1A1A] border border-[#E2BEBA] dark:border-[#1F1F1F] rounded appearance-none checked:bg-[#81000A] dark:checked:bg-[#EF4444] checked:border-transparent transition-colors relative cursor-pointer before:content-[''] before:absolute before:inset-0 before:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwb2x5bGluZSBwb2ludHM9IjIwIDYgOSAxNyA0IDEyIi8+PC9zdmc+')] before:bg-center before:bg-no-repeat before:bg-[length:12px] before:opacity-0 checked:before:opacity-100"
             />
             <span
@@ -239,16 +234,6 @@
               </svg>
             </div>
           </button>
-        </div>
-
-        <div class="flex justify-center items-start pt-4 gap-1 w-full">
-          <span
-            class="font-['Inter'] font-medium text-sm text-[#4C616C] dark:text-[#9CA3AF] transition-colors"
-            >¿No tienes cuenta?</span
-          >
-          <a href="#" class="font-['Inter'] font-bold text-sm text-[#81000A] hover:underline"
-            >Solicitar Acceso</a
-          >
         </div>
 
         <div

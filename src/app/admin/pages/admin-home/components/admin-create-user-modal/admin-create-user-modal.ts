@@ -4,17 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
 import { AdminApiService } from '../../../../services/admin-api.service';
 import { AdminRole, CreateAdminUserPayload } from '../../../../models/admin.models';
+import { Modal } from '../../../../../shared/components/modal/modal';
+import { ModalHeader } from '../../../../../shared/components/modal-header/modal-header';
+import { ModalFooter } from '../../../../../shared/components/modal-footer/modal-footer';
 
 @Component({
   selector: 'app-admin-create-user-modal',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Modal, ModalHeader, ModalFooter],
   templateUrl: './admin-create-user-modal.html',
-  styles: [`
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes zoomIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-    .animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
-    .animate-zoom-in { animation: zoomIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-  `],
 })
 export class AdminCreateUserModal {
   private readonly adminApi = inject(AdminApiService);

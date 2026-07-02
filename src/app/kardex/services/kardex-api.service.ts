@@ -10,7 +10,7 @@ import { KardexDto, FiltroKardexDto } from '../models/kardex.model';
 })
 export class KardexApiService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = `${environment.apiUrl}/v1/kardex`;
+  private readonly baseUrl = `${environment.apiUrl}/kardex`;
   listar(filtros: FiltroKardexDto = {}): Observable<PagedResponse<KardexDto>> {
     const params = this.construirParams({ pagina: 0, tamanioPagina: 50, ...filtros });
     return this.http.get<PagedResponse<KardexDto>>(this.baseUrl, {
@@ -25,7 +25,7 @@ export class KardexApiService {
     const params = new HttpParams()
       .set('format', formato.toUpperCase())
       .set('metodoCosto', metodoCosto);
-    const exportUrl = `${environment.apiUrl}/v1/kardex/export`;
+    const exportUrl = `${environment.apiUrl}/kardex/export`;
     return this.http.get(exportUrl, { params, responseType: 'blob' });
   }
 

@@ -1,0 +1,58 @@
+@if (totalItems() > 0) {
+  <div class="flex flex-col sm:flex-row items-center justify-between w-full gap-4">
+    <div class="flex items-center gap-2">
+      <span class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">Filas:</span>
+      <select
+        [ngModel]="pageSize()"
+        (ngModelChange)="onPageSizeChange($event)"
+        [ngModelOptions]="{ standalone: true }"
+        class="bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#81000A] cursor-pointer"
+      >
+        @for (opt of pageSizeOptions(); track opt) {
+          <option [value]="opt">{{ opt }}</option>
+        }
+      </select>
+      <span class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">
+        Página {{ currentPage() + 1 }} de {{ totalPages() }} ({{ totalItems() }} registros)
+      </span>
+    </div>
+
+    @if (showPageButtons()) {
+      <div class="flex items-center gap-1">
+        <button (click)="goToPage(currentPage() - 1)" [disabled]="currentPage() === 0"
+          class="flex h-8 w-8 items-center justify-center rounded-lg font-['Inter'] text-xs font-bold transition-colors disabled:opacity-40 disabled:cursor-not-allowed
+            text-[#4C616C] hover:bg-gray-50 dark:text-[#8A9BA8] dark:hover:bg-[#222222] cursor-pointer">
+          &lt;
+        </button>
+        @for (p of pageButtons(); track p) {
+          <button (click)="goToPage(p - 1)"
+            class="flex h-8 w-8 items-center justify-center rounded-lg font-['Inter'] text-xs font-bold transition-colors cursor-pointer"
+            [class.bg-[#81000A]]="p - 1 === currentPage()"
+            [class.text-white]="p - 1 === currentPage()"
+            [class.text-[#4C616C]]="p - 1 !== currentPage()"
+            [class.hover:bg-gray-50]="p - 1 !== currentPage()"
+            [class.dark:text-[#8A9BA8]]="p - 1 !== currentPage()"
+            [class.dark:hover:bg-[#222222]]="p - 1 !== currentPage()">
+            {{ p }}
+          </button>
+        }
+        <button (click)="goToPage(currentPage() + 1)" [disabled]="(currentPage() + 1) * pageSize() >= totalItems()"
+          class="flex h-8 w-8 items-center justify-center rounded-lg font-['Inter'] text-xs font-bold transition-colors disabled:opacity-40 disabled:cursor-not-allowed
+            text-[#4C616C] hover:bg-gray-50 dark:text-[#8A9BA8] dark:hover:bg-[#222222] cursor-pointer">
+          &gt;
+        </button>
+      </div>
+    } @else {
+      <div class="flex items-center gap-2">
+        <button (click)="previousPage()" [disabled]="currentPage() === 0"
+          class="px-4 py-2 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-[#141414] hover:border-[#81000A]/50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer">
+          Anterior
+        </button>
+        <button (click)="nextPage()" [disabled]="(currentPage() + 1) * pageSize() >= totalItems()"
+          class="px-4 py-2 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-[#141414] hover:border-[#81000A]/50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer">
+          Siguiente
+        </button>
+      </div>
+    }
+  </div>
+}

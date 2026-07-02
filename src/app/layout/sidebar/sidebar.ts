@@ -1,4 +1,4 @@
-import { Component, signal, output } from '@angular/core';
+import { Component, signal, computed, output } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -28,6 +28,14 @@ export class Sidebar {
   openChange = output<boolean>();
 
   expandedMenus = signal<Set<string>>(new Set());
+
+  filteredMenuItems = computed(() => {
+    const role = this.authService.currentUserRole()?.toUpperCase();
+    return this.menuItems.filter(item => {
+      if (item.label === 'Admin') return role === 'ADMIN';
+      return true;
+    });
+  });
 
   menuItems: SidebarEntry[] = [
     {

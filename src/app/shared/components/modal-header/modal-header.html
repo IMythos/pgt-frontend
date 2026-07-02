@@ -1,0 +1,23 @@
+<div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-[#1F1F1F] bg-gray-50 dark:bg-[#141414]">
+  <div class="flex items-center gap-3">
+    @if (icon()) {
+      <div class="w-9 h-9 rounded-full bg-[rgba(129,0,10,0.1)] dark:bg-[#313131] flex items-center justify-center shrink-0">
+        <ng-content select="[icon]" />
+      </div>
+    }
+    <div class="flex flex-col">
+      <h3 class="font-['Work_Sans'] font-bold text-lg text-[#111D23] dark:text-white leading-tight">{{ title() }}</h3>
+      @if (subtitle()) {
+        <span class="font-['Inter'] text-[11px] text-[#4C616C] dark:text-[#8A9BA8]">{{ subtitle() }}</span>
+      }
+    </div>
+  </div>
+  @if (closable()) {
+    <button (click)="close.emit()" type="button"
+      class="btn-ghost p-1.5 rounded-full">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  }
+</div>

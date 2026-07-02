@@ -24,7 +24,7 @@
     </div>
 
     <nav class="flex flex-col w-full">
-      @for (item of menuItems; track item.label) {
+      @for (item of filteredMenuItems(); track item.label) {
         @if (isGroup(item)) {
           <!-- Grupo expandible -->
           <button (click)="toggleMenu(item.label)"

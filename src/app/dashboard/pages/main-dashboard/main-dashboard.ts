@@ -58,13 +58,13 @@ export class MainDashboard implements OnInit, OnDestroy {
     this.loading.set(true);
     this.loadedCount = 0;
 
-    this.api.getKpis().subscribe({ next: k => this.kpis.set(k), error: this.finishLoad });
-    this.api.getStockAlerts().subscribe({ next: a => this.stockAlerts.set(a), error: this.finishLoad });
-    this.api.getMovementsByTime().subscribe({ next: m => this.movements.set(m), error: this.finishLoad });
-    this.api.getProporcionPorTipo().subscribe({ next: p => this.proporciones.set(p), error: this.finishLoad });
-    this.api.getRecentOperations().subscribe({ next: o => this.operations.set(o), error: this.finishLoad });
-    this.api.getZoneCapacities().subscribe({ next: z => this.zoneCapacities.set(z), error: this.finishLoad });
-    this.api.getTopProducts().subscribe({ next: p => this.topProducts.set(p), error: this.finishLoad });
+    this.api.getKpis().subscribe({ next: k => { this.kpis.set(k); this.finishLoad(); }, error: this.finishLoad });
+    this.api.getStockAlerts().subscribe({ next: a => { this.stockAlerts.set(a); this.finishLoad(); }, error: this.finishLoad });
+    this.api.getMovementsByTime().subscribe({ next: m => { this.movements.set(m); this.finishLoad(); }, error: this.finishLoad });
+    this.api.getProporcionPorTipo().subscribe({ next: p => { this.proporciones.set(p); this.finishLoad(); }, error: this.finishLoad });
+    this.api.getRecentOperations().subscribe({ next: o => { this.operations.set(o); this.finishLoad(); }, error: this.finishLoad });
+    this.api.getZoneCapacities().subscribe({ next: z => { this.zoneCapacities.set(z); this.finishLoad(); console.warn('Zone capacities:', z); }, error: this.finishLoad });
+    this.api.getTopProducts().subscribe({ next: p => { this.topProducts.set(p); this.finishLoad(); }, error: this.finishLoad });
   }
 
   private loadedCount = 0;

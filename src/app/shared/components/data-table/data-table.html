@@ -1,0 +1,50 @@
+<div class="card-table">
+  <div class="overflow-x-auto">
+    <table class="w-full">
+      <thead>
+        <tr class="bg-gray-50 dark:bg-black">
+          @for (col of columns(); track col.key) {
+            <th class="th-base"
+              [class]="col.align === 'right' ? 'text-right' : col.align === 'center' ? 'text-center' : 'text-left'"
+              [style.width]="col.width">
+              {{ col.label }}
+            </th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @if (loading()) {
+          <tr>
+            <td [attr.colspan]="columns().length" class="p-0">
+              <app-loading [type]="loadingType()" [text]="loadingText()" [colspan]="columns().length" />
+            </td>
+          </tr>
+        } @else if (data().length === 0) {
+          <tr>
+            <td [attr.colspan]="columns().length" class="p-0">
+              <app-empty-state [icon]="emptyIcon()" [title]="emptyTitle()" [message]="emptyMessage()"
+                [actionText]="emptyActionText()" (action)="emptyAction.emit()" />
+            </td>
+          </tr>
+        } @else {
+          @for (row of data(); track $index) {
+            <tr class="border-b border-gray-50 dark:border-[#1F1F1F] hover:bg-gray-50 dark:hover:bg-[#141414] transition-colors"
+              (click)="rowClick.emit(row)" [class.cursor-pointer]="true">
+              @for (col of columns(); track col.key) {
+                <td class="td-base"
+                  [class]="col.align === 'right' ? 'text-right' : col.align === 'center' ? 'text-center' : 'text-left'">
+                  {{ row[col.key] }}
+                </td>
+              }
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+  @if (showFooter()) {
+    <div class="px-6 py-4 border-t border-gray-100 dark:border-[#1F1F1F]">
+      <ng-content select="[footer]" />
+    </div>
+  }
+</div>

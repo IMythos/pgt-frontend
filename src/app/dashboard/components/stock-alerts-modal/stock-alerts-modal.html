@@ -1,26 +1,14 @@
-<div class="animate-fade-in fixed inset-0 z-50 flex items-center justify-center bg-[#111111]/60 dark:bg-black/80 backdrop-blur-sm p-4" (click)="close.emit()">
-  <div class="animate-zoom-in flex flex-col w-full max-w-4xl bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] rounded-2xl shadow-2xl overflow-hidden max-h-[90vh]" (click)="$event.stopPropagation()">
-
-    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-[#1F1F1F] bg-gray-50 dark:bg-[#141414] shrink-0">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-[rgba(129,0,10,0.1)] dark:bg-[#313131] flex items-center justify-center shrink-0">
-          <svg class="w-5 h-5 text-[#81000A] dark:text-[#EF4444]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-          </svg>
-        </div>
-        <div class="flex flex-col">
-          <h3 class="font-['Work_Sans'] font-bold text-lg text-[#111D23] dark:text-white leading-tight">Alertas de Stock</h3>
-          <span class="font-['Inter'] text-[11px] text-[#4C616C] dark:text-[#8A9BA8]">
-            {{ totalCriticalCount() }} crítica{{ totalCriticalCount() !== 1 ? 's' : '' }} &middot; {{ totalLowCount() }} baja{{ totalLowCount() !== 1 ? 's' : '' }}
-          </span>
-        </div>
-      </div>
-      <button (click)="close.emit()" type="button" class="p-1.5 text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#81000A] dark:hover:text-[#EF4444] hover:bg-gray-200 dark:hover:bg-[#313131] rounded-full transition-colors cursor-pointer">
-        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-    </div>
+<app-modal size="xxl" [closeOnOverlay]="true" (close)="close.emit()">
+  <app-modal-header
+    [icon]="true"
+    title="Alertas de Stock"
+    [subtitle]="totalCriticalCount() + ' crítica' + (totalCriticalCount() !== 1 ? 's' : '') + ' · ' + totalLowCount() + ' baja' + (totalLowCount() !== 1 ? 's' : '')"
+    (close)="close.emit()"
+  >
+    <svg icon class="w-5 h-5 text-[#81000A] dark:text-[#EF4444]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+    </svg>
+  </app-modal-header>
 
     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 px-6 py-3 border-b border-gray-100 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A] shrink-0">
       <div class="flex items-center gap-1.5 bg-gray-100 dark:bg-black rounded-lg p-1 w-fit">
@@ -158,6 +146,4 @@
         Cerrar
       </button>
     </div>
-
-  </div>
-</div>
+</app-modal>

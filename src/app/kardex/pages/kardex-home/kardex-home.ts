@@ -1,13 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal, computed, inject, OnInit } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KardexApiService } from '../../services/kardex-api.service';
 import { KardexDto, FiltroKardexDto } from '../../models/kardex.model';
 import { WebSocketService } from '../../../core/services/websocket.service';
+import { Pagination } from '../../../shared/components/pagination/pagination';
+import { Btn } from '../../../shared/components/btn/btn';
+import { Modal } from '../../../shared/components/modal/modal';
+import { ModalHeader } from '../../../shared/components/modal-header/modal-header';
+import { ModalFooter } from '../../../shared/components/modal-footer/modal-footer';
+import { scrollLock } from '../../../shared/utils/scroll-lock';
 
 @Component({
   selector: 'app-kardex-home',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Pagination, Btn, Modal, ModalHeader, ModalFooter],
   templateUrl: './kardex-home.html',
   styleUrl: './kardex-home.css',
 })
@@ -19,7 +25,6 @@ export class KardexHome implements OnInit {
   currentPage = signal(0);
   pageSize = signal(10);
   totalItems = signal(0);
-  totalPages = computed(() => Math.max(1, Math.ceil(this.totalItems() / this.pageSize())));
   filtroProducto = signal('');
   filtroFechaDesde = signal('');
   filtroFechaHasta = signal('');
@@ -60,34 +65,25 @@ export class KardexHome implements OnInit {
     });
   }
 
+  onPageChange(page: number): void {
+    this.currentPage.set(page);
+    this.cargarKardex();
+  }
+
   onPageSizeChange(size: number): void {
     this.pageSize.set(size);
     this.currentPage.set(0);
     this.cargarKardex();
   }
 
-  previousPage(): void {
-    if (this.currentPage() > 0) {
-      this.currentPage.update(p => p - 1);
-      this.cargarKardex();
-    }
-  }
-
-  nextPage(): void {
-    if ((this.currentPage() + 1) * this.pageSize() < this.totalItems()) {
-      this.currentPage.update(p => p + 1);
-      this.cargarKardex();
-    }
-  }
-
   openExportModal(): void {
     this.isExportModalOpen.set(true);
-    document.body.style.overflow = 'hidden';
+    scrollLock(true);
   }
 
   closeExportModal(): void {
     this.isExportModalOpen.set(false);
-    document.body.style.overflow = 'auto';
+    scrollLock(false);
   }
 
   exportar(formato: 'excel' | 'pdf'): void {

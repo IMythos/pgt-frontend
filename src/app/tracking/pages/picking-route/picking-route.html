@@ -38,12 +38,11 @@
       }
 
       <div class="flex justify-between items-center px-4 py-3 bg-[#FFF3F3] dark:bg-[rgba(239,68,68,0.1)] rounded-lg">
-        <span class="font-['Inter'] font-semibold text-xs text-[#81000A] dark:text-[#EF4444]">Tiempo Estimado (Nearest Neighbor)</span>
+        <span class="font-['Inter'] font-semibold text-xs text-[#81000A] dark:text-[#EF4444]">Tiempo Estimado de Ruta</span>
         <span class="font-['Work_Sans'] font-bold text-sm text-[#81000A] dark:text-[#EF4444]">{{ estimatedTime() }}</span>
       </div>
     </div>
 
-    <!-- Secuencia de Recolección (Picking List) -->
     <div class="flex flex-col flex-1 bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] rounded-2xl p-6 shadow-sm transition-colors overflow-hidden">
       <div class="flex justify-between items-center mb-6">
         <h3 class="font-['Work_Sans'] font-bold text-lg text-[#111D23] dark:text-white">Secuencia de Picking</h3>
@@ -53,18 +52,15 @@
       </div>
 
       <div class="flex flex-col gap-3 overflow-y-auto pr-2">
-        @for (item of pickingList(); track item.id) {
+        @for (item of pickingList(); track item.sequence) {
           <div class="flex items-center gap-4 p-4 rounded-xl border transition-all duration-300 relative overflow-hidden group"
                [ngClass]="{
                  'bg-gray-50/50 dark:bg-black/50 border-gray-100 dark:border-[#141414] opacity-60': item.status === 'completed',
                  'bg-white dark:bg-[#141414] border-[#81000A] shadow-md scale-[1.02]': item.status === 'active',
                  'bg-white dark:bg-black border-gray-200 dark:border-[#1F1F1F]': item.status === 'pending'
                }">
-            
-            <!-- Barra lateral indicadora de activo -->
             @if(item.status === 'active') { <div class="absolute left-0 top-0 w-1 h-full bg-[#81000A]"></div> }
 
-            <!-- Círculo de Número -->
             <div class="flex justify-center items-center w-8 h-8 rounded-full shrink-0 shadow-sm transition-colors"
                  [ngClass]="{
                    'bg-[#34A853] text-white': item.status === 'completed',
@@ -77,7 +73,6 @@
                 <span class="font-['Inter'] font-bold text-xs">{{ item.sequence }}</span>
               }
             </div>
-
             <div class="flex flex-col flex-1">
               <span class="font-['Inter'] font-bold text-sm text-[#111D23] dark:text-white" [ngClass]="{'line-through': item.status === 'completed'}">{{ item.name }}</span>
               <span class="font-['Inter'] font-medium text-[11px] text-[#4C616C] dark:text-[#8A9BA8]">
@@ -85,7 +80,6 @@
               </span>
             </div>
 
-            <!-- Botón de confirmar recolección -->
             @if (item.status === 'active') {
               <button (click)="completePick(item)" class="p-2 bg-[#81000A] hover:bg-[#6a0008] text-white rounded-lg shadow-md transition-colors cursor-pointer shrink-0">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
@@ -102,12 +96,7 @@
       }
     </div>
   </div>
-
-  <!-- ========================================== -->
-  <!-- COLUMNA DERECHA: PLANO Y RUTA (MAPA)       -->
-  <!-- ========================================== -->
   <div class="flex flex-col flex-1 bg-gray-50 dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] rounded-2xl p-8 shadow-sm relative overflow-hidden transition-colors">
-    
     <div class="flex justify-between items-center w-full mb-6 z-30">
       <div class="flex flex-col">
         <h2 class="font-['Work_Sans'] font-bold text-2xl text-[#111D23] dark:text-white">Sector Alpha del Almacén</h2>
@@ -119,54 +108,93 @@
       </div>
     </div>
 
-    <!-- Contenedor del Plano -->
-    <div class="relative w-full flex-1 min-h-[500px] bg-white dark:bg-black border border-gray-200 dark:border-[#141414] rounded-xl overflow-hidden transition-colors"
-         style="background-image: radial-gradient(circle, rgba(129,0,10,0.15) 1px, transparent 1px); background-size: 24px 24px;">
-      
-      <!-- POLILÍNEA SVG DINÁMICA (La Ruta) -->
-      <svg class="absolute inset-0 w-full h-full pointer-events-none z-10" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <!-- Definimos un stroke-dasharray para el efecto de "ruta caminando" -->
-        <polyline [attr.points]="routePath()" 
-                  fill="none" 
-                  stroke="#81000A" 
-                  stroke-width="0.4" 
-                  stroke-dasharray="2 1" 
-                  stroke-linejoin="round"
-                  class="animate-dash opacity-70" />
-      </svg>
+    <div class="relative w-full flex-1 min-h-[500px] bg-white dark:bg-black border border-gray-200 dark:border-[#141414] rounded-xl overflow-hidden transition-colors select-none"
+         style="background-image: radial-gradient(circle, rgba(129,0,10,0.15) 1px, transparent 1px); background-size: 24px 24px;"
+         (wheel)="onWheel($event)">
 
-      @for (rack of racks(); track rack.id) {
-        <div class="absolute w-28 h-14 bg-white dark:bg-[#141414] border-2 rounded-lg flex items-center justify-center -translate-x-1/2 -translate-y-1/2 transition-colors z-20 shadow-sm"
-             [ngClass]="getNodeStatus(rack.id) ? 'border-[#81000A] dark:border-[#EF4444]' : 'border-gray-200 dark:border-[#1F1F1F]'"
-             [style.left.%]="rack.x" [style.top.%]="rack.y">
-          
-          <span class="font-['Inter'] font-bold text-sm text-[#4C616C] dark:text-[#8A9BA8]">{{ rack.id }}</span>
+      <!-- Controles de zoom flotantes -->
+      <div class="absolute top-4 right-4 z-30 flex flex-col gap-1.5">
+        <button (click)="zoomIn()" title="Acercar"
+          class="p-2.5 bg-white dark:bg-[#141414] border border-gray-200 dark:border-[#1F1F1F] rounded-lg shadow-md text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white hover:border-[#81000A] dark:hover:border-[#EF4444] transition-colors cursor-pointer text-lg leading-none font-bold">
+          +
+        </button>
+        <button (click)="zoomOut()" title="Alejar"
+          class="p-2.5 bg-white dark:bg-[#141414] border border-gray-200 dark:border-[#1F1F1F] rounded-lg shadow-md text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white hover:border-[#81000A] dark:hover:border-[#EF4444] transition-colors cursor-pointer text-lg leading-none font-bold">
+          &minus;
+        </button>
+        <button (click)="resetView()" title="Restablecer vista"
+          class="p-2.5 bg-white dark:bg-[#141414] border border-gray-200 dark:border-[#1F1F1F] rounded-lg shadow-md text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white hover:border-[#81000A] dark:hover:border-[#EF4444] transition-colors cursor-pointer text-sm leading-none">
+          ⟲
+        </button>
+      </div>
 
-          <!-- Badge Indicador de Secuencia Numérica -->
-          @if (getNodeSequence(rack.id)) {
-            <div class="absolute -top-3 -right-3 w-7 h-7 rounded-full flex items-center justify-center shadow-lg border-[3px] border-white dark:border-[#111111] z-30 transition-all duration-300"
-                 [ngClass]="{
-                   'bg-[#34A853] text-white': getNodeStatus(rack.id) === 'completed',
-                   'bg-[#81000A] text-white scale-110 animate-pulse': getNodeStatus(rack.id) === 'active',
-                   'bg-gray-200 dark:bg-[#313131] text-[#4C616C] dark:text-[#8A9BA8]': getNodeStatus(rack.id) === 'pending'
-                 }">
-              
-              @if (getNodeStatus(rack.id) === 'completed') {
-                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-              } @else {
-                <span class="font-bold text-[11px]">{{ getNodeSequence(rack.id) }}</span>
+      <!-- Indicador de zoom -->
+      <div class="absolute bottom-4 left-4 z-30 px-3 py-1.5 bg-white/80 dark:bg-black/80 backdrop-blur-sm border border-gray-200 dark:border-[#1F1F1F] rounded-lg text-xs font-['Inter'] font-medium text-[#4C616C] dark:text-[#8A9BA8]">
+        {{ zoomLabel() }}
+      </div>
+
+      <!-- Wrapper arrastrable con zoom -->
+      <div (mousedown)="startPan($event)"
+           (mousemove)="onPan($event)"
+           (mouseup)="endPan()"
+           (mouseleave)="endPan()"
+           [ngStyle]="panStyle()"
+           class="absolute inset-0 z-10"
+           style="transform-origin: 0 0;">
+
+        <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <path [attr.d]="routePath()"
+                fill="none"
+                stroke="#81000A"
+                stroke-width="0.6"
+                stroke-dasharray="2 1"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="animate-dash" />
+        </svg>
+
+         @for (rack of racks(); track rack.id) {
+           <div class="rack-node absolute w-28 h-14 bg-white dark:bg-[#141414] border-2 rounded-lg flex items-center justify-center -translate-x-1/2 -translate-y-1/2 transition-colors z-20 shadow-sm"
+                [ngClass]="{
+                   'border-[#34A853] dark:border-[#34A853]': rack.tipo === 'ENTRADA',
+                   'border-[#3B82F6] dark:border-[#3B82F6]': rack.tipo === 'SALIDA',
+                   'border-[#81000A] dark:border-[#EF4444]': rack.tipo !== 'ENTRADA' && rack.tipo !== 'SALIDA' && getNodeStatus(rack.id),
+                   'border-gray-200 dark:border-[#1F1F1F]': rack.tipo !== 'ENTRADA' && rack.tipo !== 'SALIDA' && !getNodeStatus(rack.id)
+                }"
+               [style.left.%]="rack.x" [style.top.%]="rack.y">
+
+            <span class="font-['Inter'] font-bold text-xs text-[#4C616C] dark:text-[#8A9BA8] text-center px-2 truncate max-w-full">
+              {{ rack.label }}
+            </span>
+
+            @if (getNodeSequence(rack.id)) {
+              <div class="absolute -top-3 -right-3 w-7 h-7 rounded-full flex items-center justify-center shadow-lg border-[3px] border-white dark:border-[#111111] z-30 transition-all duration-300"
+                   [ngClass]="{
+                     'bg-[#34A853] text-white': getNodeStatus(rack.id) === 'completed',
+                     'bg-[#81000A] text-white scale-110 animate-pulse': getNodeStatus(rack.id) === 'active',
+                     'bg-gray-200 dark:bg-[#313131] text-[#4C616C] dark:text-[#8A9BA8]': getNodeStatus(rack.id) === 'pending'
+                   }">
+
+                @if (getNodeStatus(rack.id) === 'completed') {
+                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                } @else {
+                  <span class="font-bold text-[11px]">{{ getNodeSequence(rack.id) }}</span>
+                }
+              </div>
+
+              @if (getNodeStatus(rack.id) === 'active') {
+                <div class="absolute -inset-2 bg-[#81000A] rounded-lg opacity-20 animate-ping -z-10 pointer-events-none"></div>
               }
-            </div>
-            
-            <!-- Halo pulsante si está activo -->
-            @if (getNodeStatus(rack.id) === 'active') {
-              <div class="absolute -inset-2 bg-[#81000A] rounded-lg opacity-20 animate-ping -z-10 pointer-events-none"></div>
             }
-          }
-        </div>
-      }
+          </div>
+        }
+      </div>
     </div>
 
-  </div>
+</div>
+
+@if (showCompleteModal()) {
+  <app-picking-complete-dialog (cerrar)="cerrarModal()" />
+}
 
 </div>

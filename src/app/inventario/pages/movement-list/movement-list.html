@@ -12,7 +12,7 @@
     </div>
 
     <div class="flex items-center gap-3">
-      <button (click)="openModal()" class="flex items-center gap-2 px-4 py-2.5 bg-[#81000A] hover:bg-[#6a0008] text-white font-['Inter'] font-semibold text-sm rounded-lg shadow-sm transition-colors cursor-pointer">
+      <button app-btn variant="primary" (click)="openModal()">
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
         </svg>
@@ -123,63 +123,27 @@
     </div>
   </div>
 
-  <!-- Paginación -->
-  <div class="flex items-center justify-between w-full">
-    <div class="flex items-center gap-2">
-      <span class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">Filas:</span>
-      <select
-        [ngModel]="pageSize()"
-        (ngModelChange)="onPageSizeChange($event)"
-        class="bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#81000A] cursor-pointer"
-      >
-        <option [value]="5">5</option>
-        <option [value]="10">10</option>
-        <option [value]="20">20</option>
-      </select>
-      <span class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">
-        Página {{ currentPage() + 1 }} de {{ totalPages() }} ({{ totalItems() }} registros)
-      </span>
-    </div>
-    <div class="flex items-center gap-2">
-      <button
-        (click)="previousPage()"
-        [disabled]="currentPage() === 0"
-        class="px-4 py-2 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-[#141414] hover:border-[#81000A]/50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
-      >
-        Anterior
-      </button>
-      <button
-        (click)="nextPage()"
-        [disabled]="(currentPage() + 1) * pageSize() >= totalItems()"
-        class="px-4 py-2 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-[#141414] hover:border-[#81000A]/50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
-      >
-        Siguiente
-      </button>
-    </div>
-  </div>
+  <app-pagination
+    [currentPage]="currentPage()"
+    [pageSize]="pageSize()"
+    [totalItems]="totalItems()"
+    (pageChange)="onPageChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+  />
 
   <!-- Modal para Registrar Movimiento -->
   @if (isModalOpen()) {
-    <div class="animate-fade-in fixed inset-0 z-50 flex items-center justify-center bg-[#111111]/60 dark:bg-black/80 backdrop-blur-sm p-4">
-      <div class="animate-zoom-in flex flex-col w-full max-w-2xl bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] rounded-2xl shadow-2xl overflow-hidden">
-
-        <!-- Header -->
-        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-[#1F1F1F] bg-gray-50 dark:bg-[#141414]">
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-full bg-[rgba(129,0,10,0.1)] dark:bg-[#313131] flex items-center justify-center shrink-0">
-              <svg class="w-5 h-5 text-[#81000A] dark:text-[#EF4444]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-              </svg>
-            </div>
-            <div class="flex flex-col">
-              <h3 class="font-['Work_Sans'] font-bold text-lg text-[#111D23] dark:text-white leading-tight">Registrar Operación</h3>
-              <span class="font-['Inter'] text-[11px] text-[#4C616C] dark:text-[#8A9BA8]">Ingresa los detalles del movimiento de inventario</span>
-            </div>
-          </div>
-          <button (click)="closeModal()" type="button" class="p-1.5 text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#81000A] dark:hover:text-[#EF4444] rounded-full transition-colors cursor-pointer hover:bg-gray-200 dark:hover:bg-[#1F1F1F]">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-          </button>
-        </div>
+    <app-modal size="lg" (close)="closeModal()">
+      <app-modal-header
+        [icon]="true"
+        title="Registrar Operación"
+        subtitle="Ingresa los detalles del movimiento de inventario"
+        (close)="closeModal()"
+      >
+        <svg icon class="w-5 h-5 text-[#81000A] dark:text-[#EF4444]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+        </svg>
+      </app-modal-header>
 
         <!-- Body -->
         <div class="p-6 overflow-y-auto max-h-[70vh] flex flex-col gap-5">
@@ -274,6 +238,7 @@
           </div>
 
           <!-- Card: Producto -->
+          @if (formTipo() !== 'SALIDA') {
           <div class="bg-gray-50 dark:bg-black border border-gray-100 dark:border-[#1F1F1F] rounded-xl p-5 transition-colors">
             <span class="font-['Inter'] text-xs font-bold uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8] block mb-3">Producto <span class="text-[#81000A]">*</span></span>
             <select
@@ -287,6 +252,7 @@
               }
             </select>
           </div>
+          }
 
           <!-- Card: Detalles de Ingreso -->
           @if (formTipo() === 'INGRESO') {
@@ -294,17 +260,18 @@
             <span class="font-['Inter'] text-xs font-bold uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8] block mb-3">Detalles de Ingreso</span>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Locación</label>
+                <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Locación <span class="text-[#81000A]">*</span></label>
                 <select
                   class="w-full mt-1 px-4 py-2.5 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50 appearance-none cursor-pointer"
                   [ngModel]="formLocacion()"
                   (ngModelChange)="formLocacion.set($event)"
                 >
-                  <option value="">Seleccione</option>
+                  <option value="">Seleccione una ubicación</option>
                   @for (loc of locaciones(); track loc.idLocacion) {
                   <option [value]="loc.idLocacion">{{ loc.zona }} - {{ loc.pasillo }}{{ loc.estante ? ' - ' + loc.estante : '' }}</option>
                   }
                 </select>
+                <span class="text-[11px] text-[#8A9BA8] mt-1">Ubicación física donde se almacenará el producto</span>
               </div>
               <div>
                 <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Proveedor</label>
@@ -343,16 +310,102 @@
           <!-- Card: Datos de Salida -->
           @if (formTipo() === 'SALIDA') {
           <div class="bg-gray-50 dark:bg-black border border-gray-100 dark:border-[#1F1F1F] rounded-xl p-5 transition-colors">
-            <span class="font-['Inter'] text-xs font-bold uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8] block mb-3">Datos de Salida</span>
-            <div>
-              <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Cliente</label>
-              <input
-                class="w-full mt-1 px-4 py-2.5 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors hover:border-[#81000A]/50 dark:hover:border-[#81000A]/50"
-                placeholder="Nombre del cliente"
-                [ngModel]="formCliente()"
-                (ngModelChange)="formCliente.set($event)"
-              />
+            <span class="font-['Inter'] text-xs font-bold uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8] block mb-3">Ubicaciones y Productos</span>
+
+            <!-- Selector de ubicación -->
+            <div class="mb-4">
+              <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Locación</label>
+              <select
+                class="w-full mt-1 px-4 py-2.5 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors appearance-none cursor-pointer"
+                [ngModel]="salidaLocacionId()"
+                (ngModelChange)="onSalidaLocacionChange($event)"
+              >
+                <option value="">Seleccione una ubicación</option>
+                @for (loc of locaciones(); track loc.idLocacion) {
+                <option [value]="loc.idLocacion">{{ loc.zona }} - {{ loc.pasillo }}{{ loc.estante ? ' - ' + loc.estante : '' }}</option>
+                }
+              </select>
             </div>
+
+            <!-- Tabla de productos en la ubicación seleccionada -->
+            @if (salidaLocacionId() && salidaLocationProducts().length > 0) {
+            <div class="border border-gray-200 dark:border-[#1F1F1F] rounded-lg overflow-hidden">
+              <table class="w-full text-left text-sm">
+                <thead>
+                  <tr class="bg-gray-100 dark:bg-[#141414]">
+                    <th class="px-3 py-2 font-['Inter'] font-semibold text-xs text-[#4C616C] dark:text-[#8A9BA8]">SKU</th>
+                    <th class="px-3 py-2 font-['Inter'] font-semibold text-xs text-[#4C616C] dark:text-[#8A9BA8]">Producto</th>
+                    <th class="px-3 py-2 font-['Inter'] font-semibold text-xs text-[#4C616C] dark:text-[#8A9BA8] text-center">Stock</th>
+                    <th class="px-3 py-2 font-['Inter'] font-semibold text-xs text-[#4C616C] dark:text-[#8A9BA8] text-center">Cant.</th>
+                    <th class="px-3 py-2"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (prod of salidaLocationProducts(); track prod.idLote) {
+                  <tr class="border-t border-gray-100 dark:border-[#1F1F1F]">
+                    <td class="px-3 py-2 font-mono text-xs text-[#111D23] dark:text-white">{{ prod.productoCod }}</td>
+                    <td class="px-3 py-2 text-sm text-[#111D23] dark:text-white">{{ prod.productoDesc }}</td>
+                    <td class="px-3 py-2 text-center text-sm text-[#4C616C] dark:text-[#8A9BA8]">{{ prod.cantidad }}</td>
+                    <td class="px-3 py-2 text-center">
+                      <input
+                        type="number" min="1" [max]="prod.cantidad" step="1"
+                        class="w-20 px-2 py-1 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded font-['Inter'] text-sm text-center text-[#111D23] dark:text-white focus:outline-none focus:ring-1 focus:ring-[#81000A]/50"
+                        [ngModel]="salidaQtyMap()[prod.idLote] || 1"
+                        (ngModelChange)="setSalidaQty(prod.idLote, $event)"
+                      />
+                    </td>
+                    <td class="px-3 py-2 text-center">
+                      @if (isItemAdded(prod.productoCod, salidaLocacionId())) {
+                      <span class="text-[#34A853] font-['Inter'] text-xs font-semibold">Agregado</span>
+                      } @else {
+                      <button app-btn variant="primary" size="sm" (click)="agregarItem(prod)">Agregar</button>
+                      }
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+            } @else if (salidaLocacionId() && salidaLocationProducts().length === 0) {
+            <div class="text-center py-4 text-[#4C616C] dark:text-[#8A9BA8] font-['Inter'] text-sm">
+              No hay productos en esta ubicación.
+            </div>
+            }
+
+            <!-- Resumen de productos agregados -->
+            @if (salidaItems().length > 0) {
+            <div class="mt-4 pt-4 border-t border-gray-200 dark:border-[#1F1F1F]">
+              <span class="font-['Inter'] text-xs font-bold uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8] block mb-3">
+                Productos a retirar ({{ salidaItems().length }})
+              </span>
+              <div class="border border-gray-200 dark:border-[#1F1F1F] rounded-lg overflow-hidden">
+                <table class="w-full text-left text-sm">
+                  <thead>
+                    <tr class="bg-gray-100 dark:bg-[#141414]">
+                      <th class="px-3 py-2 font-['Inter'] font-semibold text-xs text-[#4C616C] dark:text-[#8A9BA8]">SKU</th>
+                      <th class="px-3 py-2 font-['Inter'] font-semibold text-xs text-[#4C616C] dark:text-[#8A9BA8]">Producto</th>
+                      <th class="px-3 py-2 font-['Inter'] font-semibold text-xs text-[#4C616C] dark:text-[#8A9BA8]">Ubicación</th>
+                      <th class="px-3 py-2 font-['Inter'] font-semibold text-xs text-[#4C616C] dark:text-[#8A9BA8] text-center">Cant.</th>
+                      <th class="px-3 py-2"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (item of salidaItems(); track $index) {
+                    <tr class="border-t border-gray-100 dark:border-[#1F1F1F]">
+                      <td class="px-3 py-2 font-mono text-xs text-[#111D23] dark:text-white">{{ item.productoCod }}</td>
+                      <td class="px-3 py-2 text-sm text-[#111D23] dark:text-white">{{ item.productoDesc }}</td>
+                      <td class="px-3 py-2 text-sm text-[#4C616C] dark:text-[#8A9BA8]">{{ getLocationLabel(item.locacionId) }}</td>
+                      <td class="px-3 py-2 text-center text-sm font-semibold text-[#111D23] dark:text-white">{{ item.cantidad }}</td>
+                      <td class="px-3 py-2 text-center">
+                        <button (click)="eliminarItem($index)" class="text-[#81000A] hover:text-[#6a0008] font-['Inter'] text-xs font-semibold cursor-pointer">Eliminar</button>
+                      </td>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            }
           </div>
           }
 
@@ -360,6 +413,7 @@
           <div class="bg-gray-50 dark:bg-black border border-gray-100 dark:border-[#1F1F1F] rounded-xl p-5 transition-colors">
             <span class="font-['Inter'] text-xs font-bold uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8] block mb-3">Operación</span>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              @if (formTipo() !== 'SALIDA') {
               <div>
                 <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Cantidad <span class="text-[#81000A]">*</span></label>
                 <input
@@ -369,6 +423,7 @@
                   (ngModelChange)="formCantidad.set($event)"
                 />
               </div>
+              }
               <div>
                 <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Documento Ref.</label>
                 <input
@@ -393,27 +448,23 @@
 
         </div>
 
-        <!-- Footer -->
-        <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100 dark:border-[#1F1F1F] bg-gray-50 dark:bg-black">
-          <button (click)="closeModal()" type="button" class="px-5 py-2.5 font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white hover:bg-gray-200 dark:hover:bg-[#141414] rounded-lg transition-colors cursor-pointer">
-            Cancelar
-          </button>
-          <button (click)="registrarMovimiento()" [disabled]="isSaving()"
-            class="flex items-center gap-2 px-6 py-2.5 bg-[#81000A] hover:bg-[#6a0008] text-white font-['Inter'] font-semibold text-sm rounded-lg shadow-md transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
-            @if (isSaving()) {
-            <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-            </svg>
-            <span>Guardando...</span>
-            } @else {
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-            Confirmar Movimiento
-            }
-          </button>
-        </div>
-
-      </div>
-    </div>
+      <app-modal-footer>
+        <button app-btn variant="cancel" (click)="closeModal()" type="button">
+          Cancelar
+        </button>
+        <button app-btn variant="primary" (click)="registrarMovimiento()" [disabled]="isSaving()">
+          @if (isSaving()) {
+          <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+          </svg>
+          <span>Guardando...</span>
+          } @else {
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          Confirmar Movimiento
+          }
+        </button>
+      </app-modal-footer>
+    </app-modal>
   }
 </div>

@@ -2,11 +2,12 @@ import { Component, input, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StockAlert } from '../../models/dashboard.models';
 import { StockAlertsModal } from '../stock-alerts-modal/stock-alerts-modal';
+import { Card } from '../../../shared/components/card/card';
 
 @Component({
   selector: 'app-stock-alerts-widget',
   standalone: true,
-  imports: [CommonModule, StockAlertsModal],
+  imports: [CommonModule, StockAlertsModal, Card],
   templateUrl: './stock-alerts-widget.html',
   styleUrl: './stock-alerts-widget.css'})
 export class StockAlertsWidget {

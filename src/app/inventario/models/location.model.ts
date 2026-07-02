@@ -6,5 +6,7 @@ export interface LocationDto {
   estante: string;
   codBarras: string;
   capacidad: number;
+  posX?: number;
+  posY?: number;
   activo: boolean;
 }

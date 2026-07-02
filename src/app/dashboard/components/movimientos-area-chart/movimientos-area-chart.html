@@ -10,18 +10,28 @@
     </div>
   </div>
   <div class="w-full flex-1">
-    <apx-chart
-      [series]="chartSeries()"
-      [chart]="chartOptions()"
-      [xaxis]="xaxis()"
-      [yaxis]="yaxis()"
-      [stroke]="stroke()"
-      [fill]="fill()"
-      [colors]="colors()"
-      [legend]="legend()"
-      [dataLabels]="dataLabels()"
-      [grid]="grid()"
-      [tooltip]="tooltip()"
-    />
+    @if (data().length > 0) {
+      <apx-chart
+        [series]="chartSeries()"
+        [chart]="chartOptions()"
+        [xaxis]="xaxis()"
+        [yaxis]="yaxis()"
+        [stroke]="stroke()"
+        [fill]="fill()"
+        [colors]="colors()"
+        [legend]="legend()"
+        [dataLabels]="dataLabels()"
+        [grid]="grid()"
+        [tooltip]="tooltip()"
+      />
+    } @else {
+      <div class="flex flex-col items-center justify-center gap-3 py-16">
+        <svg class="w-16 h-16 text-[#4C616C] dark:text-[#8A9BA8] opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+        </svg>
+        <span class="font-['Inter'] text-sm font-medium text-[#4C616C] dark:text-[#8A9BA8]">No hay movimientos registrados</span>
+        <span class="font-['Inter'] text-xs text-[#4C616C] dark:text-[#8A9BA8] opacity-60">Los datos aparecerán cuando se registren ingresos o salidas.</span>
+      </div>
+    }
   </div>
 </div>

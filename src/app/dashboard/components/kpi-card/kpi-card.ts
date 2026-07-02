@@ -2,11 +2,12 @@ import { Component, input, effect, signal, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChartComponent } from 'ng-apexcharts';
 import { DashboardKpi } from '../../models/dashboard.models';
+import { Card } from '../../../shared/components/card/card';
 
 @Component({
   selector: 'app-kpi-card',
   standalone: true,
-  imports: [CommonModule, ChartComponent],
+  imports: [CommonModule, ChartComponent, Card],
   templateUrl: './kpi-card.html'})
 export class KpiCard {
   kpi = input.required<DashboardKpi>();
@@ -44,7 +45,8 @@ export class KpiCard {
 
   private setupSparkline(kpi: DashboardKpi) {
     const color = kpi.isPositive ? '#34A853' : '#EF4444';
-    this.sparklineSeries.set([{ data: kpi.sparkline }]);
+    const data = kpi.sparkline?.length ? kpi.sparkline : [0];
+    this.sparklineSeries.set([{ data }]);
     this.sparklineChart.set({
       type: 'line',
       height: 48,

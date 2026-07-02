@@ -2,13 +2,15 @@ import { Component, input, output, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { StockAlert } from '../../models/dashboard.models';
+import { Modal } from '../../../shared/components/modal/modal';
+import { ModalHeader } from '../../../shared/components/modal-header/modal-header';
 
 type FilterTab = 'TODAS' | 'CRITICAS' | 'BAJAS';
 
 @Component({
   selector: 'app-stock-alerts-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Modal, ModalHeader],
   templateUrl: './stock-alerts-modal.html',
   styleUrl: './stock-alerts-modal.css'
 })

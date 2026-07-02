@@ -2,6 +2,7 @@ import { inject, Injectable } from "@angular/core";
 import { Subject } from "rxjs";
 import { AuthService } from "./auth.service";
 import { Client } from "@stomp/stompjs"
+import { environment } from '../../../environments/environment';
 export interface MovementWsEvent {
   id: string;
   productId: string;
@@ -28,9 +29,13 @@ export class WebSocketService {
   private movements$ = new Subject<MovementWsEvent>();
   private stockAlerts$ = new Subject<StockAlertWsEvent>();
   private heatmap$ = new Subject<HeatmapWsEvent>();
+  private get wsBaseUrl(): string {
+    return environment.apiUrl.replace(/^http/, 'ws').replace(/\/api(\/v1)?$/, '');
+  }
+
   constructor() {
     this.client = new Client({
-      brokerURL: 'ws://localhost:8080/ws',
+      brokerURL: `${this.wsBaseUrl}/ws`,
       connectHeaders: {
         Authorization: `Bearer ${this.authService.getToken()}`
       },

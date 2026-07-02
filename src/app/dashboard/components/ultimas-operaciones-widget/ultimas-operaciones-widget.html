@@ -1,11 +1,12 @@
-<div class="flex flex-col p-6 w-full h-[404px] bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] shadow-sm rounded-xl transition-all duration-300 overflow-hidden">
+<app-card variant="widget" padding="lg">
+  <div class="flex flex-col overflow-hidden h-full">
   <div class="flex justify-between items-center mb-6 shrink-0">
     <h3 class="font-['Work_Sans'] font-bold text-xl text-[#111D23] dark:text-white">
       Últimas Operaciones
     </h3>
-    <a href="#" class="font-['Inter'] font-semibold text-sm text-[#81000A] dark:text-[#EF4444] hover:underline">
-      Ver historial
-    </a>
+    <button (click)="showHistory.set(true)" class="font-['Inter'] font-semibold text-sm text-[#81000A] dark:text-[#EF4444] hover:underline cursor-pointer">
+      Ver historial completo
+    </button>
   </div>
 
   <div class="w-full flex-1 overflow-y-auto pr-2">
@@ -30,26 +31,108 @@
         </tr>
       </thead>
       <tbody class="font-['Inter'] text-sm">
-        @for (op of data(); track op.id; let i = $index) {
-          <tr class="border-b border-gray-50 dark:border-[#1F1F1F] hover:bg-gray-50 dark:hover:bg-[#141414] transition-all duration-300"
-              [style.animation-delay.ms]="i * 60"
-              [class.slide-in]="!loaded()">
-            <td class="py-3.5 font-semibold text-[#111D23] dark:text-white">{{ op.id }}</td>
-            <td class="py-3.5">
-              <span class="px-2 py-1 rounded text-[10px] font-bold tracking-wide uppercase"
-                    [ngClass]="typeClass(op.type)">
-                {{ op.type }}
-              </span>
-            </td>
-            <td class="py-3.5 text-[#4C616C] dark:text-[#8A9BA8]">{{ op.product }}</td>
-            <td class="py-3.5 text-[#4C616C] dark:text-[#8A9BA8]">{{ op.date }}</td>
-            <td class="py-3.5 text-right font-semibold text-xs"
-                [ngClass]="op.status === 'COMPLETADO' ? 'text-[#34A853]' : 'text-[#F5A623]'">
-              {{ op.status }}
+        @if (data().length > 0) {
+          @for (op of data(); track op.id; let i = $index) {
+            <tr class="border-b border-gray-50 dark:border-[#1F1F1F] hover:bg-gray-50 dark:hover:bg-[#141414] transition-all duration-300"
+                [style.animation-delay.ms]="i * 60"
+                [class.slide-in]="!loaded()">
+              <td class="py-3.5 font-semibold text-[#111D23] dark:text-white">{{ op.id }}</td>
+              <td class="py-3.5">
+                <span class="px-2 py-1 rounded text-[10px] font-bold tracking-wide uppercase"
+                      [ngClass]="typeClass(op.type)">
+                  {{ op.type }}
+                </span>
+              </td>
+              <td class="py-3.5 text-[#4C616C] dark:text-[#8A9BA8]">{{ op.product }}</td>
+              <td class="py-3.5 text-[#4C616C] dark:text-[#8A9BA8]">{{ op.date }}</td>
+              <td class="py-3.5 text-right font-semibold text-xs"
+                  [ngClass]="op.status === 'COMPLETADO' ? 'text-[#34A853]' : 'text-[#F5A623]'">
+                {{ op.status }}
+              </td>
+            </tr>
+          }
+        } @else {
+          <tr>
+            <td colspan="5" class="py-16">
+              <div class="flex flex-col items-center justify-center gap-3">
+                <svg class="w-12 h-12 text-[#4C616C] dark:text-[#8A9BA8] opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                </svg>
+                <span class="font-['Inter'] text-sm font-medium text-[#4C616C] dark:text-[#8A9BA8]">No hay operaciones recientes</span>
+                <span class="font-['Inter'] text-xs text-[#4C616C] dark:text-[#8A9BA8] opacity-60">Las operaciones aparecerán cuando se realicen movimientos en el inventario.</span>
+              </div>
             </td>
           </tr>
         }
       </tbody>
     </table>
   </div>
-</div>
+  </div>
+</app-card>
+
+@if (showHistory()) {
+  <app-modal size="lg" (close)="showHistory.set(false)">
+    <app-modal-header
+      [icon]="true"
+      title="Historial de Operaciones"
+      [subtitle]="data().length + ' operaciones registradas'"
+      (close)="showHistory.set(false)"
+    >
+      <svg icon class="w-5 h-5 text-[#81000A] dark:text-[#EF4444]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+      </svg>
+    </app-modal-header>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left whitespace-nowrap">
+        <thead>
+          <tr class="border-b border-gray-100 text-[11px] uppercase text-[#81000A] dark:border-[#1F1F1F] dark:text-[#EF4444]">
+            <th class="px-5 py-4 font-['Inter'] font-bold">ID</th>
+            <th class="px-5 py-4 font-['Inter'] font-bold">Tipo</th>
+            <th class="px-5 py-4 font-['Inter'] font-bold">Producto</th>
+            <th class="px-5 py-4 font-['Inter'] font-bold">Fecha</th>
+            <th class="px-5 py-4 font-['Inter'] font-bold">Estado</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-50 dark:divide-[#222222]">
+          @if (data().length > 0) {
+            @for (op of data(); track op.id) {
+              <tr class="hover:bg-gray-50 dark:hover:bg-[#222222]/60 transition-colors">
+                <td class="px-5 py-4 font-['Inter'] text-sm font-semibold text-[#111D23] dark:text-white">{{ op.id }}</td>
+                <td class="px-5 py-4">
+                  <span class="px-2 py-1 rounded text-[10px] font-bold tracking-wide uppercase"
+                        [ngClass]="typeClass(op.type)">
+                    {{ op.type }}
+                  </span>
+                </td>
+                <td class="px-5 py-4 font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">{{ op.product }}</td>
+                <td class="px-5 py-4 font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">{{ op.date }}</td>
+                <td class="px-5 py-4 font-['Inter'] text-xs font-bold"
+                    [ngClass]="op.status === 'COMPLETADO' ? 'text-[#34A853]' : 'text-[#F5A623]'">
+                  {{ op.status }}
+                </td>
+              </tr>
+            }
+          } @else {
+            <tr>
+              <td colspan="5" class="py-16">
+                <div class="flex flex-col items-center justify-center gap-3">
+                  <svg class="w-12 h-12 text-[#4C616C] dark:text-[#8A9BA8] opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                  </svg>
+                  <span class="font-['Inter'] text-sm font-medium text-[#4C616C] dark:text-[#8A9BA8]">No hay operaciones registradas</span>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <app-modal-footer>
+      <button app-btn variant="cancel" (click)="showHistory.set(false)" type="button">
+        Cerrar
+      </button>
+    </app-modal-footer>
+  </app-modal>
+}

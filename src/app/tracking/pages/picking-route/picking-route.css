@@ -1,0 +1,19 @@
+@keyframes dash {
+  to {
+    stroke-dashoffset: -10;
+  }
+}
+
+.animate-dash {
+  animation: dash 1.5s linear infinite;
+}
+
+.rack-node {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rack-node:hover {
+  transform: translate(-5%, -5%) scale(1.02);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  z-index: 40;
+}

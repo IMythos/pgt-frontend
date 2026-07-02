@@ -14,7 +14,7 @@ import {
 })
 export class MovementApiService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = `${environment.apiUrl}/v1/movimientos`;
+  private readonly baseUrl = `${environment.apiUrl}/movimientos`;
 
   listar(filtros: FiltroMovimientoDto = {}): Observable<PagedResponse<MovimientoListadoDto>> {
     const params = this.construirParams({ pagina: 0, tamanioPagina: 50, ...filtros });

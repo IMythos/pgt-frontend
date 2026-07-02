@@ -14,10 +14,7 @@
     </div>
 
     <div class="flex items-center gap-3">
-      <button
-        (click)="openExportModal()"
-        class="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] text-[#111D23] dark:text-white font-['Inter'] font-semibold text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-[#141414] transition-colors shadow-sm cursor-pointer"
-      >
+      <button app-btn variant="secondary" (click)="openExportModal()">
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path
             stroke-linecap="round"
@@ -287,156 +284,68 @@
       </table>
     </div>
   </div>
-  <!-- Paginación -->
-  <div class="flex items-center justify-between w-full">
-    <div class="flex items-center gap-2">
-      <span class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">Filas:</span>
-      <select
-        [ngModel]="pageSize()"
-        (ngModelChange)="onPageSizeChange($event)"
-        class="bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#81000A] cursor-pointer"
-      >
-        <option [value]="5">5</option>
-        <option [value]="10">10</option>
-        <option [value]="20">20</option>
-      </select>
-      <span class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">
-        Página {{ currentPage() + 1 }} de {{ totalPages() }} ({{ totalItems() }} registros)
-      </span>
-    </div>
-    <div class="flex items-center gap-2">
-      <button
-        (click)="previousPage()"
-        [disabled]="currentPage() === 0"
-        class="px-4 py-2 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-[#141414] hover:border-[#81000A]/50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
-      >
-        Anterior
-      </button>
-      <button
-        (click)="nextPage()"
-        [disabled]="(currentPage() + 1) * pageSize() >= totalItems()"
-        class="px-4 py-2 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] text-[#111D23] dark:text-white font-['Inter'] text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-[#141414] hover:border-[#81000A]/50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
-      >
-        Siguiente
-      </button>
-    </div>
-  </div>
+  <app-pagination
+    [currentPage]="currentPage()"
+    [pageSize]="pageSize()"
+    [totalItems]="totalItems()"
+    (pageChange)="onPageChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+  />
 
   @if (isExportModalOpen()) {
-    <div
-      class="animate-fade-in fixed inset-0 z-50 flex items-center justify-center bg-[#111111]/60 dark:bg-black/80 backdrop-blur-sm p-4"
-    >
-      <div
-        class="animate-zoom-in flex flex-col w-full max-w-md bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] rounded-2xl shadow-2xl overflow-hidden"
+    <app-modal size="sm" (close)="closeExportModal()">
+      <app-modal-header
+        [icon]="true"
+        title="Exportar Kardex"
+        (close)="closeExportModal()"
       >
-        <div
-          class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-[#1F1F1F] bg-gray-50 dark:bg-[#141414]"
+        <svg icon class="w-4 h-4 text-[#81000A] dark:text-[#EF4444]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+      </app-modal-header>
+      <div class="p-6 flex flex-col gap-3">
+        <p class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8] mb-2">
+          Selecciona el formato de exportación:
+        </p>
+        <button
+          (click)="exportar('excel')"
+          class="flex items-center gap-4 p-4 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-xl hover:border-[#81000A]/50 dark:hover:border-[#EF4444]/50 hover:bg-[#FFF3F3]/30 dark:hover:bg-[rgba(239,68,68,0.1)] transition-all cursor-pointer group"
         >
-          <div class="flex items-center gap-3">
-            <div
-              class="w-8 h-8 rounded-full bg-[rgba(129,0,10,0.1)] dark:bg-[#313131] flex items-center justify-center shrink-0"
-            >
-              <svg
-                class="w-4 h-4 text-[#81000A] dark:text-[#EF4444]"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                />
-              </svg>
-            </div>
-            <h3 class="font-['Work_Sans'] font-bold text-lg text-[#111D23] dark:text-white">
-              Exportar Kardex
-            </h3>
-          </div>
-          <button
-            (click)="closeExportModal()"
-            class="p-2 text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#81000A] dark:hover:text-[#EF4444] dark:hover:bg-[#141414] rounded-full transition-colors cursor-pointer"
+          <div
+            class="w-12 h-12 rounded-lg bg-[#217346]/10 flex items-center justify-center shrink-0 group-hover:bg-[#217346]/20 transition-colors"
           >
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
+            <svg class="w-6 h-6 text-[#217346]" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M14,2H6A2,2,0,0,0,4,4V20a2,2,0,0,0,2,2H18a2,2,0,0,0,2-2V8ZM18,20H6V4h7V9h5V20Z" opacity="0.4" />
+              <path d="M14,2l6,6h-6V2Z" />
+              <rect x="8" y="13" width="3" height="5" rx="0.5" fill="#217346" />
+              <rect x="13" y="13" width="3" height="5" rx="0.5" fill="#217346" />
             </svg>
-          </button>
-        </div>
-        <div class="p-6 flex flex-col gap-3">
-          <p class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8] mb-2">
-            Selecciona el formato de exportación:
-          </p>
-          <button
-            (click)="exportar('excel')"
-            class="flex items-center gap-4 p-4 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-xl hover:border-[#81000A]/50 dark:hover:border-[#EF4444]/50 hover:bg-[#FFF3F3]/30 dark:hover:bg-[rgba(239,68,68,0.1)] transition-all cursor-pointer group"
-          >
-            <div
-              class="w-12 h-12 rounded-lg bg-[#217346]/10 flex items-center justify-center shrink-0 group-hover:bg-[#217346]/20 transition-colors"
-            >
-              <svg class="w-6 h-6 text-[#217346]" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M14,2H6A2,2,0,0,0,4,4V20a2,2,0,0,0,2,2H18a2,2,0,0,0,2-2V8ZM18,20H6V4h7V9h5V20Z"
-                  opacity="0.4"
-                />
-                <path d="M14,2l6,6h-6V2Z" />
-                <rect x="8" y="13" width="3" height="5" rx="0.5" fill="#217346" />
-                <rect x="13" y="13" width="3" height="5" rx="0.5" fill="#217346" />
-              </svg>
-            </div>
-            <div class="flex flex-col items-start">
-              <span
-                class="font-['Inter'] font-bold text-[#111D23] dark:text-white group-hover:text-[#217346] transition-colors"
-                >Microsoft Excel (.xlsx)</span
-              >
-              <span class="font-['Inter'] text-xs text-[#4C616C] dark:text-[#8A9BA8]"
-                >Formato de hoja de cálculo con filtros y fórmulas</span
-              >
-            </div>
-          </button>
-          <button
-            (click)="exportar('pdf')"
-            class="flex items-center gap-4 p-4 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-xl hover:border-[#81000A]/50 dark:hover:border-[#EF4444]/50 hover:bg-[#FFF3F3]/30 dark:hover:bg-[rgba(239,68,68,0.1)] transition-all cursor-pointer group"
-          >
-            <div
-              class="w-12 h-12 rounded-lg bg-[#B30B00]/10 flex items-center justify-center shrink-0 group-hover:bg-[#B30B00]/20 transition-colors"
-            >
-              <svg class="w-6 h-6 text-[#B30B00]" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M14,2H6A2,2,0,0,0,4,4V20a2,2,0,0,0,2,2H18a2,2,0,0,0,2-2V8ZM18,20H6V4h7V9h5V20Z"
-                  opacity="0.4"
-                />
-                <path d="M14,2l6,6h-6V2Z" />
-                <text x="8" y="18" font-size="7" font-weight="bold" fill="#B30B00">PDF</text>
-              </svg>
-            </div>
-            <div class="flex flex-col items-start">
-              <span
-                class="font-['Inter'] font-bold text-[#111D23] dark:text-white group-hover:text-[#B30B00] transition-colors"
-                >Adobe PDF (.pdf)</span
-              >
-              <span class="font-['Inter'] text-xs text-[#4C616C] dark:text-[#8A9BA8]"
-                >Formato portable ideal para impresión y distribución</span
-              >
-            </div>
-          </button>
-        </div>
-        <div
-          class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100 dark:border-[#1F1F1F] bg-gray-50 dark:bg-black"
+          </div>
+          <div class="flex flex-col items-start">
+            <span class="font-['Inter'] font-bold text-[#111D23] dark:text-white group-hover:text-[#217346] transition-colors">Microsoft Excel (.xlsx)</span>
+            <span class="font-['Inter'] text-xs text-[#4C616C] dark:text-[#8A9BA8]">Formato de hoja de cálculo con filtros y fórmulas</span>
+          </div>
+        </button>
+        <button
+          (click)="exportar('pdf')"
+          class="flex items-center gap-4 p-4 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-xl hover:border-[#81000A]/50 dark:hover:border-[#EF4444]/50 hover:bg-[#FFF3F3]/30 dark:hover:bg-[rgba(239,68,68,0.1)] transition-all cursor-pointer group"
         >
-          <button
-            (click)="closeExportModal()"
-            class="px-5 py-2.5 font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white hover:bg-gray-200 dark:hover:bg-[#141414] rounded-lg transition-colors cursor-pointer"
-          >
-            Cancelar
-          </button>
-        </div>
+          <div class="w-12 h-12 rounded-lg bg-[#B30B00]/10 flex items-center justify-center shrink-0 group-hover:bg-[#B30B00]/20 transition-colors">
+            <svg class="w-6 h-6 text-[#B30B00]" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M14,2H6A2,2,0,0,0,4,4V20a2,2,0,0,0,2,2H18a2,2,0,0,0,2-2V8ZM18,20H6V4h7V9h5V20Z" opacity="0.4" />
+              <path d="M14,2l6,6h-6V2Z" />
+              <text x="8" y="18" font-size="7" font-weight="bold" fill="#B30B00">PDF</text>
+            </svg>
+          </div>
+          <div class="flex flex-col items-start">
+            <span class="font-['Inter'] font-bold text-[#111D23] dark:text-white group-hover:text-[#B30B00] transition-colors">Adobe PDF (.pdf)</span>
+            <span class="font-['Inter'] text-xs text-[#4C616C] dark:text-[#8A9BA8]">Formato portable ideal para impresión y distribución</span>
+          </div>
+        </button>
       </div>
-    </div>
+      <app-modal-footer>
+        <button app-btn variant="cancel" (click)="closeExportModal()">Cancelar</button>
+      </app-modal-footer>
+    </app-modal>
   }
 </div>

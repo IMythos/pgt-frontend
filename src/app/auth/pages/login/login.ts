@@ -35,9 +35,11 @@ export class Login implements AfterViewInit, OnDestroy {
     private authService: AuthService,
     private router: Router,
   ) {
+    const rememberedUser = this.authService.getRememberedUser();
     this.loginForm = this.fb.group({
-      identifier: ['', [Validators.required]],
+      identifier: [rememberedUser || '', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]],
+      rememberMe: [!!rememberedUser],
     });
   }
 
@@ -98,11 +100,12 @@ export class Login implements AfterViewInit, OnDestroy {
       this.loginError.set(false);
       this.isLoading.set(true);
 
-      const { identifier, password } = this.loginForm.value;
+      const { identifier, password, rememberMe } = this.loginForm.value;
 
       const requestPayload: LoginRequest = {
         username: identifier,
         password: password,
+        rememberMe,
       };
 
       this.authService.login(requestPayload).subscribe({

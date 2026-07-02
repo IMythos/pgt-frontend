@@ -1,0 +1,17 @@
+<app-modal size="sm" (close)="cancel.emit()">
+  <app-modal-header [title]="title()" [closable]="true" (close)="cancel.emit()" />
+  <div class="p-6">
+    <p class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">{{ message() }}</p>
+  </div>
+  <app-modal-footer>
+    <button (click)="cancel.emit()" class="btn-cancel px-5 py-2.5">Cancelar</button>
+    <button (click)="confirm.emit()" [class]="confirmBtnClass()">
+      @if (confirmIcon()) {
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="confirmIcon()" />
+        </svg>
+      }
+      {{ confirmText() }}
+    </button>
+  </app-modal-footer>
+</app-modal>

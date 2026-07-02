@@ -45,9 +45,9 @@ interface MarcaResponseBe {
 export class ProductApiService {
   private readonly http = inject(HttpClient);
 
-  private readonly baseUrl = `${environment.apiUrl}/v1/products`;
-  private readonly categoriasUrl = `${environment.apiUrl}/v1/categories`;
-  private readonly marcasUrl = `${environment.apiUrl}/v1/brands`;
+  private readonly baseUrl = `${environment.apiUrl}/products`;
+  private readonly categoriasUrl = `${environment.apiUrl}/categories`;
+  private readonly marcasUrl = `${environment.apiUrl}/brands`;
 
   listarCatalogo(filtros: FiltroCatalogoProductosDto = {}): Observable<RespuestaPaginadaProductosDto> {
     const params = this.construirParams({ pagina: 0, tamanioPagina: 50, ...filtros });
@@ -79,6 +79,7 @@ export class ProductApiService {
       preVen: payload.precioVenta,
       stockMinimo: payload.stockMinimo ?? null,
       stockInicial: payload.stockInicial ?? null,
+      idLocacion: payload.idLocacion ?? null,
     };
     return this.http
       .post<ProductoResponseBe>(this.baseUrl, payloadBe)
@@ -99,7 +100,7 @@ export class ProductApiService {
       costoUnit: null,
       fecGarantia: null
     };
-    return this.http.post(`${environment.apiUrl}/v1/movimientos`, body);
+    return this.http.post(`${environment.apiUrl}/movimientos`, body);
   }
 
   actualizar(idProducto: string, payload: ActualizarProductoDto): Observable<DetalleProductoDto> {
@@ -115,6 +116,27 @@ export class ProductApiService {
     payload: CambiarEstadoProductoDto,
   ): Observable<DetalleProductoDto> {
     return this.http.patch<DetalleProductoDto>(`${this.baseUrl}/${idProducto}/estado`, payload);
+  }
+
+  crearCategoria(payload: { name: string; description?: string }): Observable<CategoriaProductoDto> {
+    return this.http.post<CategoriaResponseBe>(this.categoriasUrl, payload).pipe(
+      map((be) => ({
+        idCategoria: be.id,
+        codigoCategoria: '',
+        nombreCategoria: be.name,
+        activo: true,
+      })),
+    );
+  }
+
+  crearMarca(payload: { name: string }): Observable<MarcaProductoDto> {
+    return this.http.post<MarcaResponseBe>(this.marcasUrl, payload).pipe(
+      map((be) => ({
+        idMarca: be.id,
+        nombreMarca: be.name,
+        activo: true,
+      })),
+    );
   }
 
   listarCategoriasActivas(): Observable<CategoriaProductoDto[]> {
@@ -172,7 +194,7 @@ export class ProductApiService {
     return params;
   }
   exportar(formato: 'excel' | 'pdf'): Observable<Blob> {
-    const exportUrl = `${environment.apiUrl}/v1/products/export?format=${formato}`;
+    const exportUrl = `${environment.apiUrl}/products/export?format=${formato}`;
     return this.http.get(exportUrl, {
       responseType: 'blob',
     });

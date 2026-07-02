@@ -1,0 +1,24 @@
+<div class="flex flex-col items-center justify-center gap-4 px-6 py-16 text-center">
+  @if (icon()) {
+    <div class="w-16 h-16 rounded-full flex items-center justify-center"
+      [class.bg-[#E6F4EA]]="icon() === 'check'"
+      [class.bg-[#F3F4F6]]="icon() !== 'check'"
+      [class.dark:bg-[#141414]]="icon() !== 'check'">
+      <svg class="w-8 h-8 text-[#4C616C] dark:text-[#8A9BA8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" [attr.d]="iconPath()" />
+      </svg>
+    </div>
+  }
+  @if (title()) {
+    <p class="font-['Work_Sans'] font-bold text-base text-[#111D23] dark:text-white">{{ title() }}</p>
+  }
+  @if (message()) {
+    <p class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8] max-w-sm">{{ message() }}</p>
+  }
+  @if (actionText()) {
+    <button (click)="action.emit()"
+      class="px-4 py-2 font-['Inter'] text-sm font-semibold text-[#81000A] dark:text-[#EF4444] border border-[#81000A]/30 dark:border-[#EF4444]/30 rounded-lg hover:bg-[#FFF3F3] dark:hover:bg-[rgba(239,68,68,0.1)] transition-colors cursor-pointer">
+      {{ actionText() }}
+    </button>
+  }
+</div>

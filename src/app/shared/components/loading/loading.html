@@ -1,0 +1,30 @@
+@switch (type()) {
+  @case ('spinner') {
+    <div class="flex items-center justify-center py-4">
+      <div class="w-8 h-8 border-4 border-[#81000A] dark:border-[#EF4444] border-t-transparent rounded-full animate-spin"></div>
+      @if (text()) {
+        <span class="ml-3 font-['Inter'] text-sm font-semibold text-[#4C616C] dark:text-[#8A9BA8]">{{ text() }}</span>
+      }
+    </div>
+  }
+  @case ('skeleton') {
+    <div class="flex flex-col gap-3 p-4">
+      @for (_ of rowsArr(); track $index) {
+        <div class="flex items-center gap-3">
+          <div class="h-9 w-9 animate-pulse rounded-full bg-gray-200 dark:bg-[#222222]"></div>
+          <div class="flex flex-col gap-1.5 flex-1">
+            <div class="h-3.5 w-36 animate-pulse rounded bg-gray-200 dark:bg-[#222222]"></div>
+            <div class="h-3 w-24 animate-pulse rounded bg-gray-100 dark:bg-[#1A1A1A]"></div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+  @case ('text') {
+    <tr>
+      <td [attr.colspan]="colspan()" class="px-6 py-8 text-center font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8]">
+        {{ text() || 'Cargando...' }}
+      </td>
+    </tr>
+  }
+}

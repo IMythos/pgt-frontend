@@ -26,7 +26,7 @@ export class MovimientosAreaChart {
   constructor() {
     effect(() => {
       const pts = this.data();
-      if (pts.length) this.buildChart(pts);
+      if (pts.length) { this.buildChart(pts); }
     });
   }
 

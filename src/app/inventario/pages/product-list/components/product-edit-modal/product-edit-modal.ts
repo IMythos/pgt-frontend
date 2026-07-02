@@ -8,17 +8,14 @@ import {
   MarcaProductoDto,
   ProductoCatalogoDto,
 } from '../../../../models/product.model';
+import { Modal } from '../../../../../shared/components/modal/modal';
+import { ModalHeader } from '../../../../../shared/components/modal-header/modal-header';
+import { ModalFooter } from '../../../../../shared/components/modal-footer/modal-footer';
 
 @Component({
   selector: 'app-product-edit-modal',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Modal, ModalHeader, ModalFooter],
   templateUrl: './product-edit-modal.html',
-  styles: [`
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes zoomIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-    .animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
-    .animate-zoom-in { animation: zoomIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-  `],
 })
 export class ProductEditModal {
   private readonly productApi = inject(ProductApiService);
@@ -30,6 +27,8 @@ export class ProductEditModal {
 
   readonly close = output<void>();
   readonly updated = output<void>();
+  readonly createCategory = output<void>();
+  readonly createBrand = output<void>();
 
   isUpdating = signal(false);
   editFormProducto = signal({

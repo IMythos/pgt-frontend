@@ -3,13 +3,16 @@ import { Component, signal, input, output, inject, Inject, PLATFORM_ID } from '@
 import { Router, ActivatedRoute, NavigationEnd, RouterModule } from '@angular/router';
 import { filter } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
+import { Modal } from '../../shared/components/modal/modal';
+import { ModalHeader } from '../../shared/components/modal-header/modal-header';
+import { ModalFooter } from '../../shared/components/modal-footer/modal-footer';
 export interface Breadcrumb {
   label: string;
   url: string;
 }
 @Component({
   selector: 'app-navbar',
-  imports: [CommonModule,RouterModule],
+  imports: [CommonModule, RouterModule, Modal, ModalHeader, ModalFooter],
   templateUrl: './navbar.html',
   styles: [`
     @keyframes dropdownFade {
@@ -23,8 +26,10 @@ export interface Breadcrumb {
 })
 export class Navbar {
   authService = inject(AuthService);
-  hasUnreadNotifications = signal<boolean>(true);
+  hasUnreadNotifications = signal<boolean>(false);
+  isNotificationsOpen = signal<boolean>(false);
   isSettingsOpen = signal<boolean>(false);
+  showHelpGuide = signal<boolean>(false);
   isDarkMode = signal<boolean>(false);
   breadcrumbs = signal<Breadcrumb[]>([]);
   private router = inject(Router);
@@ -46,8 +51,18 @@ export class Navbar {
     });
   }
 
+  toggleNotifications() {
+    this.isNotificationsOpen.update(v => !v);
+    this.isSettingsOpen.set(false);
+  }
+
   toggleSettings() {
     this.isSettingsOpen.update(v => !v);
+    this.isNotificationsOpen.set(false);
+  }
+
+  toggleHelpGuide() {
+    this.showHelpGuide.update(v => !v);
   }
 
   toggleDarkMode() {

@@ -1,0 +1,5 @@
+<div class="animate-fade-in modal-overlay" (click)="closeOnOverlay() && close.emit()">
+  <div class="animate-zoom-in modal-dialog max-h-[90vh]" [class]="sizeClass()" (click)="$event.stopPropagation()">
+    <ng-content />
+  </div>
+</div>

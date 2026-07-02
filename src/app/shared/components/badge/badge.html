@@ -1,0 +1,6 @@
+<span class="badge" [ngClass]="classMap()[variant()]">
+  @if (dot()) {
+    <span class="badge-dot" [ngClass]="dotClassMap()[variant()]"></span>
+  }
+  <ng-content />
+</span>

@@ -12,7 +12,7 @@ import {
 })
 export class HeatmapApiService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = `${environment.apiUrl}/v1/heatmap`;
+  private readonly baseUrl = `${environment.apiUrl}/heatmap`;
 
   obtenerPorAlmacen(almacenId: number): Observable<HeatmapAlmacenDto> {
     return this.http

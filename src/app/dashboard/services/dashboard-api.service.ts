@@ -7,7 +7,7 @@ import { environment } from '../../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class DashboardApiService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = `${environment.apiUrl}/v1/dashboard`;
+  private readonly baseUrl = `${environment.apiUrl}/dashboard`;
 
   getKpis(): Observable<DashboardKpi[]> {
     return this.http.get<DashboardKpi[]>(`${this.baseUrl}/kpis`);

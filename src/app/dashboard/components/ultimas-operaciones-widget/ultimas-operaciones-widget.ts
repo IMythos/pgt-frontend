@@ -1,16 +1,21 @@
 import { Component, input, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Operation } from '../../models/dashboard.models';
+import { Card } from '../../../shared/components/card/card';
+import { Modal } from '../../../shared/components/modal/modal';
+import { ModalHeader } from '../../../shared/components/modal-header/modal-header';
+import { ModalFooter } from '../../../shared/components/modal-footer/modal-footer';
 
 @Component({
   selector: 'app-ultimas-operaciones-widget',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, Card, Modal, ModalHeader, ModalFooter],
   templateUrl: './ultimas-operaciones-widget.html',
   styleUrl: './ultimas-operaciones-widget.css'})
 export class UltimasOperacionesWidget {
   data = input<Operation[]>([]);
   loaded = signal(false);
+  showHistory = signal(false);
 
   constructor() {
     effect(() => {

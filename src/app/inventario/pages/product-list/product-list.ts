@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
@@ -14,39 +14,15 @@ import { ProductCreateModal } from './components/product-create-modal/product-cr
 import { ProductDetailModal } from './components/product-detail-modal/product-detail-modal';
 import { ProductEditModal } from './components/product-edit-modal/product-edit-modal';
 import { ProductExportModal } from './components/product-export-modal/product-export-modal';
+import { QuickCatalogModal } from './components/quick-catalog-modal/quick-catalog-modal';
+import { Pagination } from '../../../shared/components/pagination/pagination';
+import { Btn } from '../../../shared/components/btn/btn';
+import { scrollLock } from '../../../shared/utils/scroll-lock';
 
 @Component({
   selector: 'app-product-list',
-  imports: [CommonModule, FormsModule, ProductCreateModal, ProductDetailModal, ProductEditModal, ProductExportModal],
+  imports: [CommonModule, FormsModule, ProductCreateModal, ProductDetailModal, ProductEditModal, ProductExportModal, QuickCatalogModal, Pagination, Btn],
   templateUrl: './product-list.html',
-  styles: [
-    `
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-      @keyframes zoomIn {
-        from {
-          opacity: 0;
-          transform: scale(0.95) translateY(10px);
-        }
-        to {
-          opacity: 1;
-          transform: scale(1) translateY(0);
-        }
-      }
-      .animate-fade-in {
-        animation: fadeIn 0.2s ease-out forwards;
-      }
-      .animate-zoom-in {
-        animation: zoomIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-      }
-    `,
-  ],
 })
 export class ProductList implements OnInit {
   private readonly productApi = inject(ProductApiService);
@@ -54,6 +30,8 @@ export class ProductList implements OnInit {
 
   isModalOpen = signal(false);
   isExportModalOpen = signal(false);
+  showQuickCatalogModal = signal(false);
+  quickCatalogType = signal<'category' | 'brand'>('category');
   loading = signal(false);
 
   isDetailModalOpen = signal(false);
@@ -66,7 +44,6 @@ export class ProductList implements OnInit {
   currentPage = signal(0);
   pageSize = signal(10);
   totalItems = signal(0);
-  totalPages = computed(() => Math.max(1, Math.ceil(this.totalItems() / this.pageSize())));
 
   filtroTexto = signal('');
   filtroCategoria = signal<number | ''>('');
@@ -161,24 +138,15 @@ export class ProductList implements OnInit {
     });
   }
 
+  onPageChange(page: number): void {
+    this.currentPage.set(page);
+    this.cargarProductos();
+  }
+
   onPageSizeChange(size: number): void {
     this.pageSize.set(size);
     this.currentPage.set(0);
     this.cargarProductos();
-  }
-
-  previousPage(): void {
-    if (this.currentPage() > 0) {
-      this.currentPage.update((p) => p - 1);
-      this.cargarProductos();
-    }
-  }
-
-  nextPage(): void {
-    if ((this.currentPage() + 1) * this.pageSize() < this.totalItems()) {
-      this.currentPage.update((p) => p + 1);
-      this.cargarProductos();
-    }
   }
 
   getStockStatus(stock: number | undefined): { label: string; colorClass: string } {
@@ -209,43 +177,57 @@ export class ProductList implements OnInit {
   openDetail(product: ProductoCatalogoDto): void {
     this.selectedProduct.set(product);
     this.isDetailModalOpen.set(true);
-    document.body.style.overflow = 'hidden';
+    scrollLock(true);
   }
   closeDetail(): void {
     this.isDetailModalOpen.set(false);
     this.selectedProduct.set(null);
-    document.body.style.overflow = 'auto';
+    scrollLock(false);
   }
 
   openEdit(product: ProductoCatalogoDto): void {
     this.editingProductId.set(product.idProducto);
     this.selectedProduct.set(product);
     this.isEditModalOpen.set(true);
-    document.body.style.overflow = 'hidden';
+    scrollLock(true);
   }
 
   closeEdit(): void {
     this.isEditModalOpen.set(false);
     this.editingProductId.set(null);
     this.selectedProduct.set(null);
-    document.body.style.overflow = 'auto';
+    scrollLock(false);
   }
 
   openModal() {
     this.isModalOpen.set(true);
-    document.body.style.overflow = 'hidden';
+    scrollLock(true);
   }
   closeModal() {
     this.isModalOpen.set(false);
-    document.body.style.overflow = 'auto';
+    scrollLock(false);
   }
+  openQuickCatalog(type: 'category' | 'brand') {
+    this.quickCatalogType.set(type);
+    this.showQuickCatalogModal.set(true);
+  }
+
+  closeQuickCatalog() {
+    this.showQuickCatalogModal.set(false);
+  }
+
+  onQuickCatalogSaved() {
+    this.showQuickCatalogModal.set(false);
+    this.cargarCatalogos();
+  }
+
   openExportModal() {
     this.isExportModalOpen.set(true);
-    document.body.style.overflow = 'hidden';
+    scrollLock(true);
   }
   closeExportModal() {
     this.isExportModalOpen.set(false);
-    document.body.style.overflow = 'auto';
+    scrollLock(false);
   }
 
 }

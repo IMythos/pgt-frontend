@@ -1,0 +1,128 @@
+<app-modal size="md" (close)="close.emit()">
+  @let f = form();
+  @let errs = formErrors();
+
+  <app-modal-header
+    [icon]="true"
+    [title]="isEditing() ? 'Editar Ubicación' : 'Nueva Ubicación'"
+    [subtitle]="isEditing() ? 'Actualiza los datos de la ubicación' : 'Completa los datos para crear una nueva ubicación'"
+    (close)="close.emit()"
+  >
+    <svg icon class="w-5 h-5 text-[#81000A] dark:text-[#EF4444]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  </app-modal-header>
+
+  @if (errs['general']) {
+    <div class="mx-6 mt-4 rounded-lg border border-[#E2BEBA] bg-[#81000A]/10 px-4 py-3 font-['Inter'] text-sm font-semibold text-[#81000A] dark:bg-[#81000A]/20 dark:text-[#EF4444]">
+      {{ errs['general'] }}
+    </div>
+  }
+
+  <div class="p-6 overflow-y-auto max-h-[70vh] flex flex-col gap-4">
+    <div class="flex flex-col gap-1.5">
+      <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Almacén <span class="text-[#81000A]">*</span></label>
+      <select
+        [ngModel]="f.idAlmacen"
+        (ngModelChange)="updateForm('idAlmacen', $event)"
+        [ngModelOptions]="{ standalone: true }"
+        class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors cursor-pointer"
+        [ngClass]="errs['idAlmacen'] ? 'border-red-500' : 'border-gray-200 dark:border-[#1F1F1F]'"
+      >
+        <option value="0" disabled>Seleccione un almacén</option>
+        @for (wh of warehouses(); track wh.id) {
+          <option [value]="wh.id">{{ wh.nombre }} ({{ wh.codAlm }})</option>
+        }
+      </select>
+      @if (errs['idAlmacen']) {
+        <span class="font-['Inter'] text-xs text-red-500">{{ errs['idAlmacen'] }}</span>
+      }
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="flex flex-col gap-1.5">
+        <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Zona</label>
+        <input
+          type="text"
+          placeholder="Ej. A"
+          [ngModel]="f.zona"
+          (ngModelChange)="updateForm('zona', $event)"
+          [ngModelOptions]="{ standalone: true }"
+          class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors border-gray-200 dark:border-[#1F1F1F]"
+        />
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Pasillo</label>
+        <input
+          type="text"
+          placeholder="Ej. 01"
+          [ngModel]="f.pasillo"
+          (ngModelChange)="updateForm('pasillo', $event)"
+          [ngModelOptions]="{ standalone: true }"
+          class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors border-gray-200 dark:border-[#1F1F1F]"
+        />
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Estante</label>
+        <input
+          type="text"
+          placeholder="Ej. 3"
+          [ngModel]="f.estante"
+          (ngModelChange)="updateForm('estante', $event)"
+          [ngModelOptions]="{ standalone: true }"
+          class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors border-gray-200 dark:border-[#1F1F1F]"
+        />
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="flex flex-col gap-1.5">
+        <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Código de Barras <span class="text-[#81000A]">*</span></label>
+        <input
+          type="text"
+          placeholder="Ej. LOC-A-01-3"
+          [ngModel]="f.codBarras"
+          (ngModelChange)="updateForm('codBarras', $event)"
+          [ngModelOptions]="{ standalone: true }"
+          class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors"
+          [ngClass]="errs['codBarras'] ? 'border-red-500' : 'border-gray-200 dark:border-[#1F1F1F]'"
+        />
+        @if (errs['codBarras']) {
+          <span class="font-['Inter'] text-xs text-red-500">{{ errs['codBarras'] }}</span>
+        }
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Capacidad</label>
+        <input
+          type="number"
+          placeholder="0"
+          [ngModel]="f.capacidad"
+          (ngModelChange)="updateForm('capacidad', $event)"
+          [ngModelOptions]="{ standalone: true }"
+          class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors border-gray-200 dark:border-[#1F1F1F]"
+        />
+      </div>
+    </div>
+  </div>
+
+  <app-modal-footer>
+    <button (click)="close.emit()" type="button" class="px-5 py-2.5 font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white hover:bg-gray-200 dark:hover:bg-[#141414] rounded-lg transition-colors cursor-pointer">
+      Cancelar
+    </button>
+    <button (click)="save()" [disabled]="isSaving()" class="flex items-center gap-2 px-6 py-2.5 bg-[#81000A] hover:bg-[#6a0008] text-white font-['Inter'] font-semibold text-sm rounded-lg shadow-md transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+      @if (isSaving()) {
+        <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+        </svg>
+        <span>Guardando...</span>
+      } @else {
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span>{{ isEditing() ? 'Guardar Cambios' : 'Crear Ubicación' }}</span>
+      }
+    </button>
+  </app-modal-footer>
+</app-modal>

@@ -2,17 +2,14 @@ import { Component, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductApiService } from '../../../../services/product-api.service';
 import { ProductoCatalogoDto } from '../../../../models/product.model';
+import { Modal } from '../../../../../shared/components/modal/modal';
+import { ModalHeader } from '../../../../../shared/components/modal-header/modal-header';
+import { ModalFooter } from '../../../../../shared/components/modal-footer/modal-footer';
 
 @Component({
   selector: 'app-product-detail-modal',
-  imports: [CommonModule],
+  imports: [CommonModule, Modal, ModalHeader, ModalFooter],
   templateUrl: './product-detail-modal.html',
-  styles: [`
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes zoomIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-    .animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
-    .animate-zoom-in { animation: zoomIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-  `],
 })
 export class ProductDetailModal {
   private readonly productApi = inject(ProductApiService);
