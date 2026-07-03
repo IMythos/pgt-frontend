@@ -603,4 +603,16 @@
       (cancel)="onSuccessClose()"
     />
   }
+
+  @if (showError()) {
+    <app-confirm-dialog
+      title="Error"
+      [message]="errorMessage()"
+      confirmText="OK"
+      cancelText="Cerrar"
+      variant="danger"
+      (confirm)="onErrorClose()"
+      (cancel)="onErrorClose()"
+    />
+  }
 </div>

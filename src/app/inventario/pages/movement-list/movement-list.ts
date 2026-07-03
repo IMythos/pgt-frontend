@@ -60,6 +60,8 @@ export class MovementList implements OnInit {
   isSaving = signal(false);
   showSuccess = signal(false);
   successMessage = signal('');
+  showError = signal(false);
+  errorMessage = signal('');
 
   filtroTexto = signal('');
   filtroTipo = signal<string>('');
@@ -157,6 +159,10 @@ export class MovementList implements OnInit {
     this.showSuccess.set(false);
     this.closeModal();
     this.cargarMovimientos();
+  }
+
+  onErrorClose(): void {
+    this.showError.set(false);
   }
 
   onSalidaLocacionChange(id: string): void {
@@ -309,7 +315,10 @@ export class MovementList implements OnInit {
       },
       error: (err) => {
         this.isSaving.set(false);
-        console.error('Error al crear orden de picking:', err);
+        console.error('Error en SALIDA:', err);
+        const msg = err.error?.message || (typeof err.error === 'string' ? err.error : null) || err.message || 'Error al crear orden de picking';
+        this.errorMessage.set(msg);
+        this.showError.set(true);
       }
     });
   }
@@ -367,7 +376,10 @@ export class MovementList implements OnInit {
       },
       error: (err) => {
         this.isSaving.set(false);
-        console.error('Error al registrar movimiento:', err);
+        console.error('Error en INGRESO:', err);
+        const msg = err.error?.message || (typeof err.error === 'string' ? err.error : null) || err.message || 'Error al registrar movimiento';
+        this.errorMessage.set(msg);
+        this.showError.set(true);
       }
     });
   }
@@ -404,7 +416,10 @@ export class MovementList implements OnInit {
       },
       error: (err) => {
         this.isSaving.set(false);
-        console.error('Error registrando ajustes:', err);
+        console.error('Error en AJUSTE:', err);
+        const msg = err.error?.message || (typeof err.error === 'string' ? err.error : null) || err.message || 'Error registrando ajustes';
+        this.errorMessage.set(msg);
+        this.showError.set(true);
       }
     });
   }
