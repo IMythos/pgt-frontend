@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal, inject, OnInit } from '@angular/core';
+import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { MovementApiService } from '../../services/movement-api.service';
@@ -83,6 +83,15 @@ export class MovementList implements OnInit {
   salidaLocationProducts = signal<LocationProductDto[]>([]);
   salidaQtyMap = signal<Record<string, number>>({});
   salidaItems = signal<SalidaItem[]>([]);
+
+  salidaLocacionesFiltradas = computed(() => {
+    const allLocs = this.locaciones();
+    const items = this.salidaItems();
+    if (items.length === 0) return allLocs;
+    const firstItemLoc = allLocs.find(l => l.idLocacion === items[0].locacionId);
+    if (!firstItemLoc) return allLocs;
+    return allLocs.filter(l => l.idAlmacen === firstItemLoc.idAlmacen);
+  });
 
   ajusteLocacionId = signal('');
   ajusteLocationProducts = signal<LocationProductDto[]>([]);

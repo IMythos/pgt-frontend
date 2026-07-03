@@ -391,7 +391,7 @@
                   (ngModelChange)="formLocacion.set($event)"
                 >
                   <option value="">Seleccione una ubicación</option>
-                  @for (loc of locaciones(); track loc.idLocacion) {
+                  @for (loc of salidaLocacionesFiltradas(); track loc.idLocacion) {
                   <option [value]="loc.idLocacion">{{ loc.zona }} - {{ loc.pasillo }}{{ loc.estante ? ' - ' + loc.estante : '' }}</option>
                   }
                 </select>
