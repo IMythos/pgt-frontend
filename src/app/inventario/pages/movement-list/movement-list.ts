@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, signal, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { forkJoin } from 'rxjs';
 import { MovementApiService } from '../../services/movement-api.service';
 import { ProductApiService } from '../../services/product-api.service';
 import { LocationApiService } from '../../services/location-api.service';
@@ -19,6 +20,7 @@ import { Btn } from '../../../shared/components/btn/btn';
 import { Modal } from '../../../shared/components/modal/modal';
 import { ModalHeader } from '../../../shared/components/modal-header/modal-header';
 import { ModalFooter } from '../../../shared/components/modal-footer/modal-footer';
+import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm-dialog';
 import { HeatmapApiService } from '../../../tracking/services/heatmap-api.service';
 import { PickingApiService } from '../../../tracking/services/picking-api.service';
 import { LocationProductDto } from '../../../tracking/models/heatmap.model';
@@ -34,11 +36,12 @@ interface SalidaItem {
 
 @Component({
   selector: 'app-movement-list',
-  imports: [CommonModule, FormsModule, Pagination, Btn, Modal, ModalHeader, ModalFooter],
+  imports: [CommonModule, FormsModule, Pagination, Btn, Modal, ModalHeader, ModalFooter, ConfirmDialog],
   templateUrl: './movement-list.html',
   styleUrl: './movement-list.css',
 })
 export class MovementList implements OnInit {
+  readonly Math = Math;
   private readonly movementApi = inject(MovementApiService);
   private readonly productApi = inject(ProductApiService);
   private readonly locationApi = inject(LocationApiService);
@@ -55,6 +58,8 @@ export class MovementList implements OnInit {
   totalItems = signal(0);
   isModalOpen = signal<boolean>(false);
   isSaving = signal(false);
+  showSuccess = signal(false);
+  successMessage = signal('');
 
   filtroTexto = signal('');
   filtroTipo = signal<string>('');
@@ -76,6 +81,12 @@ export class MovementList implements OnInit {
   salidaLocationProducts = signal<LocationProductDto[]>([]);
   salidaQtyMap = signal<Record<string, number>>({});
   salidaItems = signal<SalidaItem[]>([]);
+
+  ajusteLocacionId = signal('');
+  ajusteLocationProducts = signal<LocationProductDto[]>([]);
+  ajusteItems = signal<SalidaItem[]>([]);
+  ajusteSelectedProduct = signal<LocationProductDto | null>(null);
+  ajustePendingQty = signal<number>(1);
 
   ngOnInit(): void {
     this.cargarMovimientos();
@@ -142,6 +153,12 @@ export class MovementList implements OnInit {
     this.limpiarFormulario();
   }
 
+  onSuccessClose(): void {
+    this.showSuccess.set(false);
+    this.closeModal();
+    this.cargarMovimientos();
+  }
+
   onSalidaLocacionChange(id: string): void {
     this.salidaLocacionId.set(id);
     this.salidaQtyMap.set({});
@@ -193,6 +210,72 @@ export class MovementList implements OnInit {
     this.salidaItems.update(items => items.filter((_, i) => i !== idx));
   }
 
+  onAjusteLocacionChange(id: string): void {
+    this.ajusteLocacionId.set(id);
+    this.ajusteSelectedProduct.set(null);
+    this.ajustePendingQty.set(1);
+    if (!id) {
+      this.ajusteLocationProducts.set([]);
+      return;
+    }
+    this.heatmapApi.obtenerDetalleLocacion(id).subscribe({
+      next: (data) => this.ajusteLocationProducts.set(data.productos ?? []),
+      error: () => {
+        this.ajusteLocationProducts.set([]);
+        console.error('Error al cargar productos de la ubicación');
+      }
+    });
+  }
+
+  isAjusteItemAdded(productoCod: string): boolean {
+    return this.ajusteItems().some(i => i.productoCod === productoCod);
+  }
+
+  seleccionarProducto(prod: LocationProductDto): void {
+    this.ajusteSelectedProduct.set(prod);
+    this.ajustePendingQty.set(1);
+  }
+
+  cancelarSeleccionProducto(): void {
+    this.ajusteSelectedProduct.set(null);
+    this.ajustePendingQty.set(1);
+  }
+
+  onAjusteQtyChange(val: any): void {
+    this.ajustePendingQty.set(Math.max(1, Number(val) || 1));
+  }
+
+  agregarAjusteItem(): void {
+    const prod = this.ajusteSelectedProduct();
+    if (!prod) return;
+
+    const qty = this.ajustePendingQty();
+    if (qty <= 0) return;
+
+    const productoId = this.lookupProductoId(prod.productoCod);
+    if (!productoId) {
+      console.warn(`Producto ${prod.productoCod} no encontrado en catálogo`);
+      return;
+    }
+
+    if (this.isAjusteItemAdded(prod.productoCod)) return;
+
+    this.ajusteItems.update(items => [...items, {
+      productoId,
+      locacionId: this.ajusteLocacionId(),
+      idLote: prod.idLote,
+      productoCod: prod.productoCod,
+      productoDesc: prod.productoDesc,
+      cantidad: qty
+    }]);
+    this.ajusteSelectedProduct.set(null);
+    this.ajustePendingQty.set(1);
+  }
+
+  eliminarAjusteItem(idx: number): void {
+    this.ajusteItems.update(items => items.filter((_, i) => i !== idx));
+  }
+
   getLocationLabel(id: string): string {
     const loc = this.locaciones().find(l => l.idLocacion === id);
     if (!loc) return id;
@@ -221,8 +304,8 @@ export class MovementList implements OnInit {
     }).subscribe({
       next: () => {
         this.isSaving.set(false);
-        this.closeModal();
-        this.cargarMovimientos();
+        this.successMessage.set('La salida se ha registrado correctamente.');
+        this.showSuccess.set(true);
       },
       error: (err) => {
         this.isSaving.set(false);
@@ -233,9 +316,6 @@ export class MovementList implements OnInit {
 
   registrarMovimiento(): void {
     let tipo: TipoMovimiento = this.formTipo();
-    if (tipo === 'AJUSTE') {
-      tipo = this.formTipoAjuste() === 'POSITIVO' ? 'AJUSTE' : 'AJUSTE_NEGATIVO';
-    }
 
     if (tipo === 'SALIDA') {
       if (!this.formMotivo()) return;
@@ -243,10 +323,17 @@ export class MovementList implements OnInit {
       return;
     }
 
+    if (tipo === 'AJUSTE') {
+      if (!this.formMotivo()) return;
+      if (this.ajusteItems().length === 0) return;
+      this.registrarAjustes();
+      return;
+    }
+
     if (!this.formCantidad() || this.formCantidad()! <= 0) return;
     if (!this.formMotivo()) return;
     if (!this.formProducto()) return;
-    if ((tipo === 'INGRESO' || tipo === 'AJUSTE') && (!this.formCostoUnit() || this.formCostoUnit()! <= 0)) return;
+    if (tipo === 'INGRESO' && (!this.formCostoUnit() || this.formCostoUnit()! <= 0)) return;
 
     if (tipo === 'INGRESO' && !this.formLocacion()) {
       console.warn('La locación es obligatoria para ingresos');
@@ -265,7 +352,7 @@ export class MovementList implements OnInit {
       if (this.formLocacion()) payload.idLocacion = this.formLocacion();
     }
 
-    if (tipo === 'INGRESO' || tipo === 'AJUSTE') {
+    if (tipo === 'INGRESO') {
       if (this.formProveedor()) payload.proveedor = this.formProveedor();
       if (this.formNroLote()) payload.nroLote = this.formNroLote();
       payload.costoUnit = this.formCostoUnit()!;
@@ -275,12 +362,49 @@ export class MovementList implements OnInit {
     this.movementApi.registrar(payload).subscribe({
       next: () => {
         this.isSaving.set(false);
-        this.closeModal();
-        this.cargarMovimientos();
+        this.successMessage.set('El movimiento se ha registrado correctamente.');
+        this.showSuccess.set(true);
       },
       error: (err) => {
         this.isSaving.set(false);
         console.error('Error al registrar movimiento:', err);
+      }
+    });
+  }
+
+  private registrarAjustes(): void {
+    this.isSaving.set(true);
+    const tipoBase = (this.formTipoAjuste() === 'POSITIVO' ? 'AJUSTE_POSITIVO' : 'AJUSTE_NEGATIVO') as TipoMovimiento;
+    const items = this.ajusteItems();
+
+    const observables = items.map(item => {
+      const payload: RegistrarMovimientoRequest = {
+        tipo: tipoBase,
+        idProducto: item.productoId,
+        idLocacion: item.locacionId,
+        cantidad: item.cantidad,
+        motivo: this.formMotivo(),
+        documentoRef: this.formDocumentoRef() || undefined,
+      };
+
+      if (tipoBase === 'AJUSTE_POSITIVO') {
+        payload.costoUnit = this.formCostoUnit()!;
+        if (this.formProveedor()) payload.proveedor = this.formProveedor();
+        if (this.formNroLote()) payload.nroLote = this.formNroLote();
+      }
+
+      return this.movementApi.registrar(payload);
+    });
+
+    forkJoin(observables).subscribe({
+      next: () => {
+        this.isSaving.set(false);
+        this.successMessage.set(`${items.length} ajuste(s) registrado(s) correctamente.`);
+        this.showSuccess.set(true);
+      },
+      error: (err) => {
+        this.isSaving.set(false);
+        console.error('Error registrando ajustes:', err);
       }
     });
   }
@@ -293,6 +417,11 @@ export class MovementList implements OnInit {
     this.formNroLote.set('');
     this.formCostoUnit.set(null);
     this.formTipoAjuste.set('POSITIVO');
+    this.ajusteLocacionId.set('');
+    this.ajusteLocationProducts.set([]);
+    this.ajusteItems.set([]);
+    this.ajusteSelectedProduct.set(null);
+    this.ajustePendingQty.set(1);
   }
 
   setFormTipoAjuste(valor: string): void {
@@ -317,6 +446,11 @@ export class MovementList implements OnInit {
     this.salidaLocationProducts.set([]);
     this.salidaQtyMap.set({});
     this.salidaItems.set([]);
+    this.ajusteLocacionId.set('');
+    this.ajusteLocationProducts.set([]);
+    this.ajusteItems.set([]);
+    this.ajusteSelectedProduct.set(null);
+    this.ajustePendingQty.set(1);
   }
 
   getMovementBadgeClass(type: string): string {

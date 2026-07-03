@@ -12,10 +12,11 @@ import {
 import { Modal } from '../../../../../shared/components/modal/modal';
 import { ModalHeader } from '../../../../../shared/components/modal-header/modal-header';
 import { ModalFooter } from '../../../../../shared/components/modal-footer/modal-footer';
+import { ConfirmDialog } from '../../../../../shared/components/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-product-create-modal',
-  imports: [CommonModule, FormsModule, Modal, ModalHeader, ModalFooter],
+  imports: [CommonModule, FormsModule, Modal, ModalHeader, ModalFooter, ConfirmDialog],
   templateUrl: './product-create-modal.html',
 })
 export class ProductCreateModal implements OnInit {
@@ -31,6 +32,7 @@ export class ProductCreateModal implements OnInit {
   readonly createBrand = output<void>();
 
   isSaving = signal(false);
+  showSuccess = signal(false);
   formErrors = signal<Record<string, string>>({});
   locaciones = signal<LocationDto[]>([]);
   formProducto = signal({
@@ -97,14 +99,15 @@ export class ProductCreateModal implements OnInit {
     this.productApi.crear(payload).subscribe({
       next: () => {
         this.limpiarFormulario();
-        this.saved.emit();
+        this.isSaving.set(false);
+        this.showSuccess.set(true);
       },
       error: (err) => {
         console.error('Error guardando producto:', err);
         const msg = err.error?.message || err.error || 'Error al guardar. Verifica consola.';
         this.formErrors.set({ general: msg });
+        this.isSaving.set(false);
       },
-      complete: () => this.isSaving.set(false),
     });
   }
 

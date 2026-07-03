@@ -306,3 +306,15 @@
     </button>
   </app-modal-footer>
 </app-modal>
+
+@if (showSuccess()) {
+  <app-confirm-dialog
+    title="Producto creado"
+    message="El producto se ha registrado correctamente."
+    confirmText="OK"
+    cancelText="Cerrar"
+    variant="info"
+    (confirm)="saved.emit()"
+    (cancel)="saved.emit()"
+  />
+}

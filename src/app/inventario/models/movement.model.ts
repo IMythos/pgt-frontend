@@ -1,4 +1,4 @@
-export type TipoMovimiento = 'INGRESO' | 'SALIDA' | 'AJUSTE' | 'AJUSTE_NEGATIVO';
+export type TipoMovimiento = 'INGRESO' | 'SALIDA' | 'AJUSTE' | 'AJUSTE_POSITIVO' | 'AJUSTE_NEGATIVO';
 
 export interface MovimientoListadoDto {
   idMovimiento: string;
