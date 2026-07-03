@@ -122,26 +122,53 @@
       </div>
     </div>
 
-  <app-modal-footer>
-    <button (click)="eliminarProducto(p.idProducto)"
-      class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-[#0A0A0A] border border-[#81000A]/30 dark:border-[#EF4444]/30 text-[#81000A] dark:text-[#EF4444] font-['Inter'] font-semibold text-sm rounded-lg hover:bg-[#FFF3F3] dark:hover:bg-[rgba(239,68,68,0.1)] transition-colors cursor-pointer">
-      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-      </svg>
-      Eliminar
-    </button>
-    <div class="flex items-center gap-2">
-      <button (click)="edit.emit(p)"
-        class="flex items-center gap-2 px-4 py-2 bg-[#81000A] hover:bg-[#6a0008] text-white font-['Inter'] font-semibold text-sm rounded-lg shadow-sm transition-colors cursor-pointer">
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-        </svg>
-        Editar
-      </button>
-      <button (click)="close.emit()"
-        class="px-4 py-2 font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white hover:bg-gray-200 dark:hover:bg-[#141414] rounded-lg transition-colors cursor-pointer">
-        Cerrar
-      </button>
+  @if (errorMessage()) {
+    <div class="mx-6 mb-2 rounded-lg border border-[#E2BEBA] bg-[#81000A]/10 px-4 py-3 font-['Inter'] text-sm font-semibold text-[#81000A] dark:bg-[#81000A]/20 dark:text-[#EF4444]">
+      {{ errorMessage() }}
     </div>
+  }
+
+  <app-modal-footer>
+    @if (deleteStep() === 'confirm') {
+      <span class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8] mr-auto">¿Eliminar este producto?</span>
+      <button (click)="cancelDelete()" type="button" class="px-4 py-2 font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white hover:bg-gray-200 dark:hover:bg-[#141414] rounded-lg transition-colors cursor-pointer">
+        Cancelar
+      </button>
+      <button (click)="confirmDelete()" [disabled]="isDeleting()" class="flex items-center gap-2 px-4 py-2 bg-[#81000A] hover:bg-[#6a0008] text-white font-['Inter'] font-semibold text-sm rounded-lg shadow-sm transition-colors cursor-pointer disabled:opacity-50">
+        @if (isDeleting()) {
+          <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+          </svg>
+          <span>Eliminando...</span>
+        } @else {
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          <span>Sí, eliminar</span>
+        }
+      </button>
+    } @else {
+      <button (click)="requestDelete()" [disabled]="isDeleting()"
+        class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-[#0A0A0A] border border-[#81000A]/30 dark:border-[#EF4444]/30 text-[#81000A] dark:text-[#EF4444] font-['Inter'] font-semibold text-sm rounded-lg hover:bg-[#FFF3F3] dark:hover:bg-[rgba(239,68,68,0.1)] transition-colors cursor-pointer disabled:opacity-50">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+        Eliminar
+      </button>
+      <div class="flex items-center gap-2">
+        <button (click)="edit.emit(p)"
+          class="flex items-center gap-2 px-4 py-2 bg-[#81000A] hover:bg-[#6a0008] text-white font-['Inter'] font-semibold text-sm rounded-lg shadow-sm transition-colors cursor-pointer">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+          </svg>
+          Editar
+        </button>
+        <button (click)="close.emit()"
+          class="px-4 py-2 font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8] hover:text-[#111D23] dark:hover:text-white hover:bg-gray-200 dark:hover:bg-[#141414] rounded-lg transition-colors cursor-pointer">
+          Cerrar
+        </button>
+      </div>
+    }
   </app-modal-footer>
 </app-modal>

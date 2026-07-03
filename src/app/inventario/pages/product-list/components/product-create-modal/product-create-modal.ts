@@ -31,6 +31,7 @@ export class ProductCreateModal implements OnInit {
   readonly createBrand = output<void>();
 
   isSaving = signal(false);
+  formErrors = signal<Record<string, string>>({});
   locaciones = signal<LocationDto[]>([]);
   formProducto = signal({
     idCategoria: null as number | null,
@@ -53,41 +54,41 @@ export class ProductCreateModal implements OnInit {
     });
   }
 
-  guardarProducto(): void {
+  validate(): boolean {
     const form = this.formProducto();
-    if (!form.idCategoria || !form.idMarca || !form.sku || !form.descripcion || form.precioCompra === null || form.precioVenta === null) {
-      alert('Por favor completa los campos requeridos: Categoría, Marca, SKU, Descripción, Precios');
-      return;
-    }
-    if (form.precioCompra <= 0 || form.precioVenta <= 0) {
-      alert('Los precios deben ser mayores a 0');
-      return;
-    }
-    if (form.stockMinimo !== null && form.stockMinimo < 0) {
-      alert('El stock mínimo no puede ser negativo');
-      return;
-    }
-    if (form.stockInicial !== null && form.stockInicial < 0) {
-      alert('El stock inicial no puede ser negativo');
-      return;
-    }
-    if (form.stockInicial !== null && form.stockInicial > 0 && !form.idLocacion) {
-      alert('Debes seleccionar una ubicación (rack/estante) para el stock inicial');
-      return;
-    }
+    const errors: Record<string, string> = {};
+    if (!form.idCategoria) errors['idCategoria'] = 'Campo obligatorio';
+    if (!form.idMarca) errors['idMarca'] = 'Campo obligatorio';
+    if (!form.sku) errors['sku'] = 'Campo obligatorio';
+    if (!form.descripcion) errors['descripcion'] = 'Campo obligatorio';
+    if (form.precioCompra === null) errors['precioCompra'] = 'Campo obligatorio';
+    else if (form.precioCompra <= 0) errors['precioCompra'] = 'Debe ser mayor a 0';
+    if (form.precioVenta === null) errors['precioVenta'] = 'Campo obligatorio';
+    else if (form.precioVenta <= 0) errors['precioVenta'] = 'Debe ser mayor a 0';
+    if (form.stockMinimo !== null && form.stockMinimo < 0) errors['stockMinimo'] = 'No puede ser negativo';
+    if (form.stockInicial !== null && form.stockInicial < 0) errors['stockInicial'] = 'No puede ser negativo';
+    if (form.stockInicial !== null && form.stockInicial > 0 && !form.idLocacion) errors['idLocacion'] = 'Selecciona una ubicación para el stock inicial';
+    this.formErrors.set(errors);
+    return Object.keys(errors).length === 0;
+  }
+
+  guardarProducto(): void {
+    if (!this.validate()) return;
+
+    const form = this.formProducto();
     let modelosCompatibles: string[] = [];
     if (form.modelosCompatiblesStr && form.modelosCompatiblesStr.trim()) {
       modelosCompatibles = form.modelosCompatiblesStr.split(',').map(m => m.trim()).filter(m => m.length > 0);
     }
     const payload: CrearProductoDto = {
-      idCategoria: form.idCategoria,
-      idMarca: form.idMarca,
+      idCategoria: form.idCategoria!,
+      idMarca: form.idMarca!,
       sku: form.sku.toUpperCase(),
       numeroParte: form.numeroParte || null,
       descripcion: form.descripcion,
       modelosCompatibles,
-      precioCompra: form.precioCompra,
-      precioVenta: form.precioVenta,
+      precioCompra: form.precioCompra!,
+      precioVenta: form.precioVenta!,
       stockMinimo: form.stockMinimo ?? null,
       stockInicial: form.stockInicial ?? null,
       idLocacion: form.idLocacion ?? null,
@@ -95,14 +96,13 @@ export class ProductCreateModal implements OnInit {
     this.isSaving.set(true);
     this.productApi.crear(payload).subscribe({
       next: () => {
-        alert('Producto guardado exitosamente!');
         this.limpiarFormulario();
         this.saved.emit();
       },
       error: (err) => {
         console.error('Error guardando producto:', err);
         const msg = err.error?.message || err.error || 'Error al guardar. Verifica consola.';
-        alert(`No se pudo guardar:\n${msg}`);
+        this.formErrors.set({ general: msg });
       },
       complete: () => this.isSaving.set(false),
     });
@@ -126,6 +126,11 @@ export class ProductCreateModal implements OnInit {
 
   actualizarForm<K extends keyof ReturnType<typeof this.formProducto>>(campo: K, valor: ReturnType<typeof this.formProducto>[K]): void {
     this.formProducto.update((prev) => ({ ...prev, [campo]: valor }));
+    this.formErrors.update((err) => {
+      const copy = { ...err };
+      delete copy[campo];
+      return copy;
+    });
   }
 
   parseModelos(str: string | null | undefined): string[] {

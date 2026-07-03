@@ -31,6 +31,7 @@ export class ProductEditModal {
   readonly createBrand = output<void>();
 
   isUpdating = signal(false);
+  formErrors = signal<Record<string, string>>({});
   editFormProducto = signal({
     idCategoria: null as number | null,
     idMarca: null as number | null,
@@ -40,21 +41,29 @@ export class ProductEditModal {
     estado: true,
   });
 
+  validate(): boolean {
+    const form = this.editFormProducto();
+    const errors: Record<string, string> = {};
+    if (!form.idCategoria) errors['idCategoria'] = 'Campo obligatorio';
+    if (!form.idMarca) errors['idMarca'] = 'Campo obligatorio';
+    if (!form.descripcion) errors['descripcion'] = 'Campo obligatorio';
+    this.formErrors.set(errors);
+    return Object.keys(errors).length === 0;
+  }
+
   actualizarProducto(): void {
+    if (!this.validate()) return;
+
     const form = this.editFormProducto();
     const id = this.productId();
     if (!id) return;
-    if (!form.idCategoria || !form.idMarca || !form.descripcion) {
-      alert('Completa los campos requeridos: Categoría, Marca, Descripción');
-      return;
-    }
     let modelosCompatibles: string[] = [];
     if (form.modelosCompatiblesStr && form.modelosCompatiblesStr.trim()) {
       modelosCompatibles = form.modelosCompatiblesStr.split(',').map(m => m.trim()).filter(m => m.length > 0);
     }
     const payload: ActualizarProductoDto = {
-      idCategoria: form.idCategoria,
-      idMarca: form.idMarca,
+      idCategoria: form.idCategoria!,
+      idMarca: form.idMarca!,
       numeroParte: form.numeroParte || null,
       descripcion: form.descripcion,
       modelosCompatibles,
@@ -63,13 +72,12 @@ export class ProductEditModal {
     this.isUpdating.set(true);
     this.productApi.actualizar(id, payload).subscribe({
       next: () => {
-        alert('Producto actualizado exitosamente!');
         this.updated.emit();
       },
       error: (err) => {
         console.error('Error actualizando producto:', err);
         const msg = err.error?.message || err.error || 'Error al actualizar. Verifica consola.';
-        alert(`No se pudo actualizar:\n${msg}`);
+        this.formErrors.set({ general: msg });
       },
       complete: () => this.isUpdating.set(false),
     });
@@ -77,6 +85,11 @@ export class ProductEditModal {
 
   actualizarEditForm<K extends keyof ReturnType<typeof this.editFormProducto>>(campo: K, valor: ReturnType<typeof this.editFormProducto>[K]): void {
     this.editFormProducto.update((prev) => ({ ...prev, [campo]: valor }));
+    this.formErrors.update((err) => {
+      const copy = { ...err };
+      delete copy[campo];
+      return copy;
+    });
   }
 
   parseModelos(str: string | null | undefined): string[] {

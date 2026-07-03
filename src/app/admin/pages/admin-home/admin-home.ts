@@ -7,6 +7,7 @@ import {
   AdminAccount, AdminLocation, AdminRole, AdminUser, AdminWarehouse,
   UpdateAdminUserPayload,
 } from '../../models/admin.models';
+import { AdminCreateRoleModal } from './components/admin-create-role-modal/admin-create-role-modal';
 import { AdminCreateUserModal } from './components/admin-create-user-modal/admin-create-user-modal';
 import { AdminEditUserModal } from './components/admin-edit-user-modal/admin-edit-user-modal';
 import { AdminEditRoleModal } from './components/admin-edit-role-modal/admin-edit-role-modal';
@@ -21,7 +22,7 @@ type AdminTab = 'users' | 'roles' | 'warehouses' | 'locations';
 @Component({
   selector: 'app-admin-home',
   imports: [CommonModule, FormsModule, AdminCreateUserModal, AdminEditUserModal,
-    AdminEditRoleModal, AdminWarehouseModal, AdminLocationModal, Btn, Pagination, ConfirmDialog],
+    AdminCreateRoleModal, AdminEditRoleModal, AdminWarehouseModal, AdminLocationModal, Btn, Pagination, ConfirmDialog],
   templateUrl: './admin-home.html',
   styles: [`
     button:not(:disabled) { cursor: pointer; }
@@ -41,6 +42,7 @@ export class AdminHome implements OnInit {
   showCreateUserModal = signal(false);
   showEditUserModal = signal(false);
   showEditRoleModal = signal(false);
+  showCreateRoleModal = signal(false);
   showWarehouseModal = signal(false);
   showLocationModal = signal(false);
   showConfirmDelete = signal(false);
@@ -253,16 +255,14 @@ export class AdminHome implements OnInit {
 
   // ── Roles ──
 
-  createRole(): void {
-    const name = prompt('Nombre del nuevo rol:');
-    if (!name?.trim()) return;
-    this.adminApi.createRole(name.trim()).subscribe({
-      next: () => {
-        this.successMessage.set('Rol creado correctamente.');
-        this.loadAdminData();
-      },
-      error: () => this.errorMessage.set('No se pudo crear el rol.'),
-    });
+  openCreateRole(): void {
+    this.showCreateRoleModal.set(true);
+  }
+
+  onRoleCreated(): void {
+    this.showCreateRoleModal.set(false);
+    this.successMessage.set('Rol creado correctamente.');
+    this.loadAdminData();
   }
 
   openEditRole(role: AdminRole): void {

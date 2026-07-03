@@ -30,6 +30,8 @@ export class KardexHome implements OnInit {
   filtroFechaHasta = signal('');
   filtroTipo = signal('');
   isExportModalOpen = signal(false);
+  isExporting = signal(false);
+  exportError = signal('');
   metodoCosto = signal<'PPP' | 'PEPS' | 'UEPS'>('PPP');
 
   ngOnInit(): void {
@@ -77,6 +79,8 @@ export class KardexHome implements OnInit {
   }
 
   openExportModal(): void {
+    this.exportError.set('');
+    this.isExporting.set(false);
     this.isExportModalOpen.set(true);
     scrollLock(true);
   }
@@ -87,9 +91,11 @@ export class KardexHome implements OnInit {
   }
 
   exportar(formato: 'excel' | 'pdf'): void {
-    this.closeExportModal();
+    this.exportError.set('');
+    this.isExporting.set(true);
     this.kardexApi.exportar(formato, this.metodoCosto()).subscribe({
       next: (blob) => {
+        this.closeExportModal();
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -103,8 +109,9 @@ export class KardexHome implements OnInit {
       },
       error: (err) => {
         console.error(`Error exportando ${formato.toUpperCase()}:`, err);
-        alert('No se pudo exportar. Verifica que el backend esté corriendo.');
+        this.exportError.set('No se pudo exportar. Verifica que el backend esté corriendo.');
       },
+      complete: () => this.isExporting.set(false),
     });
   }
 
