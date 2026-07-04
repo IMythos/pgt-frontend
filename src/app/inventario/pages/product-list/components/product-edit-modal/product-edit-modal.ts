@@ -1,4 +1,4 @@
-import { Component, inject, signal, input, output } from '@angular/core';
+import { Component, inject, signal, input, output, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductApiService } from '../../../../services/product-api.service';
@@ -39,6 +39,20 @@ export class ProductEditModal {
     descripcion: '',
     modelosCompatiblesStr: '',
     estado: true,
+  });
+
+  private initForm = effect(() => {
+    const p = this.product();
+    if (p) {
+      this.editFormProducto.set({
+        idCategoria: p.categoria?.idCategoria ?? null,
+        idMarca: p.marca?.idMarca ?? null,
+        numeroParte: p.numeroParte ?? '',
+        descripcion: p.descripcion,
+        modelosCompatiblesStr: (p.modelosCompatibles ?? []).join(', '),
+        estado: p.estado,
+      });
+    }
   });
 
   validate(): boolean {

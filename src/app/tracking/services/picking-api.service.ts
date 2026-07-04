@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { PagedResponse } from '../../../app/shared/models/paginated-response';
 import { PickingOrder, PickingRoute, CreatePickingOrderPayload, CrearOrdenDesdeSalidaPayload } from '../models/picking.model';
 
 @Injectable({ providedIn: 'root' })
@@ -9,12 +10,13 @@ export class PickingApiService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${environment.apiUrl}/picking/orders`;
 
-  listar(estado?: string): Observable<PickingOrder[]> {
-    const params = estado ? `?estado=${estado}` : '';
-    const url = `${this.baseUrl}${params}`;
-    console.log('[PickingApi] GET', url);
-    return this.http.get<{ data: PickingOrder[] }>(url).pipe(
-      tap({ next: (r) => console.log('[PickingApi] Órdenes recibidas:', r.data?.length ?? 0) }),
+  listar(estado?: string, pagina?: number, tamanioPagina?: number): Observable<PagedResponse<PickingOrder>> {
+    let params = new HttpParams();
+    if (estado) params = params.set('estado', estado);
+    if (pagina != null) params = params.set('pagina', pagina);
+    if (tamanioPagina != null) params = params.set('tamanioPagina', tamanioPagina);
+    return this.http.get<{ data: PagedResponse<PickingOrder> }>(this.baseUrl, { params }).pipe(
+      tap({ next: (r) => console.log('[PickingApi] Órdenes recibidas:', r.data?.items?.length ?? 0) }),
       map((r) => r.data),
     );
   }

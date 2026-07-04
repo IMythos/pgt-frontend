@@ -10,7 +10,7 @@ import { StockAlertsWidget } from '../../components/stock-alerts-widget/stock-al
 import { TopProductsChart } from '../../components/top-products-chart/top-products-chart';
 import { UltimasOperacionesWidget } from '../../components/ultimas-operaciones-widget/ultimas-operaciones-widget';
 import { CapacidadZonaWidget } from '../../components/capacidad-zona-widget/capacidad-zona-widget';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, debounceTime, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-main-dashboard',
@@ -45,6 +45,7 @@ export class MainDashboard implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadAllData();
     this.subscribeWebSocket();
+    this.subscribeDashboardRefresh();
   }
 
   ngOnDestroy() {
@@ -76,12 +77,31 @@ export class MainDashboard implements OnInit, OnDestroy {
     }
   }
 
+  private subscribeDashboardRefresh() {
+    this.ws.onDashboardRefresh()
+      .pipe(debounceTime(1000), takeUntil(this.destroy$))
+      .subscribe(() => this.refreshAllDataSilent());
+  }
+
+  private refreshAllDataSilent() {
+    this.api.getKpis().subscribe(k => this.kpis.set(k));
+    this.api.getStockAlerts().subscribe(a => this.stockAlerts.set(a));
+    this.api.getMovementsByTime().subscribe(m => this.movements.set(m));
+    this.api.getProporcionPorTipo().subscribe(p => this.proporciones.set(p));
+    this.api.getRecentOperations().subscribe(o => this.operations.set(o));
+    this.api.getZoneCapacities().subscribe(z => this.zoneCapacities.set(z));
+    this.api.getTopProducts().subscribe(p => this.topProducts.set(p));
+  }
+
   private subscribeWebSocket() {
     this.ws.onMovement().pipe(takeUntil(this.destroy$)).subscribe(evt => {
+      const isIncrease = evt.tipo === 'INGRESO' || evt.tipo === 'AJUSTE_POSITIVO';
+      const sign = isIncrease ? 1 : -1;
+
       const newOp: Operation = {
         id: 'MOV-' + Date.now().toString().slice(-4),
         type: evt.tipo,
-        product: 'Producto #' + evt.productId.slice(0, 6),
+        product: evt.productName ?? 'Producto #' + evt.productId.slice(0, 6),
         date: new Date().toLocaleString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
         user: 'Sistema',
         status: 'COMPLETADO'
@@ -90,25 +110,34 @@ export class MainDashboard implements OnInit, OnDestroy {
 
       this.kpis.update(current => current.map(kpi => {
         if (kpi.id === 'total-inventario') {
-          const newVal = kpi.value + evt.cantidad;
+          const newVal = kpi.value + sign * evt.cantidad;
           const formatted = newVal >= 1000 ? newVal.toLocaleString() : String(newVal);
-          return { ...kpi, value: newVal, formattedValue: formatted, sparkline: [...kpi.sparkline.slice(1), newVal] };
+          return { ...kpi, value: newVal, formattedValue: formatted, sparkline: [...kpi.sparkline.slice(1), Math.max(0, newVal)] };
+        }
+        if (kpi.id === 'valor-almacenado') {
+          const costo = evt.costoPromedio ?? 0;
+          const delta = sign * evt.cantidad * costo;
+          const newVal = Math.round(kpi.value + delta);
+          const formatted = newVal >= 1_000_000 ? '$ ' + (newVal / 1_000_000).toFixed(1) + 'M'
+            : newVal >= 1_000 ? '$ ' + (newVal / 1_000).toFixed(1) + 'K'
+            : '$ ' + newVal;
+          return { ...kpi, value: newVal, formattedValue: formatted, sparkline: [...kpi.sparkline.slice(1), Math.max(0, newVal)] };
         }
         if (kpi.id === 'salidas-mes' && evt.tipo === 'SALIDA') {
           const newVal = kpi.value + 1;
           return { ...kpi, value: newVal, formattedValue: String(newVal), sparkline: [...kpi.sparkline.slice(1), newVal] };
         }
-        if (kpi.id === 'alertas-stock' && evt.stockAfter !== undefined) {
-          // would need stock threshold data — keep as-is for now
-        }
         return kpi;
       }));
+
+      this.api.getMovementsByTime().subscribe(m => this.movements.set(m));
+      this.api.getProporcionPorTipo().subscribe(p => this.proporciones.set(p));
     });
 
     this.ws.onStockAlert().pipe(takeUntil(this.destroy$)).subscribe(evt => {
       const alerta: StockAlert = {
         sku: evt.productId.slice(0, 7),
-        name: 'Producto en alerta',
+        name: evt.productName ?? 'Producto en alerta',
         stock: evt.currentStock,
         status: evt.currentStock <= 0 ? 'Crítico' : 'Bajo',
         costoPromedio: 0

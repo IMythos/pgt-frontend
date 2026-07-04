@@ -391,7 +391,7 @@
                   (ngModelChange)="formLocacion.set($event)"
                 >
                   <option value="">Seleccione una ubicación</option>
-                  @for (loc of salidaLocacionesFiltradas(); track loc.idLocacion) {
+                  @for (loc of locaciones(); track loc.idLocacion) {
                   <option [value]="loc.idLocacion">{{ loc.zona }} - {{ loc.pasillo }}{{ loc.estante ? ' - ' + loc.estante : '' }}</option>
                   }
                 </select>
@@ -436,16 +436,32 @@
           <div class="bg-gray-50 dark:bg-black border border-gray-100 dark:border-[#1F1F1F] rounded-xl p-5 transition-colors">
             <span class="font-['Inter'] text-xs font-bold uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8] block mb-3">Ubicaciones y Productos</span>
 
-            <!-- Selector de ubicación -->
+            <!-- Selector de almacén -->
             <div class="mb-4">
-              <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Locación</label>
+              <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Almacén <span class="text-[#81000A]">*</span></label>
               <select
                 class="w-full mt-1 px-4 py-2.5 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors appearance-none cursor-pointer"
+                [ngModel]="salidaAlmacenId()"
+                (ngModelChange)="onSalidaAlmacenChange($event)"
+              >
+                <option [ngValue]="null">Seleccione un almacén</option>
+                @for (alm of salidaAlmacenes(); track alm) {
+                <option [ngValue]="alm">Almacén {{ alm }}</option>
+                }
+              </select>
+            </div>
+
+            <!-- Selector de ubicación -->
+            <div class="mb-4">
+              <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Locación <span class="text-[#81000A]">*</span></label>
+              <select
+                class="w-full mt-1 px-4 py-2.5 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 [ngModel]="salidaLocacionId()"
                 (ngModelChange)="onSalidaLocacionChange($event)"
+                [disabled]="salidaAlmacenId() === null"
               >
                 <option value="">Seleccione una ubicación</option>
-                @for (loc of locaciones(); track loc.idLocacion) {
+                @for (loc of salidaLocacionesFiltradas(); track loc.idLocacion) {
                 <option [value]="loc.idLocacion">{{ loc.zona }} - {{ loc.pasillo }}{{ loc.estante ? ' - ' + loc.estante : '' }}</option>
                 }
               </select>

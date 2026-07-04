@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { PagedResponse } from '../../shared/models/paginated-response';
 import {
@@ -26,7 +26,12 @@ export class MovementApiService {
   }
 
   registrar(payload: RegistrarMovimientoRequest): Observable<void> {
-    return this.http.post<void>(this.baseUrl, payload);
+    console.debug('[MovementApi] POST', this.baseUrl, JSON.stringify(payload));
+    return this.http.post<void>(this.baseUrl, payload).pipe(
+      tap({
+        error: (err) => console.error('[MovementApi] ERROR - status:', err.status, 'body:', JSON.stringify(err.error).slice(0, 2000), 'mensaje:', err.message)
+      })
+    );
   }
 
   anular(id: string): Observable<void> {

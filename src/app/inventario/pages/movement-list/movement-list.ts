@@ -79,18 +79,21 @@ export class MovementList implements OnInit {
   formCliente = signal('');
   formTipoAjuste = signal<'POSITIVO' | 'NEGATIVO'>('POSITIVO');
 
+  salidaAlmacenId = signal<number | null>(null);
   salidaLocacionId = signal('');
   salidaLocationProducts = signal<LocationProductDto[]>([]);
   salidaQtyMap = signal<Record<string, number>>({});
   salidaItems = signal<SalidaItem[]>([]);
 
+  salidaAlmacenes = computed(() => {
+    const ids = new Set(this.locaciones().map(l => l.idAlmacen));
+    return [...ids].sort();
+  });
+
   salidaLocacionesFiltradas = computed(() => {
-    const allLocs = this.locaciones();
-    const items = this.salidaItems();
-    if (items.length === 0) return allLocs;
-    const firstItemLoc = allLocs.find(l => l.idLocacion === items[0].locacionId);
-    if (!firstItemLoc) return allLocs;
-    return allLocs.filter(l => l.idAlmacen === firstItemLoc.idAlmacen);
+    const almacenId = this.salidaAlmacenId();
+    if (almacenId === null) return [];
+    return this.locaciones().filter(l => l.idAlmacen === almacenId);
   });
 
   ajusteLocacionId = signal('');
@@ -114,9 +117,13 @@ export class MovementList implements OnInit {
   }
 
   cargarLocaciones(): void {
+    console.debug('[MovementList] cargando locaciones...');
     this.locationApi.listarActivas().subscribe({
-      next: (data) => this.locaciones.set(data),
-      error: () => console.error('Error al cargar locaciones')
+      next: (data) => {
+        console.debug('[MovementList] locaciones recibidas:', data?.length, 'items, primera:', JSON.stringify(data?.[0]).slice(0, 500));
+        this.locaciones.set(data);
+      },
+      error: (err) => console.error('[MovementList] Error al cargar locaciones - status:', err.status, 'body:', err.error, 'mensaje:', err.message)
     });
   }
 
@@ -174,6 +181,14 @@ export class MovementList implements OnInit {
     this.showError.set(false);
   }
 
+  onSalidaAlmacenChange(id: number | null): void {
+    this.salidaAlmacenId.set(id);
+    this.salidaLocacionId.set('');
+    this.salidaLocationProducts.set([]);
+    this.salidaQtyMap.set({});
+    this.salidaItems.set([]);
+  }
+
   onSalidaLocacionChange(id: string): void {
     this.salidaLocacionId.set(id);
     this.salidaQtyMap.set({});
@@ -181,11 +196,15 @@ export class MovementList implements OnInit {
       this.salidaLocationProducts.set([]);
       return;
     }
+    console.debug('[MovementList] SALIDA - locacion seleccionada:', id);
     this.heatmapApi.obtenerDetalleLocacion(id).subscribe({
-      next: (data) => this.salidaLocationProducts.set(data.productos ?? []),
-      error: () => {
+      next: (data) => {
+        console.debug('[MovementList] SALIDA - detalle locacion recibido:', JSON.stringify(data).slice(0, 1500));
+        this.salidaLocationProducts.set(data.productos ?? []);
+      },
+      error: (err) => {
         this.salidaLocationProducts.set([]);
-        console.error('Error al cargar productos de la ubicación');
+        console.error('[MovementList] SALIDA - Error al cargar productos de la ubicación - status:', err.status, 'body:', err.error, 'mensaje:', err.message);
       }
     });
   }
@@ -233,11 +252,15 @@ export class MovementList implements OnInit {
       this.ajusteLocationProducts.set([]);
       return;
     }
+    console.debug('[MovementList] AJUSTE - locacion seleccionada:', id);
     this.heatmapApi.obtenerDetalleLocacion(id).subscribe({
-      next: (data) => this.ajusteLocationProducts.set(data.productos ?? []),
-      error: () => {
+      next: (data) => {
+        console.debug('[MovementList] AJUSTE - detalle locacion recibido:', JSON.stringify(data).slice(0, 1500));
+        this.ajusteLocationProducts.set(data.productos ?? []);
+      },
+      error: (err) => {
         this.ajusteLocationProducts.set([]);
-        console.error('Error al cargar productos de la ubicación');
+        console.error('[MovementList] AJUSTE - Error al cargar productos de la ubicación - status:', err.status, 'body:', err.error, 'mensaje:', err.message);
       }
     });
   }
@@ -441,6 +464,11 @@ export class MovementList implements OnInit {
     this.formNroLote.set('');
     this.formCostoUnit.set(null);
     this.formTipoAjuste.set('POSITIVO');
+    this.salidaAlmacenId.set(null);
+    this.salidaLocacionId.set('');
+    this.salidaLocationProducts.set([]);
+    this.salidaQtyMap.set({});
+    this.salidaItems.set([]);
     this.ajusteLocacionId.set('');
     this.ajusteLocationProducts.set([]);
     this.ajusteItems.set([]);
@@ -466,6 +494,7 @@ export class MovementList implements OnInit {
     this.formCostoUnit.set(null);
     this.formCliente.set('');
     this.formTipoAjuste.set('POSITIVO');
+    this.salidaAlmacenId.set(null);
     this.salidaLocacionId.set('');
     this.salidaLocationProducts.set([]);
     this.salidaQtyMap.set({});
