@@ -1,5 +1,6 @@
-import { Component, inject, output } from '@angular/core';
+import { Component, inject, signal, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { finalize } from 'rxjs';
 import { ProductApiService } from '../../../../services/product-api.service';
 import { Modal } from '../../../../../shared/components/modal/modal';
 import { ModalHeader } from '../../../../../shared/components/modal-header/modal-header';
@@ -15,9 +16,13 @@ export class ProductExportModal {
 
   readonly close = output<void>();
 
+  isExporting = signal(false);
+  errorMessage = signal('');
+
   exportar(formato: 'excel' | 'pdf'): void {
-    this.close.emit();
-    this.productApi.exportar(formato).subscribe({
+    this.errorMessage.set('');
+    this.isExporting.set(true);
+    this.productApi.exportar(formato).pipe(finalize(() => this.isExporting.set(false))).subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -28,10 +33,11 @@ export class ProductExportModal {
         a.click();
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
+        this.close.emit();
       },
       error: (err) => {
         console.error(`Error exportando ${formato.toUpperCase()}:`, err);
-        alert('No se pudo exportar. Verifica que el backend esté corriendo.');
+        this.errorMessage.set('No se pudo exportar. Verifica que el backend esté corriendo.');
       },
     });
   }

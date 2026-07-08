@@ -1,9 +1,10 @@
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable, signal } from '@angular/core';
+import { Injectable, Injector, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, tap, map, catchError, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { WebSocketService } from './websocket.service';
 export interface LoginRequest {
   username: string;
   password: string;
@@ -34,7 +35,8 @@ export class AuthService {
 
   constructor(
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private injector: Injector
   ) {
     const token = this.getToken();
     if (token) {
@@ -85,6 +87,11 @@ export class AuthService {
         this.isAuthenticated.set(true);
         this.currentUserRole.set(role);
         this.decodeAndSetUser();
+        try {
+          this.injector.get(WebSocketService).connect();
+        } catch (e) {
+          console.warn('Could not connect WebSocket after login', e);
+        }
       }),
       map(() => true),
       catchError((error) => {
@@ -95,6 +102,11 @@ export class AuthService {
   }
 
   logout(): void {
+    try {
+      this.injector.get(WebSocketService).disconnect();
+    } catch (e) {
+      console.warn('Could not disconnect WebSocket on logout', e);
+    }
     localStorage.removeItem('token');
     localStorage.removeItem('role');
     sessionStorage.removeItem('token');

@@ -43,6 +43,12 @@
       </div>
     </div>
 
+    @if (errorMessage()) {
+      <div class="rounded-lg border border-[#E2BEBA] bg-[#81000A]/10 px-4 py-3 font-['Inter'] text-sm font-semibold text-[#81000A] dark:bg-[#81000A]/20 dark:text-[#EF4444]">
+        {{ errorMessage() }}
+      </div>
+    }
+
     <div class="flex flex-col flex-1 bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] rounded-2xl p-6 shadow-sm transition-colors overflow-hidden">
       <div class="flex justify-between items-center mb-6">
         <h3 class="font-['Work_Sans'] font-bold text-lg text-[#111D23] dark:text-white">Secuencia de Picking</h3>

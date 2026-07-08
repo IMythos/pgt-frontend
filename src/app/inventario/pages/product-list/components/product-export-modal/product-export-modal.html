@@ -10,10 +10,16 @@
   </app-modal-header>
 
   <div class="p-6 flex flex-col gap-3">
+    @if (errorMessage()) {
+      <div class="rounded-lg border border-[#E2BEBA] bg-[#81000A]/10 px-4 py-3 font-['Inter'] text-sm font-semibold text-[#81000A] dark:bg-[#81000A]/20 dark:text-[#EF4444]">
+        {{ errorMessage() }}
+      </div>
+    }
+
     <p class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8] mb-2">Selecciona el formato de exportación:</p>
 
-    <button (click)="exportar('excel')"
-      class="flex items-center gap-4 p-4 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-xl hover:border-[#81000A]/50 dark:hover:border-[#EF4444]/50 hover:bg-[#FFF3F3]/30 dark:hover:bg-[rgba(239,68,68,0.1)] transition-all cursor-pointer group">
+    <button (click)="exportar('excel')" [disabled]="isExporting()"
+      class="flex items-center gap-4 p-4 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-xl hover:border-[#81000A]/50 dark:hover:border-[#EF4444]/50 hover:bg-[#FFF3F3]/30 dark:hover:bg-[rgba(239,68,68,0.1)] transition-all cursor-pointer group disabled:opacity-50">
       <div class="w-12 h-12 rounded-lg bg-[#217346]/10 flex items-center justify-center shrink-0 group-hover:bg-[#217346]/20 transition-colors">
         <svg class="w-6 h-6 text-[#217346]" viewBox="0 0 24 24" fill="currentColor">
           <path d="M14,2H6A2,2,0,0,0,4,4V20a2,2,0,0,0,2,2H18a2,2,0,0,0,2-2V8ZM18,20H6V4h7V9h5V20Z" opacity="0.4" />
@@ -28,8 +34,8 @@
       </div>
     </button>
 
-    <button (click)="exportar('pdf')"
-      class="flex items-center gap-4 p-4 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-xl hover:border-[#81000A]/50 dark:hover:border-[#EF4444]/50 hover:bg-[#FFF3F3]/30 dark:hover:bg-[rgba(239,68,68,0.1)] transition-all cursor-pointer group">
+    <button (click)="exportar('pdf')" [disabled]="isExporting()"
+      class="flex items-center gap-4 p-4 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-xl hover:border-[#81000A]/50 dark:hover:border-[#EF4444]/50 hover:bg-[#FFF3F3]/30 dark:hover:bg-[rgba(239,68,68,0.1)] transition-all cursor-pointer group disabled:opacity-50">
       <div class="w-12 h-12 rounded-lg bg-[#B30B00]/10 flex items-center justify-center shrink-0 group-hover:bg-[#B30B00]/20 transition-colors">
         <svg class="w-6 h-6 text-[#B30B00]" viewBox="0 0 24 24" fill="currentColor">
           <path d="M14,2H6A2,2,0,0,0,4,4V20a2,2,0,0,0,2,2H18a2,2,0,0,0,2-2V8ZM18,20H6V4h7V9h5V20Z" opacity="0.4" />

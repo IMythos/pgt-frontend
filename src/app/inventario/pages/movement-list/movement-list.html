@@ -237,8 +237,132 @@
 
           </div>
 
+          <!-- Card: Ajuste Ubicación y Productos -->
+          @if (formTipo() === 'AJUSTE') {
+          <div class="bg-gray-50 dark:bg-black border border-gray-100 dark:border-[#1F1F1F] rounded-xl p-5 transition-colors">
+            <span class="font-['Inter'] text-xs font-bold uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8] block mb-3">Ubicación y Productos</span>
+
+            <!-- Selector de ubicación -->
+            <div class="mb-4">
+              <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Locación</label>
+              <select
+                class="w-full mt-1 px-4 py-2.5 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors appearance-none cursor-pointer"
+                [ngModel]="ajusteLocacionId()"
+                (ngModelChange)="onAjusteLocacionChange($event)"
+              >
+                <option value="">Seleccione una ubicación</option>
+                @for (loc of locaciones(); track loc.idLocacion) {
+                <option [value]="loc.idLocacion">{{ loc.zona }} - {{ loc.pasillo }}{{ loc.estante ? ' - ' + loc.estante : '' }}</option>
+                }
+              </select>
+            </div>
+
+            <!-- Tabla de productos en la ubicación seleccionada -->
+            @if (ajusteLocacionId() && ajusteLocationProducts().length > 0) {
+            <div class="border border-gray-200 dark:border-[#1F1F1F] rounded-lg overflow-hidden">
+              <table class="w-full text-left text-sm">
+                <thead>
+                  <tr class="bg-gray-100 dark:bg-[#141414]">
+                    <th class="px-3 py-2 font-['Inter'] font-semibold text-xs text-[#4C616C] dark:text-[#8A9BA8]">SKU</th>
+                    <th class="px-3 py-2 font-['Inter'] font-semibold text-xs text-[#4C616C] dark:text-[#8A9BA8]">Producto</th>
+                    <th class="px-3 py-2 font-['Inter'] font-semibold text-xs text-[#4C616C] dark:text-[#8A9BA8] text-center">Stock</th>
+                    <th class="px-3 py-2"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (prod of ajusteLocationProducts(); track prod.idLote) {
+                  <tr class="border-t border-gray-100 dark:border-[#1F1F1F]">
+                    <td class="px-3 py-2 font-mono text-xs text-[#111D23] dark:text-white">{{ prod.productoCod }}</td>
+                    <td class="px-3 py-2 text-sm text-[#111D23] dark:text-white">{{ prod.productoDesc }}</td>
+                    <td class="px-3 py-2 text-center text-sm text-[#4C616C] dark:text-[#8A9BA8]">{{ prod.cantidad }}</td>
+                    <td class="px-3 py-2 text-center">
+                      @if (isAjusteItemAdded(prod.productoCod)) {
+                      <span class="text-[#34A853] font-['Inter'] text-xs font-semibold">Agregado</span>
+                      } @else {
+                      <button app-btn variant="primary" size="sm" (click)="seleccionarProducto(prod)">Seleccionar</button>
+                      }
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+            } @else if (ajusteLocacionId() && ajusteLocationProducts().length === 0) {
+            <div class="text-center py-4 text-[#4C616C] dark:text-[#8A9BA8] font-['Inter'] text-sm">
+              No hay productos en esta ubicación.
+            </div>
+            }
+
+            <!-- Producto seleccionado para ajuste -->
+            @let selectedProd = ajusteSelectedProduct();
+            @if (selectedProd) {
+            <div class="mt-4 pt-4 border-t border-gray-200 dark:border-[#1F1F1F]">
+              <span class="font-['Inter'] text-xs font-bold uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8] block mb-3">Producto seleccionado</span>
+              <div class="flex flex-col gap-3">
+                <div class="flex items-center gap-3 p-3 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-lg">
+                  <div class="flex-1">
+                    <span class="font-['Inter'] font-semibold text-sm text-[#111D23] dark:text-white">{{ selectedProd.productoCod }}</span>
+                    <span class="font-['Inter'] text-sm text-[#4C616C] dark:text-[#8A9BA8] ml-2">{{ selectedProd.productoDesc }}</span>
+                  </div>
+                  <span class="font-['Inter'] text-xs text-[#4C616C] dark:text-[#8A9BA8]">Stock: <strong class="text-[#111D23] dark:text-white">{{ selectedProd.cantidad }}</strong></span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="flex flex-col gap-1">
+                    <label class="font-['Inter'] font-semibold text-xs text-[#4C616C] dark:text-[#8A9BA8]">Cantidad a ajustar</label>
+                    <input
+                      type="number" min="1" step="1"
+                      class="w-28 px-3 py-2 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-center text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors"
+                      [ngModel]="ajustePendingQty()"
+                      (ngModelChange)="onAjusteQtyChange($event)"
+                    />
+                  </div>
+                  <button app-btn variant="primary" (click)="agregarAjusteItem()">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Agregar a ajuste
+                  </button>
+                  <button app-btn variant="cancel" (click)="cancelarSeleccionProducto()">Cancelar</button>
+                </div>
+              </div>
+            </div>
+            }
+
+            <!-- Resumen de productos agregados -->
+            @if (ajusteItems().length > 0) {
+            <div class="mt-4 pt-4 border-t border-gray-200 dark:border-[#1F1F1F]">
+              <span class="font-['Inter'] text-xs font-bold uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8] block mb-3">
+                Productos a ajustar ({{ ajusteItems().length }})
+              </span>
+              <div class="border border-gray-200 dark:border-[#1F1F1F] rounded-lg overflow-hidden">
+                <table class="w-full text-left text-sm">
+                  <thead>
+                    <tr class="bg-gray-100 dark:bg-[#141414]">
+                      <th class="px-3 py-2 font-['Inter'] font-semibold text-xs text-[#4C616C] dark:text-[#8A9BA8]">SKU</th>
+                      <th class="px-3 py-2 font-['Inter'] font-semibold text-xs text-[#4C616C] dark:text-[#8A9BA8]">Producto</th>
+                      <th class="px-3 py-2 font-['Inter'] font-semibold text-xs text-[#4C616C] dark:text-[#8A9BA8] text-center">Cant.</th>
+                      <th class="px-3 py-2"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (item of ajusteItems(); track $index) {
+                    <tr class="border-t border-gray-100 dark:border-[#1F1F1F]">
+                      <td class="px-3 py-2 font-mono text-xs text-[#111D23] dark:text-white">{{ item.productoCod }}</td>
+                      <td class="px-3 py-2 text-sm text-[#111D23] dark:text-white">{{ item.productoDesc }}</td>
+                      <td class="px-3 py-2 text-center text-sm font-semibold text-[#111D23] dark:text-white">{{ item.cantidad }}</td>
+                      <td class="px-3 py-2 text-center">
+                        <button (click)="eliminarAjusteItem($index)" class="text-[#81000A] hover:text-[#6a0008] font-['Inter'] text-xs font-semibold cursor-pointer">Eliminar</button>
+                      </td>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            }
+          </div>
+          }
+
           <!-- Card: Producto -->
-          @if (formTipo() !== 'SALIDA') {
+          @if (formTipo() !== 'SALIDA' && formTipo() !== 'AJUSTE') {
           <div class="bg-gray-50 dark:bg-black border border-gray-100 dark:border-[#1F1F1F] rounded-xl p-5 transition-colors">
             <span class="font-['Inter'] text-xs font-bold uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8] block mb-3">Producto <span class="text-[#81000A]">*</span></span>
             <select
@@ -312,16 +436,32 @@
           <div class="bg-gray-50 dark:bg-black border border-gray-100 dark:border-[#1F1F1F] rounded-xl p-5 transition-colors">
             <span class="font-['Inter'] text-xs font-bold uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8] block mb-3">Ubicaciones y Productos</span>
 
-            <!-- Selector de ubicación -->
+            <!-- Selector de almacén -->
             <div class="mb-4">
-              <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Locación</label>
+              <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Almacén <span class="text-[#81000A]">*</span></label>
               <select
                 class="w-full mt-1 px-4 py-2.5 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors appearance-none cursor-pointer"
+                [ngModel]="salidaAlmacenId()"
+                (ngModelChange)="onSalidaAlmacenChange($event)"
+              >
+                <option [ngValue]="null">Seleccione un almacén</option>
+                @for (alm of salidaAlmacenes(); track alm) {
+                <option [ngValue]="alm">Almacén {{ alm }}</option>
+                }
+              </select>
+            </div>
+
+            <!-- Selector de ubicación -->
+            <div class="mb-4">
+              <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Locación <span class="text-[#81000A]">*</span></label>
+              <select
+                class="w-full mt-1 px-4 py-2.5 bg-white dark:bg-black border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 [ngModel]="salidaLocacionId()"
                 (ngModelChange)="onSalidaLocacionChange($event)"
+                [disabled]="salidaAlmacenId() === null"
               >
                 <option value="">Seleccione una ubicación</option>
-                @for (loc of locaciones(); track loc.idLocacion) {
+                @for (loc of salidaLocacionesFiltradas(); track loc.idLocacion) {
                 <option [value]="loc.idLocacion">{{ loc.zona }} - {{ loc.pasillo }}{{ loc.estante ? ' - ' + loc.estante : '' }}</option>
                 }
               </select>
@@ -413,7 +553,7 @@
           <div class="bg-gray-50 dark:bg-black border border-gray-100 dark:border-[#1F1F1F] rounded-xl p-5 transition-colors">
             <span class="font-['Inter'] text-xs font-bold uppercase tracking-wider text-[#4C616C] dark:text-[#8A9BA8] block mb-3">Operación</span>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              @if (formTipo() !== 'SALIDA') {
+              @if (formTipo() !== 'SALIDA' && formTipo() !== 'AJUSTE') {
               <div>
                 <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Cantidad <span class="text-[#81000A]">*</span></label>
                 <input
@@ -466,5 +606,29 @@
         </button>
       </app-modal-footer>
     </app-modal>
+  }
+
+  @if (showSuccess()) {
+    <app-confirm-dialog
+      title="Operación exitosa"
+      [message]="successMessage()"
+      confirmText="OK"
+      cancelText="Cerrar"
+      variant="info"
+      (confirm)="onSuccessClose()"
+      (cancel)="onSuccessClose()"
+    />
+  }
+
+  @if (showError()) {
+    <app-confirm-dialog
+      title="Error"
+      [message]="errorMessage()"
+      confirmText="OK"
+      cancelText="Cerrar"
+      variant="danger"
+      (confirm)="onErrorClose()"
+      (cancel)="onErrorClose()"
+    />
   }
 </div>

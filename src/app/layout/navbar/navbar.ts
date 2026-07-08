@@ -1,8 +1,9 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, signal, input, output, inject, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, signal, computed, input, output, inject, Inject, PLATFORM_ID } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd, RouterModule } from '@angular/router';
 import { filter } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
+import { NotificationService, NotificationItem } from '../../core/services/notification.service';
 import { Modal } from '../../shared/components/modal/modal';
 import { ModalHeader } from '../../shared/components/modal-header/modal-header';
 import { ModalFooter } from '../../shared/components/modal-footer/modal-footer';
@@ -26,7 +27,9 @@ export interface Breadcrumb {
 })
 export class Navbar {
   authService = inject(AuthService);
-  hasUnreadNotifications = signal<boolean>(false);
+  notifService = inject(NotificationService);
+  notifications = this.notifService.items;
+  hasUnreadNotifications = computed(() => this.notifService.unreadCount() > 0);
   isNotificationsOpen = signal<boolean>(false);
   isSettingsOpen = signal<boolean>(false);
   showHelpGuide = signal<boolean>(false);
@@ -54,6 +57,7 @@ export class Navbar {
   toggleNotifications() {
     this.isNotificationsOpen.update(v => !v);
     this.isSettingsOpen.set(false);
+    this.notifService.markAllAsRead();
   }
 
   toggleSettings() {

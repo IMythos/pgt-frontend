@@ -1,5 +1,6 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, inject, signal, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { finalize } from 'rxjs';
 import { ProductApiService } from '../../../../services/product-api.service';
 import { ProductoCatalogoDto } from '../../../../models/product.model';
 import { Modal } from '../../../../../shared/components/modal/modal';
@@ -20,17 +21,30 @@ export class ProductDetailModal {
   readonly edit = output<ProductoCatalogoDto>();
   readonly deleted = output<void>();
 
-  eliminarProducto(id: string): void {
-    if (!confirm('¿Estás seguro de eliminar este producto? Esta acción no se puede deshacer.')) return;
-    this.productApi.eliminar(id).subscribe({
+  deleteStep = signal<'initial' | 'confirm'>('initial');
+  isDeleting = signal(false);
+  errorMessage = signal('');
+
+  requestDelete(): void {
+    this.deleteStep.set('confirm');
+  }
+
+  cancelDelete(): void {
+    this.deleteStep.set('initial');
+  }
+
+  confirmDelete(): void {
+    const product = this.product();
+    this.isDeleting.set(true);
+    this.productApi.eliminar(product.idProducto).pipe(finalize(() => this.isDeleting.set(false))).subscribe({
       next: () => {
-        alert('Producto eliminado exitosamente!');
         this.deleted.emit();
       },
       error: (err) => {
         console.error('Error eliminando producto:', err);
         const msg = err.error?.message || err.error || 'Error al eliminar. Verifica consola.';
-        alert(`No se pudo eliminar:\n${msg}`);
+        this.errorMessage.set(msg);
+        this.deleteStep.set('initial');
       },
     });
   }

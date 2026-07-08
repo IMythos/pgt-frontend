@@ -32,6 +32,7 @@ export class PickingRoute implements OnInit {
   loading = signal(true);
   optimizing = signal(false);
   isRouteActive = signal(true);
+  errorMessage = signal('');
   estimatedTime = signal('--');
 
   showCompleteModal = signal(false);
@@ -128,6 +129,7 @@ export class PickingRoute implements OnInit {
 
   private cargarOrden(id: string) {
     this.loading.set(true);
+    this.errorMessage.set('');
     this.pickingApi.obtener(id).subscribe({
       next: (orden) => {
         if (orden.estado === 'COMPLETADO') {
@@ -143,6 +145,7 @@ export class PickingRoute implements OnInit {
   }
 
   private cargarRuta(id: string) {
+    this.errorMessage.set('');
     this.pickingApi.obtenerRuta(id).subscribe({
       next: (ruta) => this.construirDesdeRuta(ruta),
       error: (err) => {
@@ -152,12 +155,14 @@ export class PickingRoute implements OnInit {
             next: (ruta) => this.construirDesdeRuta(ruta),
             error: (err2) => {
               console.error('[PickingRoute] Error al optimizar ruta:', err2);
+              this.errorMessage.set(err2.error?.message ?? 'No se pudo optimizar la ruta.');
               this.racks.set(PickingRoute.FALLBACK_NODES);
               this.loading.set(false);
             },
           });
         } else {
           console.error('[PickingRoute] Error al obtener ruta:', err);
+          this.errorMessage.set(err.error?.message ?? 'No se pudo obtener la ruta.');
           this.racks.set(PickingRoute.FALLBACK_NODES);
           this.loading.set(false);
         }
@@ -169,13 +174,17 @@ export class PickingRoute implements OnInit {
     const id = this.ordenId();
     if (!id) return;
     this.optimizing.set(true);
+    this.errorMessage.set('');
 
     this.pickingApi.optimizar(id).subscribe({
       next: (ruta) => {
         this.construirDesdeRuta(ruta);
         this.optimizing.set(false);
       },
-      error: () => this.optimizing.set(false),
+      error: (err) => {
+        this.optimizing.set(false);
+        this.errorMessage.set(err.error?.message ?? 'No se pudo optimizar la ruta.');
+      },
     });
   }
 

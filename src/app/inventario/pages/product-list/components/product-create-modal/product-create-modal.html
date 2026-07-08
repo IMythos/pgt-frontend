@@ -17,6 +17,14 @@
     </svg>
   </app-modal-header>
 
+    @let errs = formErrors();
+
+    @if (errs['general']) {
+      <div class="mx-6 mt-4 rounded-lg border border-[#E2BEBA] bg-[#81000A]/10 px-4 py-3 font-['Inter'] text-sm font-semibold text-[#81000A] dark:bg-[#81000A]/20 dark:text-[#EF4444]">
+        {{ errs['general'] }}
+      </div>
+    }
+
     <!-- Body -->
     <div class="p-6 overflow-y-auto max-h-[70vh] flex flex-col gap-5">
 
@@ -31,7 +39,8 @@
                 [ngModel]="f.idCategoria"
                 (ngModelChange)="actualizarForm('idCategoria', $event)"
                 [ngModelOptions]="{ standalone: true }"
-                class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors cursor-pointer"
+                class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors cursor-pointer"
+                [ngClass]="errs['idCategoria'] ? 'border-red-500' : 'border-gray-200 dark:border-[#1F1F1F]'"
               >
                 <option [ngValue]="null" disabled>Seleccione una categoría</option>
                 @for (cat of categorias(); track cat.idCategoria) {
@@ -49,6 +58,9 @@
                 </svg>
               </button>
             </div>
+            @if (errs['idCategoria']) {
+              <span class="font-['Inter'] text-xs text-red-500">{{ errs['idCategoria'] }}</span>
+            }
           </div>
           <div class="flex flex-col gap-1.5">
             <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Marca <span class="text-[#81000A]">*</span></label>
@@ -57,7 +69,8 @@
                 [ngModel]="f.idMarca"
                 (ngModelChange)="actualizarForm('idMarca', $event)"
                 [ngModelOptions]="{ standalone: true }"
-                class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors cursor-pointer"
+                class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors cursor-pointer"
+                [ngClass]="errs['idMarca'] ? 'border-red-500' : 'border-gray-200 dark:border-[#1F1F1F]'"
               >
                 <option [ngValue]="null" disabled>Seleccione una marca</option>
                 @for (marca of marcas(); track marca.idMarca) {
@@ -75,18 +88,25 @@
                 </svg>
               </button>
             </div>
+            @if (errs['idMarca']) {
+              <span class="font-['Inter'] text-xs text-red-500">{{ errs['idMarca'] }}</span>
+            }
           </div>
           <div class="flex flex-col gap-1.5">
             <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">SKU Interno <span class="text-[#81000A]">*</span></label>
-            <input
-              type="text"
-              [ngModel]="f.sku"
-              (ngModelChange)="actualizarForm('sku', $event.toUpperCase())"
-              [ngModelOptions]="{ standalone: true }"
-              placeholder="Ingrese SKU..."
-              class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors uppercase"
-            />
-            <span class="text-[11px] text-[#8A9BA8]">Se guardará automáticamente en mayúsculas</span>
+              <input
+                type="text"
+                [ngModel]="f.sku"
+                (ngModelChange)="actualizarForm('sku', $event.toUpperCase())"
+                [ngModelOptions]="{ standalone: true }"
+                placeholder="Ingrese SKU..."
+                class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors uppercase"
+                [ngClass]="errs['sku'] ? 'border-red-500' : 'border-gray-200 dark:border-[#1F1F1F]'"
+              />
+              @if (errs['sku']) {
+                <span class="font-['Inter'] text-xs text-red-500">{{ errs['sku'] }}</span>
+              }
+              <span class="text-[11px] text-[#8A9BA8]">Se guardará automáticamente en mayúsculas</span>
           </div>
           <div class="flex flex-col gap-1.5">
             <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Cód. Fabricante</label>
@@ -115,8 +135,12 @@
               (ngModelChange)="actualizarForm('descripcion', $event)"
               [ngModelOptions]="{ standalone: true }"
               placeholder="Describa el producto..."
-              class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors resize-none"
+              class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors resize-none"
+              [ngClass]="errs['descripcion'] ? 'border-red-500' : 'border-gray-200 dark:border-[#1F1F1F]'"
             ></textarea>
+            @if (errs['descripcion']) {
+              <span class="font-['Inter'] text-xs text-red-500">{{ errs['descripcion'] }}</span>
+            }
           </div>
           <div class="flex flex-col gap-1.5">
             <label class="font-['Inter'] font-semibold text-sm text-[#4C616C] dark:text-[#8A9BA8]">Modelos Compatibles <span class="text-[#8A9BA8]">(separados por coma)</span></label>
@@ -153,8 +177,12 @@
                 (ngModelChange)="actualizarForm('precioCompra', $event)"
                 [ngModelOptions]="{ standalone: true }"
                 placeholder="0.00"
-                class="w-full pl-8 pr-4 py-2.5 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors"
+                class="w-full pl-8 pr-4 py-2.5 bg-white dark:bg-[#0A0A0A] border rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors"
+                [ngClass]="errs['precioCompra'] ? 'border-red-500' : 'border-gray-200 dark:border-[#1F1F1F]'"
               />
+              @if (errs['precioCompra']) {
+                <span class="font-['Inter'] text-xs text-red-500">{{ errs['precioCompra'] }}</span>
+              }
             </div>
           </div>
           <div class="flex flex-col gap-1.5">
@@ -167,8 +195,12 @@
                 (ngModelChange)="actualizarForm('precioVenta', $event)"
                 [ngModelOptions]="{ standalone: true }"
                 placeholder="0.00"
-                class="w-full pl-8 pr-4 py-2.5 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors"
+                class="w-full pl-8 pr-4 py-2.5 bg-white dark:bg-[#0A0A0A] border rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors"
+                [ngClass]="errs['precioVenta'] ? 'border-red-500' : 'border-gray-200 dark:border-[#1F1F1F]'"
               />
+              @if (errs['precioVenta']) {
+                <span class="font-['Inter'] text-xs text-red-500">{{ errs['precioVenta'] }}</span>
+              }
             </div>
           </div>
         </div>
@@ -200,8 +232,12 @@
               (ngModelChange)="actualizarForm('stockMinimo', $event)"
               [ngModelOptions]="{ standalone: true }"
               placeholder="0"
-              class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors"
+              class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors"
+              [ngClass]="errs['stockMinimo'] ? 'border-red-500' : 'border-gray-200 dark:border-[#1F1F1F]'"
             />
+            @if (errs['stockMinimo']) {
+              <span class="font-['Inter'] text-xs text-red-500">{{ errs['stockMinimo'] }}</span>
+            }
             <span class="text-[11px] text-[#8A9BA8]">Define el umbral mínimo de stock para este producto</span>
           </div>
           <div class="flex flex-col gap-1.5">
@@ -212,8 +248,12 @@
               (ngModelChange)="actualizarForm('stockInicial', $event); actualizarForm('idLocacion', null)"
               [ngModelOptions]="{ standalone: true }"
               placeholder="0"
-              class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors"
+              class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white placeholder-[#8A9BA8] focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors"
+              [ngClass]="errs['stockInicial'] ? 'border-red-500' : 'border-gray-200 dark:border-[#1F1F1F]'"
             />
+            @if (errs['stockInicial']) {
+              <span class="font-['Inter'] text-xs text-red-500">{{ errs['stockInicial'] }}</span>
+            }
             <span class="text-[11px] text-[#8A9BA8]">Si ingresas un valor, se registrará automáticamente como ingreso</span>
           </div>
         </div>
@@ -226,13 +266,17 @@
               [ngModel]="f.idLocacion"
               (ngModelChange)="actualizarForm('idLocacion', $event)"
               [ngModelOptions]="{ standalone: true }"
-              class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#1F1F1F] rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors cursor-pointer"
+              class="w-full px-4 py-2.5 bg-white dark:bg-[#0A0A0A] border rounded-lg font-['Inter'] text-sm text-[#111D23] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#81000A]/50 transition-colors cursor-pointer"
+              [ngClass]="errs['idLocacion'] ? 'border-red-500' : 'border-gray-200 dark:border-[#1F1F1F]'"
             >
               <option [ngValue]="null" disabled>Seleccione una ubicación</option>
               @for (loc of locaciones(); track loc.idLocacion) {
               <option [ngValue]="loc.idLocacion">{{ loc.zona }} - {{ loc.pasillo }}{{ loc.estante ? ' - ' + loc.estante : '' }}</option>
               }
             </select>
+            @if (errs['idLocacion']) {
+              <span class="font-['Inter'] text-xs text-red-500">{{ errs['idLocacion'] }}</span>
+            }
             <span class="text-[11px] text-[#8A9BA8]">Ubicación física donde se almacenará el producto</span>
           </div>
         </div>
@@ -262,3 +306,15 @@
     </button>
   </app-modal-footer>
 </app-modal>
+
+@if (showSuccess()) {
+  <app-confirm-dialog
+    title="Producto creado"
+    message="El producto se ha registrado correctamente."
+    confirmText="OK"
+    cancelText="Cerrar"
+    variant="info"
+    (confirm)="saved.emit()"
+    (cancel)="saved.emit()"
+  />
+}

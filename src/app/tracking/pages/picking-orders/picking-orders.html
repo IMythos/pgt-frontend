@@ -10,20 +10,43 @@
     </div>
   </div>
 
-  <!-- Tabs de filtro -->
+  <!-- Tabs de filtro con iconos -->
   <div class="flex flex-wrap gap-2">
-    @for (tab of ['TODAS', 'PENDIENTE', 'EN_PROCESO', 'COMPLETADO']; track tab) {
-      <button (click)="setTab(tab)"
-        class="px-4 py-2 font-['Inter'] font-semibold text-sm rounded-lg transition-all cursor-pointer"
-        [ngClass]="activeTab() === tab
-          ? 'bg-[#81000A] text-white shadow-md'
-          : 'bg-gray-100 dark:bg-[#1F1F1F] text-[#4C616C] dark:text-[#8A9BA8] hover:bg-gray-200 dark:hover:bg-[#2A2A2A]'">
-        {{ tab === 'TODAS' ? 'Todas' : tab.replace('_', ' ') }}
-      </button>
-    }
+    <button (click)="setTab('TODAS')"
+      class="inline-flex items-center gap-1.5 px-4 py-2 font-['Inter'] font-semibold text-sm rounded-lg transition-all cursor-pointer"
+      [ngClass]="activeTab() === 'TODAS'
+        ? 'bg-[#81000A] text-white shadow-md'
+        : 'bg-gray-100 dark:bg-[#1F1F1F] text-[#4C616C] dark:text-[#8A9BA8] hover:bg-gray-200 dark:hover:bg-[#2A2A2A]'">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      Todas
+    </button>
+    <button (click)="setTab('PENDIENTE')"
+      class="inline-flex items-center gap-1.5 px-4 py-2 font-['Inter'] font-semibold text-sm rounded-lg transition-all cursor-pointer"
+      [ngClass]="activeTab() === 'PENDIENTE'
+        ? 'bg-[#F5A623] text-white shadow-md'
+        : 'bg-gray-100 dark:bg-[#1F1F1F] text-[#4C616C] dark:text-[#8A9BA8] hover:bg-gray-200 dark:hover:bg-[#2A2A2A]'">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      Pendiente
+    </button>
+    <button (click)="setTab('EN_PROCESO')"
+      class="inline-flex items-center gap-1.5 px-4 py-2 font-['Inter'] font-semibold text-sm rounded-lg transition-all cursor-pointer"
+      [ngClass]="activeTab() === 'EN_PROCESO'
+        ? 'bg-[#3B82F6] text-white shadow-md'
+        : 'bg-gray-100 dark:bg-[#1F1F1F] text-[#4C616C] dark:text-[#8A9BA8] hover:bg-gray-200 dark:hover:bg-[#2A2A2A]'">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      En Proceso
+    </button>
+    <button (click)="setTab('COMPLETADO')"
+      class="inline-flex items-center gap-1.5 px-4 py-2 font-['Inter'] font-semibold text-sm rounded-lg transition-all cursor-pointer"
+      [ngClass]="activeTab() === 'COMPLETADO'
+        ? 'bg-[#34A853] text-white shadow-md'
+        : 'bg-gray-100 dark:bg-[#1F1F1F] text-[#4C616C] dark:text-[#8A9BA8] hover:bg-gray-200 dark:hover:bg-[#2A2A2A]'">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      Completado
+    </button>
   </div>
 
-  <!-- Tabla -->
+  <!-- Tabla con paginación -->
   <div class="w-full bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-[#1F1F1F] shadow-sm rounded-xl overflow-hidden transition-colors">
     @if (loading()) {
       <div class="flex items-center justify-center p-12">
@@ -53,44 +76,92 @@
           </thead>
           <tbody class="font-['Inter'] text-sm">
             @for (order of orders(); track order.idOrden) {
-              <tr class="border-b border-gray-50 dark:border-[#1F1F1F] transition-colors"
+              <tr class="border-b border-gray-50 dark:border-[#1F1F1F] transition-all duration-200"
                   [ngClass]="{
                     'opacity-40 pointer-events-none': order.estado === 'COMPLETADO',
                     'hover:bg-gray-50 dark:hover:bg-[#141414]': order.estado !== 'COMPLETADO'
                   }">
-                <td class="p-4 font-semibold text-[#111D23] dark:text-white">{{ order.idOrden | slice:0:8 }}...</td>
                 <td class="p-4">
-                  <span class="px-2.5 py-1 rounded text-[10px] font-bold tracking-wide uppercase"
+                  <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-[#81000A]/10 dark:bg-[#81000A]/20 flex items-center justify-center flex-shrink-0">
+                      <svg class="w-4 h-4 text-[#81000A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                      </svg>
+                    </div>
+                    <span class="font-semibold text-[#111D23] dark:text-white text-xs font-mono tracking-wide"
+                          [title]="order.idOrden">{{ order.idOrden | slice:0:8 }}...</span>
+                  </div>
+                </td>
+                <td class="p-4">
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-bold tracking-wide uppercase"
                         [ngClass]="tipoClass(order.tipoSalida)">
+                    @if (order.tipoSalida === 'TRANSFERENCIA') {
+                      <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                    } @else {
+                      <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+                    }
                     {{ order.tipoSalida || 'SALIDA' }}
                   </span>
                 </td>
-                <td class="p-4 text-[#4C616C] dark:text-[#8A9BA8] max-w-[120px] truncate">{{ order.docRef || '—' }}</td>
+                <td class="p-4 text-[#4C616C] dark:text-[#8A9BA8] max-w-[140px] truncate font-medium">{{ order.docRef || '—' }}</td>
                 <td class="p-4">
-                  <span class="px-2.5 py-1 rounded text-[10px] font-bold tracking-wide uppercase"
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-bold tracking-wide uppercase"
                         [ngClass]="estadoClass(order.estado)">
-                    {{ order.estado }}
+                    <span class="w-1.5 h-1.5 rounded-full"
+                          [ngClass]="{
+                            'bg-[#F5A623] animate-pulse': order.estado === 'PENDIENTE',
+                            'bg-[#3B82F6] animate-pulse': order.estado === 'EN_PROCESO',
+                            'bg-[#34A853]': order.estado === 'COMPLETADO',
+                            'bg-[#6B7280]': order.estado === 'CANCELADO'
+                          }"></span>
+                    {{ order.estado === 'EN_PROCESO' ? 'EN PROCESO' : order.estado }}
                   </span>
                 </td>
-                <td class="p-4 text-[#4C616C] dark:text-[#8A9BA8]">{{ order.usuarioPickingId || '—' }}</td>
-                <td class="p-4 text-[#4C616C] dark:text-[#8A9BA8]">{{ fechaFormateada(order.fecCreacion) }}</td>
+                <td class="p-4">
+                  <span class="text-[#4C616C] dark:text-[#8A9BA8]">{{ order.usuarioPickingId || '—' }}</span>
+                </td>
+                <td class="p-4 text-[#4C616C] dark:text-[#8A9BA8] whitespace-nowrap text-xs">{{ fechaFormateada(order.fecCreacion) }}</td>
                 <td class="p-4 text-right">
-                  @if (order.estado !== 'COMPLETADO') {
+                  @if (order.estado === 'PENDIENTE') {
                     <a [routerLink]="['/tracking/picking', order.idOrden]"
-                      class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#81000A] hover:bg-[#6a0008] text-white font-semibold text-xs rounded-lg transition-colors">
+                      class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#81000A] hover:bg-[#6a0008] text-white font-semibold text-xs rounded-lg transition-all duration-200 shadow-sm hover:shadow-md">
                       <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                       </svg>
-                      Ir
+                      Iniciar
                     </a>
+                  } @else if (order.estado === 'EN_PROCESO') {
+                    <a [routerLink]="['/tracking/picking', order.idOrden]"
+                      class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#3B82F6] hover:bg-[#2563EB] text-white font-semibold text-xs rounded-lg transition-all duration-200 shadow-sm hover:shadow-md">
+                      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                      </svg>
+                      Continuar
+                    </a>
+                  } @else if (order.estado === 'COMPLETADO') {
+                    <span class="inline-flex items-center gap-1 text-[#34A853] text-xs font-semibold">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                      Completado
+                    </span>
                   } @else {
-                    <span class="text-[#34A853] text-xs font-semibold">Completado</span>
+                    <span class="text-[#6B7280] text-xs font-semibold">{{ order.estado }}</span>
                   }
                 </td>
               </tr>
             }
           </tbody>
         </table>
+      </div>
+
+      <!-- Paginación -->
+      <div class="px-4 py-3 border-t border-gray-100 dark:border-[#1F1F1F]">
+        <app-pagination
+          [currentPage]="currentPage()"
+          [pageSize]="pageSize()"
+          [totalItems]="totalItems()"
+          [pageSizeOptions]="[5, 10, 20, 50]"
+          (pageChange)="onPageChange($event)"
+          (pageSizeChange)="onPageSizeChange($event)" />
       </div>
     }
   </div>

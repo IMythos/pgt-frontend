@@ -295,7 +295,7 @@
           </div>
         } @else {
           <div class="flex justify-end px-5 pt-4">
-            <button app-btn variant="primary" (click)="createRole()">
+            <button app-btn variant="primary" (click)="openCreateRole()">
               <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
               </svg>
@@ -525,6 +525,11 @@
   @if (showEditUserModal()) {
     <app-admin-edit-user-modal [user]="selectedUser()!" [roles]="roles()"
       (close)="showEditUserModal.set(false)" (saved)="onUserUpdated()" />
+  }
+
+  @if (showCreateRoleModal()) {
+    <app-admin-create-role-modal
+      (close)="showCreateRoleModal.set(false)" (saved)="onRoleCreated()" />
   }
 
   @if (showEditRoleModal()) {

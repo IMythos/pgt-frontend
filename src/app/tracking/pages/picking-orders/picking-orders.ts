@@ -3,10 +3,11 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { PickingApiService } from '../../services/picking-api.service';
 import { PickingOrder } from '../../models/picking.model';
+import { Pagination } from '../../../shared/components/pagination/pagination';
 
 @Component({
   selector: 'app-picking-orders',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, Pagination],
   templateUrl: './picking-orders.html',
 })
 export class PickingOrders implements OnInit {
@@ -15,6 +16,9 @@ export class PickingOrders implements OnInit {
   orders = signal<PickingOrder[]>([]);
   loading = signal(true);
   activeTab = signal<string>('TODAS');
+  currentPage = signal(0);
+  pageSize = signal(10);
+  totalItems = signal(0);
 
   ngOnInit() {
     this.cargar();
@@ -23,9 +27,10 @@ export class PickingOrders implements OnInit {
   cargar() {
     this.loading.set(true);
     const estado = this.activeTab() === 'TODAS' ? undefined : this.activeTab();
-    this.pickingApi.listar(estado).subscribe({
+    this.pickingApi.listar(estado, this.currentPage(), this.pageSize()).subscribe({
       next: (data) => {
-        this.orders.set(data);
+        this.orders.set(data.items ?? []);
+        this.totalItems.set(data.total);
         this.loading.set(false);
       },
       error: (err) => {
@@ -35,8 +40,20 @@ export class PickingOrders implements OnInit {
     });
   }
 
+  onPageChange(page: number): void {
+    this.currentPage.set(page);
+    this.cargar();
+  }
+
+  onPageSizeChange(size: number): void {
+    this.pageSize.set(size);
+    this.currentPage.set(0);
+    this.cargar();
+  }
+
   setTab(tab: string) {
     this.activeTab.set(tab);
+    this.currentPage.set(0);
     this.cargar();
   }
 
